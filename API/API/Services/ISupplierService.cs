@@ -13,4 +13,4 @@ namespace API.Services
 		public Task<Supplier> AddAdressToSupplierAsync(Guid SupplierId, Guid AdressId);
 	}
 }
-}
+
