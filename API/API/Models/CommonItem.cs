@@ -1,6 +1,6 @@
 ﻿namespace API.Models
 {
-	public class CommonItem
+	public class CommonItem : Item
 	{
 	}
 }

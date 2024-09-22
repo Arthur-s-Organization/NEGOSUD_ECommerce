@@ -2,6 +2,7 @@
 using API.Models;
 using API.Models.DTOs;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Services
 {
@@ -66,4 +67,4 @@ namespace API.Services
 		}
 	}
 }
-}
+

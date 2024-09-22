@@ -1,6 +1,6 @@
 ﻿namespace API.Models
 {
-	public class AlcoholItem
+	public class AlcoholItem : Item
 	{
 		public string AlcoholVolume { get; set; }
 		public string Year { get; set; }

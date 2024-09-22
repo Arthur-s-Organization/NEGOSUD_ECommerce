@@ -1,6 +1,6 @@
 ﻿namespace API.Models
 {
-	public class CustomerOrder
+	public class CustomerOrder : Order
 	{
 		public Guid CustomerId { get; set; }
 
