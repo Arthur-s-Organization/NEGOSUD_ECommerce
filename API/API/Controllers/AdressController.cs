@@ -8,11 +8,11 @@ namespace API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class AddressController : ControllerBase
+	public class AdressController : ControllerBase
 	{
 		private readonly IAddressService _AddressService;
 
-		public AddressController(IAddressService AddressService)
+		public AdressController(IAddressService AddressService)
 		{
 			_AddressService = AddressService;
 		}
