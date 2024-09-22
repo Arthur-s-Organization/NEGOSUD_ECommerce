@@ -1,6 +1,6 @@
 ﻿namespace API.Models.DTOs
 {
-	public class AddressDTOcs
+	public class AddressDTO
 	{
 		public string StreetAddress { get; set; }
 		public string PostalCode { get; set; }

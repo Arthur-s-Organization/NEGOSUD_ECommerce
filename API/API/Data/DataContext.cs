@@ -9,7 +9,7 @@ namespace API.Data
 		{
 		}
 
-		public DbSet<Address> Adresses { get; set; }
+		public DbSet<Address> Addresses { get; set; }
 		public DbSet<AlcoholFamily> AlcoholFamilies { get; set; }
 		public DbSet<AlcoholItem> AlcoholItems { get; set; }
 		public DbSet<CommonItem> CommonItems { get; set; }
