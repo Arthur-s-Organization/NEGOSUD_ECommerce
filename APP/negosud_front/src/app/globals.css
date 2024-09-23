@@ -6,6 +6,14 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --font-sans: 'OpenSans', sans-serif;
+  --font-heading: 'Playfair Display', serif; 
+}
+@font-face {
+  font-family: 'OpenSans';
+  src: url('/fonts/OpenSans-Cond.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
 
 @media (prefers-color-scheme: dark) {
