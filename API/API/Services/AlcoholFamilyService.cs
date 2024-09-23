@@ -39,7 +39,9 @@ namespace API.Services
 
 		public async Task<AlcoholFamily> GetAlcoholFamilyByIdAsync(Guid id)
 		{
-			var AlcoholFamily = await _context.AlcoholFamilies.SingleOrDefaultAsync(c => c.AlcoholFamilyId == id);
+			var AlcoholFamily = await _context.AlcoholFamilies
+				.Include(af => af.AlcoholItems)
+				.SingleOrDefaultAsync(c => c.AlcoholFamilyId == id);
 			if (AlcoholFamily is null)
 			{
 				return null;
@@ -49,7 +51,9 @@ namespace API.Services
 
 		public async Task<IEnumerable<AlcoholFamily>> GetAllAlcoholFamilysAsync()
 		{
-			var AlcoholFamilys = await _context.AlcoholFamilies.ToListAsync();
+			var AlcoholFamilys = await _context.AlcoholFamilies
+				.Include(af => af.AlcoholItems)
+				.ToListAsync();
 			return AlcoholFamilys;
 		}
 
