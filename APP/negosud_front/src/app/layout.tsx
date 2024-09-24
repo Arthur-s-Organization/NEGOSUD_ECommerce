@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Playfair_Display } from "next/font/google";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const playfairDisplay = Playfair_Display({
   subsets: ["latin"],
@@ -29,6 +30,7 @@ export default function RootLayout({
       <body className="font-sans">
         <Header />
         {children}
+        <Footer />
       </body>
     </html>
   );

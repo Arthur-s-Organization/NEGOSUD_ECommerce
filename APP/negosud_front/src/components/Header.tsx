@@ -7,40 +7,6 @@ import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { Button } from "./ui/button";
 
 export default function Header() {
-  const NavItems = () => (
-    <>
-      <li>
-        <Link href="#" className="hover:text-secondary transition-colors">
-          Produits
-        </Link>
-      </li>
-      <li>
-        <Link href="#" className="hover:text-secondary transition-colors">
-          A propos
-        </Link>
-      </li>
-      <li>
-        <Link href="#" className="hover:text-secondary transition-colors">
-          Contact
-        </Link>
-      </li>
-    </>
-  );
-
-  const SearchBar = () => (
-    <>
-      <Input
-        type="search"
-        placeholder="Rechercher des vins ..."
-        className="pl-10 pr-4 py-2 w-64 rounded-full bg-white text-black"
-      />
-      <SearchIcon
-        className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-        size={20}
-      />
-    </>
-  );
-
   return (
     <header className="bg-primary text-white shadow-md">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
@@ -91,3 +57,37 @@ export default function Header() {
     </header>
   );
 }
+
+export const NavItems = () => (
+  <>
+    <li>
+      <Link href="#" className="hover:text-secondary transition-colors">
+        Produits
+      </Link>
+    </li>
+    <li>
+      <Link href="#" className="hover:text-secondary transition-colors">
+        A propos
+      </Link>
+    </li>
+    <li>
+      <Link href="#" className="hover:text-secondary transition-colors">
+        Contact
+      </Link>
+    </li>
+  </>
+);
+
+export const SearchBar = () => (
+  <>
+    <Input
+      type="search"
+      placeholder="Rechercher des vins ..."
+      className="pl-10 pr-4 py-2 w-64 rounded-full bg-white text-black"
+    />
+    <SearchIcon
+      className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+      size={20}
+    />
+  </>
+);
