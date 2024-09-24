@@ -36,7 +36,7 @@ namespace API.Services
 
 		public async Task<CommonItem> DeleteCommonItemAsync(Guid id)
 		{
-			var CommonItem = await _context.CommonItems.SingleOrDefaultAsync(ai => ai.ItemId == id);
+			var CommonItem = await _context.CommonItems.SingleOrDefaultAsync(ci => ci.ItemId == id);
 			if (CommonItem is null)
 			{
 				return null;
@@ -50,7 +50,7 @@ namespace API.Services
 		{
 			var CommonItem = await _context.CommonItems
 				.Include(ai => ai.Supplier)
-				.SingleOrDefaultAsync(ai => ai.ItemId == id);
+				.SingleOrDefaultAsync(ci => ci.ItemId == id);
 			if (CommonItem is null)
 			{
 				return null;

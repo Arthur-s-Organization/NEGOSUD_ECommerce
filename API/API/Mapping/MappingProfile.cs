@@ -1,6 +1,7 @@
 ﻿using API.Models.DTOs;
 using API.Models;
 using AutoMapper;
+using API.Services;
 
 namespace API.Mapping
 {
@@ -25,6 +26,9 @@ namespace API.Mapping
 			
 			CreateMap<CommonItem, CommonItemDTO>();
 			CreateMap<CommonItemDTO, CommonItem>();
+			
+			CreateMap<CustomerOrder, CustomerOrderDTO>();
+			CreateMap<CustomerOrderDTO, CustomerOrder>();
 		}
 
 	}
