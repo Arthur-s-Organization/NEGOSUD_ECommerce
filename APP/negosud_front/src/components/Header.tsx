@@ -8,14 +8,14 @@ import { Button } from "./ui/button";
 
 export default function Header() {
   return (
-    <header className="bg-primary text-white shadow-md">
+    <header className="bg-primary text-white fixed w-full shadow-lg z-10">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-8">
           <Image
             src={horizontalLogo}
             alt="NegoSud logo"
             className="h-14 w-auto"
-          ></Image>
+          />
           <nav className="hidden lg:flex">
             <ul className="flex space-x-6 text-xl">
               <NavItems />

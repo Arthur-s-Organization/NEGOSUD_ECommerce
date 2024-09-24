@@ -7,7 +7,7 @@ import { ICONS } from "./Icons";
 
 export default function Footer() {
   return (
-    <footer className="bg-primary text-white py-8">
+    <footer className="bg-primary text-white py-8 border-t border-secondary/30">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-8 flex-col md:flex-row gap-4">
           <Image
@@ -27,12 +27,12 @@ export default function Footer() {
         </div>
 
         {/* Main content */}
-        <section className="flex flex-col md:flex-row border-t border-b border-secondary py-8 justify-between">
-          <div className="max-w-md text-balance ">
+        <section className="flex flex-col md:flex-row border-t border-b border-secondary py-8 justify-between gap-5">
+          <div className="md:max-w-md">
             <h2 className="text-3xl font-bold mb-4 text-secondary font-heading">
               Découvrez NegoSud
             </h2>
-            <p className="text-sm">
+            <p className="text-sm text-balance">
               Embarquez pour un voyage à travers les plus beaux vignobles du
               monde avec NegoSud. Notre sélection soigneusement choisie vous
               apporte l'essence d'une vinification exceptionnelle dans votre
