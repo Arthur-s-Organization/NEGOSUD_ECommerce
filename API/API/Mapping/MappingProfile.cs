@@ -29,6 +29,9 @@ namespace API.Mapping
 			
 			CreateMap<CustomerOrder, CustomerOrderDTO>();
 			CreateMap<CustomerOrderDTO, CustomerOrder>();
+			
+			CreateMap<SupplierOrder, SupplierOrderDTO>();
+			CreateMap<SupplierOrderDTO, SupplierOrder>();
 		}
 
 	}
