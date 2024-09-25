@@ -48,6 +48,7 @@ namespace API.Services
 		{
 			var CustomerOrders = await _context.CustomerOrders
 				.Include(co => co.OrderDetails)
+				.Include(co => co.Customer)
 				.ToListAsync();
 			return CustomerOrders;
 		}
@@ -56,6 +57,7 @@ namespace API.Services
 		{
 			var CustomerOrder = await _context.CustomerOrders
 				.Include(co => co.OrderDetails)
+				.Include(co => co.Customer)
 				.SingleOrDefaultAsync(co => co.OrderID == id);
 			if (CustomerOrder is null)
 			{
