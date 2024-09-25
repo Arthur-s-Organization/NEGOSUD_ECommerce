@@ -2,6 +2,7 @@
 using API.Models;
 using API.Models.DTOs;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Services
 {
@@ -15,29 +16,67 @@ namespace API.Services
 			_context = context;
 			_mapper = mapper;
 		}
-		public Task<CustomerOrder> AddCustomerOrderAsync(CustomerOrderDTO CustomerOrderDTO)
+		public async Task<CustomerOrder> AddCustomerOrderAsync(CustomerOrderDTO CustomerOrderDTO)
 		{
-			throw new NotImplementedException();
+			var existingCustomer = _context.Customers.SingleOrDefault(c => c.CustomerId == CustomerOrderDTO.CustomerId);
+
+			if (existingCustomer == null)
+			{
+				return null;
+			}
+
+			var CustomerOrder = _mapper.Map<CustomerOrder>(CustomerOrderDTO);
+			await _context.CustomerOrders.AddAsync(CustomerOrder);
+			await _context.SaveChangesAsync();
+
+			return CustomerOrder;
 		}
 
-		public Task<CustomerOrder> DeleteCustomerOrderAsync(Guid id)
+		public async Task<CustomerOrder> DeleteCustomerOrderAsync(Guid id)
 		{
-			throw new NotImplementedException();
+			var CustomerOrder = await _context.CustomerOrders.SingleOrDefaultAsync(co => co.OrderID == id);
+			if (CustomerOrder is null)
+			{
+				return null;
+			}
+			_context.CustomerOrders.Remove(CustomerOrder);
+			await _context.SaveChangesAsync();
+			return CustomerOrder;
 		}
 
-		public Task<IEnumerable<CustomerOrder>> GetAllCustomerOrdersAsync()
+		public async Task<IEnumerable<CustomerOrder>> GetAllCustomerOrdersAsync()
 		{
-			throw new NotImplementedException();
+			var CustomerOrders = await _context.CustomerOrders
+				.Include(co => co.OrderDetails)
+				.ToListAsync();
+			return CustomerOrders;
 		}
 
-		public Task<CustomerOrder> GetCustomerOrderByIdAsync(Guid id)
+		public async Task<CustomerOrder> GetCustomerOrderByIdAsync(Guid id)
 		{
-			throw new NotImplementedException();
+			var CustomerOrder = await _context.CustomerOrders
+				.Include(co => co.OrderDetails)
+				.SingleOrDefaultAsync(co => co.OrderID == id);
+			if (CustomerOrder is null)
+			{
+				return null;
+			}
+			return CustomerOrder;
 		}
 
-		public Task<CustomerOrder> UpdateCustomerOrderAsync(Guid id, CustomerOrderDTO CustomerOrderDTO)
+		public async Task<CustomerOrder> UpdateCustomerOrderAsync(Guid id, CustomerOrderDTO CustomerOrderDTO)
 		{
-			throw new NotImplementedException();
+			var existingCustomerOrder = await _context.CustomerOrders.FindAsync(id);
+
+			if (existingCustomerOrder == null)
+			{
+				return null;
+			}
+
+			_mapper.Map(CustomerOrderDTO, existingCustomerOrder);
+
+			await _context.SaveChangesAsync();
+			return existingCustomerOrder;
 		}
 	}
 }
