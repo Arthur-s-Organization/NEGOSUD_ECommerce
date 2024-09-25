@@ -18,9 +18,9 @@ namespace API.Services
 		}
 		public async Task<SupplierOrder> AddSupplierOrderAsync(SupplierOrderDTO SupplierOrderDTO)
 		{
-			var existingCustomer = _context.Suppliers.SingleOrDefault(s => s.SupplierId== SupplierOrderDTO.SupplierId);
+			var existingSupplier = _context.Suppliers.SingleOrDefault(s => s.SupplierId == SupplierOrderDTO.SupplierId);
 
-			if (existingCustomer == null)
+			if (existingSupplier == null)
 			{
 				return null;
 			}
@@ -34,7 +34,7 @@ namespace API.Services
 
 		public async Task<SupplierOrder> DeleteSupplierOrderAsync(Guid id)
 		{
-			var SupplierOrder = await _context.SupplierOrders.SingleOrDefaultAsync(co => co.OrderID == id);
+			var SupplierOrder = await _context.SupplierOrders.SingleOrDefaultAsync(so => so.OrderID == id);
 			if (SupplierOrder is null)
 			{
 				return null;
@@ -58,7 +58,7 @@ namespace API.Services
 			var SupplierOrder = await _context.SupplierOrders
 				.Include(so => so.OrderDetails)
 				.Include(so => so.Supplier)
-				.SingleOrDefaultAsync(co => co.OrderID == id);
+				.SingleOrDefaultAsync(so => so.OrderID == id);
 			if (SupplierOrder is null)
 			{
 				return null;

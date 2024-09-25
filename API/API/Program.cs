@@ -23,6 +23,7 @@ builder.Services.AddScoped<IAlcoholFamilyService, AlcoholFamilyService>();
 builder.Services.AddScoped<IAlcoholItemService, AlcoholItemService>();
 builder.Services.AddScoped<ICommonItemService, CommonItemService>();
 builder.Services.AddScoped<ICustomerOrderService, CustomerOrderService>();
+builder.Services.AddScoped<ISupplierOrderService, SupplierOrderService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
