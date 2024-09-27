@@ -46,8 +46,15 @@ namespace API.Services
 
 		public async Task<IEnumerable<CustomerOrder>> GetAllCustomerOrdersAsync()
 		{
+			//var CustomerOrders = await _context.CustomerOrders
+			//	.Include(co => co.OrderDetails)
+			//	.Include(co => co.Customer)
+			//	.ToListAsync();
+
+
 			var CustomerOrders = await _context.CustomerOrders
 				.Include(co => co.OrderDetails)
+				.ThenInclude(od => od.Item) // Inclut les items liés à chaque OrderDetail
 				.Include(co => co.Customer)
 				.ToListAsync();
 			return CustomerOrders;

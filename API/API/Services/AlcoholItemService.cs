@@ -70,6 +70,7 @@ namespace API.Services
 			var AlcoholItems = await _context.AlcoholItems
 				.Include(ai => ai.AlcoholFamily)
 				.Include(ai => ai.Supplier)
+				//.Include(ai => ai.OrderDetails)   => seulement si on veut s'avoir dans quelles commandes notre article a été ajouté
 				.ToListAsync();
 			return AlcoholItems;
 		}
