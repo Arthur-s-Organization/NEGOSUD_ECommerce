@@ -1,6 +1,7 @@
 ﻿using API.Models.DTOs;
 using API.Models;
 using AutoMapper;
+using API.Services;
 
 namespace API.Mapping
 {
@@ -22,6 +23,15 @@ namespace API.Mapping
 
 			CreateMap<AlcoholItem, AlcoholItemDTO>();
 			CreateMap<AlcoholItemDTO, AlcoholItem>();
+			
+			CreateMap<CommonItem, CommonItemDTO>();
+			CreateMap<CommonItemDTO, CommonItem>();
+			
+			CreateMap<CustomerOrder, CustomerOrderDTO>();
+			CreateMap<CustomerOrderDTO, CustomerOrder>();
+			
+			CreateMap<SupplierOrder, SupplierOrderDTO>();
+			CreateMap<SupplierOrderDTO, SupplierOrder>();
 		}
 
 	}
