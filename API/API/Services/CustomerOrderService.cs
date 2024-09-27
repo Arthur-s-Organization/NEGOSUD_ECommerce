@@ -80,5 +80,44 @@ namespace API.Services
 			await _context.SaveChangesAsync();
 			return existingCustomerOrder;
 		}
+
+		public async Task<OrderDetail> AddItemToCustomerOrderAsync(Guid supplierOrderId, Guid itemId)
+		{
+			var supplierOrder = await _context.SupplierOrders.SingleOrDefaultAsync(so => so.OrderID == supplierOrderId);
+
+			if (supplierOrderId == null)
+			{
+				return null;
+			}
+
+			var item = await _context.Items.SingleOrDefaultAsync(i => i.ItemId == itemId);
+
+			if (itemId == null)
+			{
+				return null;
+			}
+
+			var existingOrderDetail = await _context.OrderDetails
+				.SingleOrDefaultAsync(od => od.ItemId == itemId && od.OrderId == supplierOrderId);
+
+			if (existingOrderDetail != null)
+			{
+				return null;
+			}
+
+			var orderDetail = new OrderDetail
+			{
+				OrderId = supplierOrderId,
+				ItemId = itemId,
+				Quantity = 3
+			};
+
+			await _context.OrderDetails.AddAsync(orderDetail);
+			await _context.SaveChangesAsync();
+
+			return orderDetail;
+
+
+		}
 	}
 }
