@@ -13,6 +13,15 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 	options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
 });
 
+//Gestion des CORS
+builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+{
+	builder.WithOrigins("*")
+		   .AllowAnyMethod()
+		   .AllowAnyHeader();
+}));
+//
+
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 
@@ -42,6 +51,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseCors("MyPolicy");
 
 app.MapControllers();
 
