@@ -307,4 +307,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+
+# custom
+API/API/appsettings.json
+
 # End of https://www.toptal.com/developers/gitignore/api/nextjs,aspnetcore
