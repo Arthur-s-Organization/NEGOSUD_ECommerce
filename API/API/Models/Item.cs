@@ -1,14 +1,20 @@
-﻿namespace API.Models
+﻿using System.Numerics;
+
+namespace API.Models
 {
 	public class Item
 	{
 		public Guid ItemId { get; set; }
 		public string Name { get; set; }
+		public string Slug { get; set }
 		public int Stock { get; set; }
 		public string Description { get; set; }
 		public float Price
 		{ get; set; }
 		public string OriginCountry { get; set; }
+		public DateTime CreationDate { get; set; }
+		public int QuantitySold { get; set; }
+		public byte[] ItemImage { get; set; }
 		public Guid SupplierId { get; set; }
 		public virtual Supplier Supplier { get; set; }
 
