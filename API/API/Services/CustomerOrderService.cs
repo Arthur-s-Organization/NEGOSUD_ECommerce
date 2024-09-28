@@ -88,24 +88,24 @@ namespace API.Services
 			return existingCustomerOrder;
 		}
 
-		public async Task<OrderDetail> AddItemToCustomerOrderAsync(Guid supplierOrderId, Guid itemId)
+		public async Task<OrderDetail> AddItemToCustomerOrderAsync(Guid customerOrderId, Guid itemId)
 		{
-			var supplierOrder = await _context.SupplierOrders.SingleOrDefaultAsync(so => so.OrderID == supplierOrderId);
+			var customerOrder = await _context.CustomerOrders.SingleOrDefaultAsync(co => co.OrderID == customerOrderId);
 
-			if (supplierOrderId == null)
+			if (customerOrder == null)
 			{
 				return null;
 			}
 
 			var item = await _context.Items.SingleOrDefaultAsync(i => i.ItemId == itemId);
 
-			if (itemId == null)
+			if (item == null)
 			{
 				return null;
 			}
 
 			var existingOrderDetail = await _context.OrderDetails
-				.SingleOrDefaultAsync(od => od.ItemId == itemId && od.OrderId == supplierOrderId);
+				.SingleOrDefaultAsync(od => od.ItemId == itemId && od.OrderId == customerOrderId);
 
 			if (existingOrderDetail != null)
 			{
@@ -114,7 +114,7 @@ namespace API.Services
 
 			var orderDetail = new OrderDetail
 			{
-				OrderId = supplierOrderId,
+				OrderId = customerOrderId,
 				ItemId = itemId,
 				Quantity = 3
 			};
@@ -123,8 +123,6 @@ namespace API.Services
 			await _context.SaveChangesAsync();
 
 			return orderDetail;
-
-
 		}
 	}
 }

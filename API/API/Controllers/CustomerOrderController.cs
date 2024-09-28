@@ -72,13 +72,13 @@ namespace API.Controllers
 			return Ok(deletedCustomerOrder);
 		}
 
-		[HttpPost("{supplierOrderId}/books/{itemId}")]
-		public async Task<ActionResult<OrderDetail>> AddItemToCustomerOrde(Guid supplierOrderId, Guid itemId)
+		[HttpPost("{customerOrderId}/Items/{itemId}")]
+		public async Task<ActionResult<OrderDetail>> AddItemToCustomerOrde(Guid customerOrderId, Guid itemId)
 		{
-			var orderDetail = await _CustomerOrderService.AddItemToCustomerOrderAsync(supplierOrderId, itemId);
+			var orderDetail = await _CustomerOrderService.AddItemToCustomerOrderAsync(customerOrderId, itemId);
 			if (orderDetail == null)
 			{
-				return BadRequest($"Order {supplierOrderId}already contians item {itemId}");
+				return BadRequest($"Order {customerOrderId}already contians item {itemId}");
 			}
 			return Ok(orderDetail);
 		}
