@@ -72,10 +72,10 @@ namespace API.Controllers
 			return Ok(deletedSupplierOrder);
 		}
 
-		[HttpPost("{supplierOrderId}/Items/{itemId}")]
-		public async Task<ActionResult<OrderDetail>> AddItemToSuppliererOrder(Guid supplierOrderId, Guid itemId)
+		[HttpPost("{supplierOrderId}/Items/{itemId}/ItemQuantity{itemQuantity}")]
+		public async Task<ActionResult<OrderDetail>> AddItemToSuppliererOrder(Guid supplierOrderId, Guid itemId, int itemQuantity)
 		{
-			var orderDetail = await _SupplierOrderService.AddItemToSupplierOrderAsync(supplierOrderId, itemId);
+			var orderDetail = await _SupplierOrderService.AddItemToSupplierOrderAsync(supplierOrderId, itemId, itemQuantity);
 			if (orderDetail == null)
 			{
 				return BadRequest($"Order {supplierOrderId} already contains item {itemId}");

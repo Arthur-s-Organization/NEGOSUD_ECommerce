@@ -10,6 +10,6 @@ namespace API.Services
 		public Task<SupplierOrder> GetSupplierOrderByIdAsync(Guid id);
 		public Task<SupplierOrder> UpdateSupplierOrderAsync(Guid id, SupplierOrderDTO SupplierOrderDTO);
 		public Task<SupplierOrder> DeleteSupplierOrderAsync(Guid id);
-		public Task<OrderDetail> AddItemToSupplierOrderAsync(Guid supplierOrderId, Guid itemId);
+		public Task<OrderDetail> AddItemToSupplierOrderAsync(Guid supplierOrderId, Guid itemId, int itemQuantity);
 	}
 }

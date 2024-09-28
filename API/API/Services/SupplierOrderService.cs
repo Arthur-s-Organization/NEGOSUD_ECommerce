@@ -83,7 +83,7 @@ namespace API.Services
 			return existingSupplierOrder;
 		}
 
-		public async Task<OrderDetail> AddItemToSupplierOrderAsync(Guid supplierOrderId, Guid itemId)
+		public async Task<OrderDetail> AddItemToSupplierOrderAsync(Guid supplierOrderId, Guid itemId , int itemQuantity)
 		{
 			var supplierOrder = await _context.SupplierOrders.SingleOrDefaultAsync(so => so.OrderID == supplierOrderId);
 
@@ -111,7 +111,7 @@ namespace API.Services
 			{
 				OrderId = supplierOrderId,
 				ItemId = itemId,
-				Quantity = 3
+				Quantity = itemQuantity
 			};
 
 			await _context.OrderDetails.AddAsync(orderDetail);
