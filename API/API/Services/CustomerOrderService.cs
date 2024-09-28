@@ -64,6 +64,7 @@ namespace API.Services
 		{
 			var CustomerOrder = await _context.CustomerOrders
 				.Include(co => co.OrderDetails)
+				.ThenInclude(od => od.Item) // Inclut les items liés à chaque OrderDetail
 				.Include(co => co.Customer)
 				.SingleOrDefaultAsync(co => co.OrderID == id);
 			if (CustomerOrder is null)
