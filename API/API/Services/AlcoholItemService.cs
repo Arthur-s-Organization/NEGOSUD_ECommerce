@@ -3,6 +3,7 @@ using API.Models.DTOs;
 using API.Models;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using API.Utils;
 
 namespace API.Services
 {
@@ -33,11 +34,14 @@ namespace API.Services
 			}
 
 
-			var AlcoholItem = _mapper.Map<AlcoholItem>(AlcoholItemDTO);
-			await _context.AlcoholItems.AddAsync(AlcoholItem);
+			var alcoholItem = _mapper.Map<AlcoholItem>(AlcoholItemDTO);
+
+			alcoholItem.Slug = SlugHelper.GenerateSlug(alcoholItem.Name);
+
+			await _context.AlcoholItems.AddAsync(alcoholItem);
 			await _context.SaveChangesAsync();
 
-			return AlcoholItem;
+			return alcoholItem;
 		}
 
 		public async Task<AlcoholItem> DeleteAlcoholItemAsync(Guid id)

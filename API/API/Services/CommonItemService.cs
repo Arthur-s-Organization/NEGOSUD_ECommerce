@@ -1,6 +1,7 @@
 ﻿using API.Data;
 using API.Models;
 using API.Models.DTOs;
+using API.Utils;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,11 +26,14 @@ namespace API.Services
 				return null;
 			}
 
-			var CommonItem = _mapper.Map<CommonItem>(CommonItemDTO);
-			await _context.CommonItems.AddAsync(CommonItem);
+			var commonItem = _mapper.Map<CommonItem>(CommonItemDTO);
+
+			commonItem.Slug = SlugHelper.GenerateSlug(commonItem.Name);
+
+			await _context.CommonItems.AddAsync(commonItem);
 			await _context.SaveChangesAsync();
 
-			return CommonItem;
+			return commonItem;
 
 
 		}
