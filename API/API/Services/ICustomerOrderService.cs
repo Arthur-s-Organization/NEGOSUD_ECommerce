@@ -10,5 +10,6 @@ namespace API.Services
 		public Task<CustomerOrder> GetCustomerOrderByIdAsync(Guid id);
 		public Task<CustomerOrder> UpdateCustomerOrderAsync(Guid id, CustomerOrderDTO CustomerOrderDTO);
 		public Task<CustomerOrder> DeleteCustomerOrderAsync(Guid id);
+		public Task<OrderDetail> AddItemToCustomerOrderAsync(Guid customerOrderId, Guid itemId);
 	}
 }

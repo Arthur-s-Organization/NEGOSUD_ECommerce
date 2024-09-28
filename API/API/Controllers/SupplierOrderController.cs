@@ -71,5 +71,16 @@ namespace API.Controllers
 			}
 			return Ok(deletedSupplierOrder);
 		}
+
+		[HttpPost("{supplierOrderId}/Items/{itemId}")]
+		public async Task<ActionResult<OrderDetail>> AddItemToSuppliererOrder(Guid supplierOrderId, Guid itemId)
+		{
+			var orderDetail = await _SupplierOrderService.AddItemToSupplierOrderAsync(supplierOrderId, itemId);
+			if (orderDetail == null)
+			{
+				return BadRequest($"Order {supplierOrderId} already contains item {itemId}");
+			}
+			return Ok(orderDetail);
+		}
 	}
 }

@@ -46,8 +46,15 @@ namespace API.Services
 
 		public async Task<IEnumerable<CustomerOrder>> GetAllCustomerOrdersAsync()
 		{
+			//var CustomerOrders = await _context.CustomerOrders
+			//	.Include(co => co.OrderDetails)
+			//	.Include(co => co.Customer)
+			//	.ToListAsync();
+
+
 			var CustomerOrders = await _context.CustomerOrders
 				.Include(co => co.OrderDetails)
+				.ThenInclude(od => od.Item) // Inclut les items liés à chaque OrderDetail
 				.Include(co => co.Customer)
 				.ToListAsync();
 			return CustomerOrders;
@@ -57,6 +64,7 @@ namespace API.Services
 		{
 			var CustomerOrder = await _context.CustomerOrders
 				.Include(co => co.OrderDetails)
+				.ThenInclude(od => od.Item) // Inclut les items liés à chaque OrderDetail
 				.Include(co => co.Customer)
 				.SingleOrDefaultAsync(co => co.OrderID == id);
 			if (CustomerOrder is null)
@@ -79,6 +87,43 @@ namespace API.Services
 
 			await _context.SaveChangesAsync();
 			return existingCustomerOrder;
+		}
+
+		public async Task<OrderDetail> AddItemToCustomerOrderAsync(Guid customerOrderId, Guid itemId)
+		{
+			var customerOrder = await _context.CustomerOrders.SingleOrDefaultAsync(co => co.OrderID == customerOrderId);
+
+			if (customerOrder == null)
+			{
+				return null;
+			}
+
+			var item = await _context.Items.SingleOrDefaultAsync(i => i.ItemId == itemId);
+
+			if (item == null)
+			{
+				return null;
+			}
+
+			var existingOrderDetail = await _context.OrderDetails
+				.SingleOrDefaultAsync(od => od.ItemId == itemId && od.OrderId == customerOrderId);
+
+			if (existingOrderDetail != null)
+			{
+				return null;
+			}
+
+			var orderDetail = new OrderDetail
+			{
+				OrderId = customerOrderId,
+				ItemId = itemId,
+				Quantity = 3
+			};
+
+			await _context.OrderDetails.AddAsync(orderDetail);
+			await _context.SaveChangesAsync();
+
+			return orderDetail;
 		}
 	}
 }
