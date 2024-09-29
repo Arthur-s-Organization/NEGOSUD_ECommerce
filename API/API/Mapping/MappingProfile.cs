@@ -32,6 +32,8 @@ namespace API.Mapping
 
 			CreateMap<AlcoholItem, AlcoholItemRequestDTO>();
 			CreateMap<AlcoholItemRequestDTO, AlcoholItem>();
+			CreateMap<AlcoholItem, AlcoholItemResponseDTO>();
+			CreateMap<AlcoholItemResponseDTO, AlcoholItem>();
 			
 			CreateMap<CommonItem, CommonItemRequestDTO>();
 			CreateMap<CommonItemRequestDTO, CommonItem>();

@@ -1,14 +1,15 @@
 ﻿using API.Models;
 using API.Models.DTOs.RequestDTOs;
+using API.Models.DTOs.ResponseDTOs;
 
 namespace API.Services.IServices
 {
     public interface IAlcoholItemService
     {
-        public Task<AlcoholItem> AddAlcoholItemAsync(AlcoholItemRequestDTO AlcoholItemDTO);
-        public Task<IEnumerable<AlcoholItem>> GetAllAlcoholItemsAsync();
-        public Task<AlcoholItem> GetAlcoholItemByIdAsync(Guid id);
-        public Task<AlcoholItem> UpdateAlcoholItemAsync(Guid id, AlcoholItemRequestDTO AlcoholItemDTO);
-        public Task<AlcoholItem> DeleteAlcoholItemAsync(Guid id);
+        public Task<AlcoholItemResponseDTO> AddAlcoholItemAsync(AlcoholItemRequestDTO alcoholItemRequestDTO);
+        public Task<IEnumerable<AlcoholItemResponseDTO>> GetAllAlcoholItemsAsync();
+        public Task<AlcoholItemResponseDTO> GetAlcoholItemByIdAsync(Guid id);
+        public Task<AlcoholItemResponseDTO> UpdateAlcoholItemAsync(Guid id, AlcoholItemRequestDTO AlcoholItemDTO);
+        public Task<AlcoholItemResponseDTO> DeleteAlcoholItemAsync(Guid id);
     }
 }

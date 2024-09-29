@@ -40,7 +40,7 @@ namespace API.Services
 			var supplier = await _context.Suppliers.FindAsync(id);
 			if (supplier is null)
 			{
-				throw new InvalidOperationException($"Unable to delete : supplier'{id}' doesn't exists");
+				throw new InvalidOperationException($"Unable to delete : supplier '{id}' doesn't exists");
 			}
 
 			_context.Suppliers.Remove(supplier);
@@ -88,7 +88,6 @@ namespace API.Services
 			}
 
 			_mapper.Map(supplierRequestDTO, supplier);
-
 			await _context.SaveChangesAsync();
 
 			var supplierResponseDTO = _mapper.Map<SupplierResponseDTO>(supplier);
