@@ -1,12 +1,13 @@
 ﻿using API.Data;
 using API.Models;
-using API.Models.DTOs;
+using API.Models.DTOs.RequestDTOs;
+using API.Services.IServices;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Services
 {
-	public class CustomerOrderService : ICustomerOrderService
+    public class CustomerOrderService : ICustomerOrderService
 	{
 		private readonly DataContext _context;
 		private readonly IMapper _mapper;
@@ -16,7 +17,7 @@ namespace API.Services
 			_context = context;
 			_mapper = mapper;
 		}
-		public async Task<CustomerOrder> AddCustomerOrderAsync(CustomerOrderDTO CustomerOrderDTO)
+		public async Task<CustomerOrder> AddCustomerOrderAsync(CustomerOrderRequestDTO CustomerOrderDTO)
 		{
 			var existingCustomer = _context.Customers.SingleOrDefault(c => c.CustomerId == CustomerOrderDTO.CustomerId);
 
@@ -74,7 +75,7 @@ namespace API.Services
 			return CustomerOrder;
 		}
 
-		public async Task<CustomerOrder> UpdateCustomerOrderAsync(Guid id, CustomerOrderDTO CustomerOrderDTO)
+		public async Task<CustomerOrder> UpdateCustomerOrderAsync(Guid id, CustomerOrderRequestDTO CustomerOrderDTO)
 		{
 			var existingCustomerOrder = await _context.CustomerOrders.FindAsync(id);
 

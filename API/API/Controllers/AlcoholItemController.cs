@@ -1,12 +1,12 @@
-﻿using API.Models.DTOs;
-using API.Models;
-using API.Services;
+﻿using API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using API.Models.DTOs.RequestDTOs;
+using API.Services.IServices;
 
 namespace API.Controllers
 {
-	[Route("api/[controller]")]
+    [Route("api/[controller]")]
 	[ApiController]
 	public class AlcoholItemController : ControllerBase
 	{
@@ -38,7 +38,7 @@ namespace API.Controllers
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<AlcoholItem>> AddAlcoholItem(AlcoholItemDTO AlcoholItemDTO)
+		public async Task<ActionResult<AlcoholItem>> AddAlcoholItem(AlcoholItemRequestDTO AlcoholItemDTO)
 		{
 			var createdAlcoholItem = await _AlcoholItemService.AddAlcoholItemAsync(AlcoholItemDTO);
 
@@ -46,7 +46,7 @@ namespace API.Controllers
 		}
 
 		[HttpPut("{id}")]
-		public async Task<ActionResult<AlcoholItem>> UpdateAlcoholItem(Guid id, AlcoholItemDTO AlcoholItemDTO)
+		public async Task<ActionResult<AlcoholItem>> UpdateAlcoholItem(Guid id, AlcoholItemRequestDTO AlcoholItemDTO)
 		{
 			var updatedAlcoholItem = await _AlcoholItemService.UpdateAlcoholItemAsync(id, AlcoholItemDTO);
 

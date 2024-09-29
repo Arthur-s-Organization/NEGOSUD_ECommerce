@@ -1,12 +1,13 @@
 ﻿using API.Data;
-using API.Models.DTOs;
 using API.Models;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using API.Models.DTOs.RequestDTOs;
+using API.Services.IServices;
 
 namespace API.Services
 {
-	public class CustomerService : ICustomerService
+    public class CustomerService : ICustomerService
 	{
 		private readonly DataContext _context;
 		private readonly IMapper _mapper;
@@ -17,7 +18,7 @@ namespace API.Services
 			_mapper = mapper;
 		}
 
-		public async Task<Customer> AddCustomerAsync(CustomerDTO customerDTO)
+		public async Task<Customer> AddCustomerAsync(CustomerRequestDTO customerDTO)
 		{
 			var Customer = _mapper.Map<Customer>(customerDTO);
 			await _context.Customers.AddAsync(Customer);
@@ -54,7 +55,7 @@ namespace API.Services
 			return Customer;
 		}
 
-		public async Task<Customer> UpdateCustomerAsync(Guid id, CustomerDTO customerDTO)
+		public async Task<Customer> UpdateCustomerAsync(Guid id, CustomerRequestDTO customerDTO)
 		{
 
 			var existingCustomer = await _context.Customers.FindAsync(id);

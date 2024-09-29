@@ -1,12 +1,12 @@
-﻿using API.Models.DTOs;
-using API.Models;
-using API.Services;
+﻿using API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using API.Models.DTOs.RequestDTOs;
+using API.Services.IServices;
 
 namespace API.Controllers
 {
-	[Route("api/[controller]")]
+    [Route("api/[controller]")]
 	[ApiController]
 	public class CustomerOrderController : ControllerBase
 	{
@@ -38,7 +38,7 @@ namespace API.Controllers
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<CustomerOrder>> AddCustomerOrder(CustomerOrderDTO CustomerOrderDTO)
+		public async Task<ActionResult<CustomerOrder>> AddCustomerOrder(CustomerOrderRequestDTO CustomerOrderDTO)
 		{
 			var createdCustomerOrder = await _CustomerOrderService.AddCustomerOrderAsync(CustomerOrderDTO);
 
@@ -50,7 +50,7 @@ namespace API.Controllers
 		}
 
 		[HttpPut("{id}")]
-		public async Task<ActionResult<CustomerOrder>> UpdateCustomerOrder(Guid id, CustomerOrderDTO CustomerOrderDTO)
+		public async Task<ActionResult<CustomerOrder>> UpdateCustomerOrder(Guid id, CustomerOrderRequestDTO CustomerOrderDTO)
 		{
 			var updatedCustomerOrder = await _CustomerOrderService.UpdateCustomerOrderAsync(id, CustomerOrderDTO);
 

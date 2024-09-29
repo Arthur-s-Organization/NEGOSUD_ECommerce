@@ -1,12 +1,12 @@
-﻿using API.Models.DTOs;
-using API.Models;
+﻿using API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using API.Services;
+using API.Models.DTOs.RequestDTOs;
+using API.Services.IServices;
 
 namespace API.Controllers
 {
-	[Route("api/[controller]")]
+    [Route("api/[controller]")]
 	[ApiController]
 	public class AdressController : ControllerBase
 	{
@@ -38,7 +38,7 @@ namespace API.Controllers
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<Address>> AddAddress(AddressDTO AddressDTO)
+		public async Task<ActionResult<Address>> AddAddress(AddressRequestDTO AddressDTO)
 		{
 			var createdAddress = await _AddressService.AddAddressAsync(AddressDTO);
 
@@ -46,7 +46,7 @@ namespace API.Controllers
 		}
 
 		[HttpPut("{id}")]
-		public async Task<ActionResult<Address>> UpdateAddress(Guid id, AddressDTO AddressDTO)
+		public async Task<ActionResult<Address>> UpdateAddress(Guid id, AddressRequestDTO AddressDTO)
 		{
 			var updatedAddress = await _AddressService.UpdateAddressAsync(id, AddressDTO);
 

@@ -4,6 +4,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using API.Models.DTOs.ResponseDTOs;
 using API.Models.DTOs.RequestDTOs;
+using API.Services.IServices;
 
 namespace API.Services
 {
@@ -23,7 +24,7 @@ namespace API.Services
 			var alcoholFamilyNameExist = await _context.AlcoholFamilies.SingleOrDefaultAsync(af => af.Name == alcoholFamilyDTO.Name);
 			if (alcoholFamilyNameExist != null) 
 			{
-				throw new InvalidOperationException($"Unable to add : the alcohol Family named '{alcoholFamilyDTO.Name}' already exsists");
+				throw new InvalidOperationException($"Unable to add : a alcohol Family named '{alcoholFamilyDTO.Name}' already exsists");
 			}
 
 			var alcoholFamily = _mapper.Map<AlcoholFamily>(alcoholFamilyDTO);
@@ -40,7 +41,7 @@ namespace API.Services
 			var alcoholFamily = await _context.AlcoholFamilies.FindAsync(id);
 			if (alcoholFamily is null)
 			{
-				throw new InvalidOperationException($"Unable to delete : the alcohol Family '{id}' doesn't exists");
+				throw new InvalidOperationException($"Unable to delete : alcohol Family '{id}' doesn't exists");
 			}
 
 			_context.AlcoholFamilies.Remove(alcoholFamily);
@@ -56,7 +57,7 @@ namespace API.Services
 			var alcoholFamily = await _context.AlcoholFamilies.FindAsync(id);
 			if (alcoholFamily is null)
 			{
-				throw new InvalidOperationException($"Unable to get : the alcohol Family '{id}' doesn't exists");
+				throw new InvalidOperationException($"Unable to get : alcohol Family '{id}' doesn't exists");
 			}
 
 			var alcoholFamilyResponseDTO = _mapper.Map<AlcoholFamilyResponseDTO>(alcoholFamily);
@@ -85,7 +86,7 @@ namespace API.Services
 			var alcoholFamilyNameExist = await _context.AlcoholFamilies.SingleOrDefaultAsync(af => af.Name == alcoholFamilyDTO.Name && af.AlcoholFamilyId != id);
 			if (alcoholFamilyNameExist != null)
 			{
-				throw new InvalidOperationException($"Unable to modify : the alcohol Family named '{alcoholFamilyDTO.Name}' already exsists");
+				throw new InvalidOperationException($"Unable to modify : alcohol Family named '{alcoholFamilyDTO.Name}' already exsists");
 			}
 
 			_mapper.Map(alcoholFamilyDTO, alcoholFamily);

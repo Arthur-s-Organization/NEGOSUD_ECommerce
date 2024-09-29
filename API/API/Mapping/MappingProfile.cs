@@ -1,5 +1,4 @@
-﻿using API.Models.DTOs;
-using API.Models;
+﻿using API.Models;
 using AutoMapper;
 using API.Services;
 using API.Models.DTOs.ResponseDTOs;
@@ -11,14 +10,18 @@ namespace API.Mapping
 	{
 		public MappingProfile()
 		{
-			CreateMap<Customer, CustomerDTO>();
-			CreateMap<CustomerDTO, Customer>();
+			CreateMap<Customer, CustomerRequestDTO>();
+			CreateMap<CustomerRequestDTO, Customer>();
 
-			CreateMap<Supplier, SupplierDTO>();
-			CreateMap<SupplierDTO, Supplier>();
+			CreateMap<Supplier, SupplierRequestDTO>();
+			CreateMap<SupplierRequestDTO, Supplier>();
+			CreateMap<Supplier, SupplierResponseDTO>();
+			CreateMap<SupplierResponseDTO, Supplier>();
 
-			CreateMap<Address, AddressDTO>();
-			CreateMap<AddressDTO, Address>();
+			CreateMap<Address, AddressRequestDTO>();
+			CreateMap<AddressRequestDTO, Address>();
+			CreateMap<Address, AddressResponseDTO>();
+			CreateMap<AddressResponseDTO, Address>();
 
 
 			CreateMap<AlcoholFamily, AlcoholFamilyRequestDTO>();
@@ -27,17 +30,17 @@ namespace API.Mapping
 			CreateMap<AlcoholFamilyResponseDTO, AlcoholFamily>();
 
 
-			CreateMap<AlcoholItem, AlcoholItemDTO>();
-			CreateMap<AlcoholItemDTO, AlcoholItem>();
+			CreateMap<AlcoholItem, AlcoholItemRequestDTO>();
+			CreateMap<AlcoholItemRequestDTO, AlcoholItem>();
 			
-			CreateMap<CommonItem, CommonItemDTO>();
-			CreateMap<CommonItemDTO, CommonItem>();
+			CreateMap<CommonItem, CommonItemRequestDTO>();
+			CreateMap<CommonItemRequestDTO, CommonItem>();
 			
-			CreateMap<CustomerOrder, CustomerOrderDTO>();
-			CreateMap<CustomerOrderDTO, CustomerOrder>();
+			CreateMap<CustomerOrder, CustomerOrderRequestDTO>();
+			CreateMap<CustomerOrderRequestDTO, CustomerOrder>();
 			
-			CreateMap<SupplierOrder, SupplierOrderDTO>();
-			CreateMap<SupplierOrderDTO, SupplierOrder>();
+			CreateMap<SupplierOrder, SupplierOrderRequestDTO>();
+			CreateMap<SupplierOrderRequestDTO, SupplierOrder>();
 		}
 
 	}

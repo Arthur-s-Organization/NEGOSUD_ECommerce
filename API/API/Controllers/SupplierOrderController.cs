@@ -1,12 +1,12 @@
-﻿using API.Models.DTOs;
-using API.Models;
-using API.Services;
+﻿using API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using API.Models.DTOs.RequestDTOs;
+using API.Services.IServices;
 
 namespace API.Controllers
 {
-	[Route("api/[controller]")]
+    [Route("api/[controller]")]
 	[ApiController]
 	public class SupplierOrderController : ControllerBase
 	{
@@ -38,7 +38,7 @@ namespace API.Controllers
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<SupplierOrder>> AddSupplierOrder(SupplierOrderDTO SupplierOrderDTO)
+		public async Task<ActionResult<SupplierOrder>> AddSupplierOrder(SupplierOrderRequestDTO SupplierOrderDTO)
 		{
 			var createdSupplierOrder = await _SupplierOrderService.AddSupplierOrderAsync(SupplierOrderDTO);
 
@@ -50,7 +50,7 @@ namespace API.Controllers
 		}
 
 		[HttpPut("{id}")]
-		public async Task<ActionResult<SupplierOrder>> UpdateSupplierOrder(Guid id, SupplierOrderDTO SupplierOrderDTO)
+		public async Task<ActionResult<SupplierOrder>> UpdateSupplierOrder(Guid id, SupplierOrderRequestDTO SupplierOrderDTO)
 		{
 			var updatedSupplierOrder = await _SupplierOrderService.UpdateSupplierOrderAsync(id, SupplierOrderDTO);
 

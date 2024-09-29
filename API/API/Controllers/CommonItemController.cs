@@ -1,12 +1,12 @@
-﻿using API.Models.DTOs;
-using API.Models;
-using API.Services;
+﻿using API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using API.Models.DTOs.RequestDTOs;
+using API.Services.IServices;
 
 namespace API.Controllers
 {
-	[Route("api/[controller]")]
+    [Route("api/[controller]")]
 	[ApiController]
 	public class CommonItemController : ControllerBase
 	{
@@ -38,7 +38,7 @@ namespace API.Controllers
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<CommonItem>> AddCommonItem(CommonItemDTO CommonItemDTO)
+		public async Task<ActionResult<CommonItem>> AddCommonItem(CommonItemRequestDTO CommonItemDTO)
 		{
 			var createdCommonItem = await _CommonItemService.AddCommonItemAsync(CommonItemDTO);
 
@@ -50,7 +50,7 @@ namespace API.Controllers
 		}
 
 		[HttpPut("{id}")]
-		public async Task<ActionResult<CommonItem>> UpdateCommonItem(Guid id, CommonItemDTO CommonItemDTO)
+		public async Task<ActionResult<CommonItem>> UpdateCommonItem(Guid id, CommonItemRequestDTO CommonItemDTO)
 		{
 			var updatedCommonItem = await _CommonItemService.UpdateCommonItemAsync(id, CommonItemDTO);
 

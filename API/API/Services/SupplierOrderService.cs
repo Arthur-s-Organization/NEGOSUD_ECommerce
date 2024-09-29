@@ -1,12 +1,13 @@
 ﻿using API.Data;
 using API.Models;
-using API.Models.DTOs;
+using API.Models.DTOs.RequestDTOs;
+using API.Services.IServices;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Services
 {
-	public class SupplierOrderService : ISupplierOrderService
+    public class SupplierOrderService : ISupplierOrderService
 	{
 		private readonly DataContext _context;
 		private readonly IMapper _mapper;
@@ -16,7 +17,7 @@ namespace API.Services
 			_context = context;
 			_mapper = mapper;
 		}
-		public async Task<SupplierOrder> AddSupplierOrderAsync(SupplierOrderDTO SupplierOrderDTO)
+		public async Task<SupplierOrder> AddSupplierOrderAsync(SupplierOrderRequestDTO SupplierOrderDTO)
 		{
 			var existingSupplier = _context.Suppliers.SingleOrDefault(s => s.SupplierId == SupplierOrderDTO.SupplierId);
 
@@ -68,7 +69,7 @@ namespace API.Services
 			return SupplierOrder;
 		}
 
-		public async Task<SupplierOrder> UpdateSupplierOrderAsync(Guid id, SupplierOrderDTO SupplierOrderDTO)
+		public async Task<SupplierOrder> UpdateSupplierOrderAsync(Guid id, SupplierOrderRequestDTO SupplierOrderDTO)
 		{
 			var existingSupplierOrder = await _context.SupplierOrders.FindAsync(id);
 

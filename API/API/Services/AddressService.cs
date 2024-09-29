@@ -1,12 +1,13 @@
 ﻿using API.Data;
 using API.Models;
-using API.Models.DTOs;
+using API.Models.DTOs.RequestDTOs;
+using API.Services.IServices;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Services
 {
-	public class AddressService : IAddressService
+    public class AddressService : IAddressService
 	{
 		private readonly DataContext _context;
 		private readonly IMapper _mapper;
@@ -16,7 +17,7 @@ namespace API.Services
 			_context = context;
 			_mapper = mapper;
 		}
-		public async Task<Address> AddAddressAsync(AddressDTO AddressDTO)
+		public async Task<Address> AddAddressAsync(AddressRequestDTO AddressDTO)
 		{
 			var Address = _mapper.Map<Address>(AddressDTO);
 			await _context.Addresses.AddAsync(Address);
@@ -52,7 +53,7 @@ namespace API.Services
 			return Addresss;
 		}
 
-		public async Task<Address> UpdateAddressAsync(Guid id, AddressDTO AddressDTO)
+		public async Task<Address> UpdateAddressAsync(Guid id, AddressRequestDTO AddressDTO)
 		{
 			var existingAddress = await _context.Addresses.FindAsync(id);
 			if (existingAddress == null)

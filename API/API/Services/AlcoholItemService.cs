@@ -1,13 +1,14 @@
 ﻿using API.Data;
-using API.Models.DTOs;
 using API.Models;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using API.Utils;
+using API.Models.DTOs.RequestDTOs;
+using API.Services.IServices;
 
 namespace API.Services
 {
-	public class AlcoholItemService : IAlcoholItemService
+    public class AlcoholItemService : IAlcoholItemService
 	{
 		private readonly DataContext _context;
 		private readonly IMapper _mapper;
@@ -17,7 +18,7 @@ namespace API.Services
 			_context = context;
 			_mapper = mapper;
 		}
-		public async Task<AlcoholItem> AddAlcoholItemAsync(AlcoholItemDTO AlcoholItemDTO)
+		public async Task<AlcoholItem> AddAlcoholItemAsync(AlcoholItemRequestDTO AlcoholItemDTO)
 		{
 			var AlcoholFamily = _context.AlcoholFamilies.SingleOrDefault(af => af.AlcoholFamilyId == AlcoholItemDTO.AlcoholFamilyId);
 
@@ -79,7 +80,7 @@ namespace API.Services
 			return AlcoholItems;
 		}
 
-		public async Task<AlcoholItem> UpdateAlcoholItemAsync(Guid id, AlcoholItemDTO AlcoholItemDTO)
+		public async Task<AlcoholItem> UpdateAlcoholItemAsync(Guid id, AlcoholItemRequestDTO AlcoholItemDTO)
 		{
 			var existingAlcoholItem = await _context.AlcoholItems.FindAsync(id);
 

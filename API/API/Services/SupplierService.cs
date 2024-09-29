@@ -1,8 +1,10 @@
 ﻿using API.Data;
-using API.Models.DTOs;
 using API.Models;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using API.Models.DTOs.RequestDTOs;
+using API.Services.IServices;
+using API.Models.DTOs.ResponseDTOs;
 
 namespace API.Services
 {
@@ -16,77 +18,127 @@ namespace API.Services
 			_context = context;
 			_mapper = mapper;
 		}
-		public async Task<Supplier> AddSupplierAsync(SupplierDTO SupplierDTO)
+		public async Task<SupplierResponseDTO> AddSupplierAsync(SupplierRequestDTO supplierRequestDTO)
 		{
-			var Supplier = _mapper.Map<Supplier>(SupplierDTO);
-			await _context.Suppliers.AddAsync(Supplier);
-			await _context.SaveChangesAsync();
-
-			return Supplier;
-		}
-
-		public async Task<Supplier> DeleteSupplierAsync(Guid id)
-		{
-			var Supplier = await _context.Suppliers.SingleOrDefaultAsync(c => c.SupplierId == id);
-			if (Supplier is null)
+			var supplierNameExist = await _context.Suppliers.SingleOrDefaultAsync(s => s.Name == supplierRequestDTO.Name);
+			if (supplierNameExist != null)
 			{
-				return null;
-			}
-			_context.Suppliers.Remove(Supplier);
-			await _context.SaveChangesAsync();
-			return Supplier;
-		}
-
-		public async Task<IEnumerable<Supplier>> GetAllSuppliersAsync()
-		{
-			var Suppliers = await _context.Suppliers.Include(s => s.Address).Include(s => s.Items).Include(s => s.SupplierOrders).ToListAsync();
-			return Suppliers;
-		}
-
-		public async Task<Supplier> GetSupplierByIdAsync(Guid id)
-		{
-			var Supplier = await _context.Suppliers.Include(s => s.Address).Include(s => s.Items).Include(s => s.SupplierOrders).SingleOrDefaultAsync(c => c.SupplierId == id);
-			if (Supplier is null)
-			{
-				return null;
-			}
-			return Supplier;
-		}
-
-		public async Task<Supplier> UpdateSupplierAsync(Guid id, SupplierDTO SupplierDTO)
-		{
-			var existingSupplier = await _context.Suppliers.FindAsync(id);
-			if (existingSupplier == null)
-			{
-				return null;
+				throw new InvalidOperationException($"Unable to add : a supplier named '{supplierRequestDTO.Name}' already exsists");
 			}
 
-			_mapper.Map(SupplierDTO, existingSupplier);
-
+			var supplier = _mapper.Map<Supplier>(supplierRequestDTO);
+			await _context.Suppliers.AddAsync(supplier);
 			await _context.SaveChangesAsync();
-			return existingSupplier;
+
+			var supplierResponseDTO = _mapper.Map<SupplierResponseDTO>(supplier);
+
+			return supplierResponseDTO;
 		}
 
-		public async Task<Supplier> AddAdressToSupplierAsync(Guid SupplierId, Guid AdressId)
+		public async Task<SupplierResponseDTO> DeleteSupplierAsync(Guid id)
 		{
-			var Supplier = await _context.Suppliers
+			var supplier = await _context.Suppliers.FindAsync(id);
+			if (supplier is null)
+			{
+				throw new InvalidOperationException($"Unable to delete : supplier'{id}' doesn't exists");
+			}
+
+			_context.Suppliers.Remove(supplier);
+			await _context.SaveChangesAsync();
+
+			var supplierResponseDTO = _mapper.Map<SupplierResponseDTO>(supplier);
+
+			return supplierResponseDTO;
+		}
+
+		public async Task<IEnumerable<SupplierResponseDTO>> GetAllSuppliersAsync()
+		{
+			var suppliers = await _context.Suppliers.Include(s => s.Address).ToListAsync();
+
+			var suppliersResponseDTO = _mapper.Map<IEnumerable<SupplierResponseDTO>>(suppliers);
+
+			return suppliersResponseDTO;
+		}
+
+		public async Task<SupplierResponseDTO> GetSupplierByIdAsync(Guid id)
+		{
+			var supplier = await _context.Suppliers.Include(s => s.Address).Include(s => s.Items).Include(s => s.SupplierOrders).SingleOrDefaultAsync(s => s.SupplierId == id);
+			if (supplier is null)
+			{
+				throw new InvalidOperationException($"Unable to get : supplier '{id}' doesn't exists");
+			}
+
+			var supplierResponseDTO = _mapper.Map<SupplierResponseDTO>(supplier);
+
+			return supplierResponseDTO;
+		}
+
+		public async Task<SupplierResponseDTO> UpdateSupplierAsync(Guid id, SupplierRequestDTO supplierRequestDTO)
+		{
+			var supplier = await _context.Suppliers.FindAsync(id);
+			if (supplier == null)
+			{
+				throw new InvalidOperationException($"Unable to modify : supplier '{id}' doesn't exists");
+			}
+
+			var supplierNameExist = await _context.Suppliers.SingleOrDefaultAsync(s => s.Name == supplierRequestDTO.Name && s.SupplierId != id);
+			if (supplierNameExist != null)
+			{
+				throw new InvalidOperationException($"Unable to modify : supplier named '{supplierRequestDTO.Name}' already exsists");
+			}
+
+			_mapper.Map(supplierRequestDTO, supplier);
+
+			await _context.SaveChangesAsync();
+
+			var supplierResponseDTO = _mapper.Map<SupplierResponseDTO>(supplier);
+
+			return supplierResponseDTO;
+		}
+
+		public async Task<SupplierResponseDTO> AddAdressToSupplierAsync(Guid supplierId, Guid adressId)
+		{
+			var supplier = await _context.Suppliers
 				.Include(s => s.Address)
-				.SingleOrDefaultAsync(s => s.SupplierId == SupplierId);
+				.SingleOrDefaultAsync(s => s.SupplierId == supplierId);
 
-			var Adress = await _context.Addresses
+			var adress = await _context.Addresses
 				.Include(a => a.Supplier)
 				.Include(a => a.Customer)
-				.SingleOrDefaultAsync(a => a.AddressId == AdressId);
+				.SingleOrDefaultAsync(a => a.AddressId == adressId);
 
-			if (Supplier == null || Adress == null || Supplier.Address != null || Adress.Supplier != null || Adress.Customer != null)
+			if (supplier == null)
 			{
-				return null;  // Ou une autre gestion des erreurs, à voir
+				throw new InvalidOperationException($"Unable to add adress : supplier '{supplierId}' doesn't exists");
 			}
 
-			Supplier.Address = Adress;
+			if (adress == null)
+			{
+				throw new InvalidOperationException($"Unable to add adress : adress '{adressId}' doesn't exists");
+			}
+
+			if (supplier.Address != null)
+			{
+				throw new InvalidOperationException($"Unable to add adress : supplier '{supplierId}' already has an adress");
+			}
+
+			if (adress.Supplier != null)
+			{
+				throw new InvalidOperationException($"Unable to add adress :  adress '{adressId}' already own to an other supplier");
+			}
+
+			if (adress.Customer != null)
+			{
+				throw new InvalidOperationException($"Unable to add adress :  adress '{adressId}' already own to a customer");
+			}
+
+
+			supplier.Address = adress;
 			await _context.SaveChangesAsync();
 
-			return Supplier;
+			var supplierResponseDTO = _mapper.Map<SupplierResponseDTO>(supplier);
+
+			return supplierResponseDTO;
 		}
 
 	}

@@ -1,13 +1,14 @@
 ﻿using API.Data;
 using API.Models;
-using API.Models.DTOs;
+using API.Models.DTOs.RequestDTOs;
+using API.Services.IServices;
 using API.Utils;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Services
 {
-	public class CommonItemService : ICommonItemService
+    public class CommonItemService : ICommonItemService
 	{
 		private readonly DataContext _context;
 		private readonly IMapper _mapper;
@@ -17,7 +18,7 @@ namespace API.Services
 			_context = context;
 			_mapper = mapper;
 		}
-		public async Task<CommonItem> AddCommonItemAsync(CommonItemDTO CommonItemDTO)
+		public async Task<CommonItem> AddCommonItemAsync(CommonItemRequestDTO CommonItemDTO)
 		{
 			var Supplier = _context.Suppliers.SingleOrDefault(s => s.SupplierId == CommonItemDTO.SupplierId);
 
@@ -70,7 +71,7 @@ namespace API.Services
 			return CommonItems;
 		}
 
-		public async Task<CommonItem> UpdateCommonItemAsync(Guid id, CommonItemDTO CommonItemDTO)
+		public async Task<CommonItem> UpdateCommonItemAsync(Guid id, CommonItemRequestDTO CommonItemDTO)
 		{
 			var existingCommonItem = await _context.CommonItems.FindAsync(id);
 

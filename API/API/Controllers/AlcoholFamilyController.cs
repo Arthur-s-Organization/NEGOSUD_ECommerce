@@ -1,9 +1,9 @@
 ﻿using API.Models;
-using API.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using API.Models.DTOs.ResponseDTOs;
 using API.Models.DTOs.RequestDTOs;
+using API.Services.IServices;
 
 namespace API.Controllers
 {
@@ -59,11 +59,11 @@ namespace API.Controllers
 		}
 
 		[HttpPut("{id}")]
-		public async Task<ActionResult<AlcoholFamilyResponseDTO>> UpdateAlcoholFamily(Guid id, AlcoholFamilyRequestDTO AlcoholFamilyDTO)
+		public async Task<ActionResult<AlcoholFamilyResponseDTO>> UpdateAlcoholFamily(Guid id, AlcoholFamilyRequestDTO alcoholFamilyRequestDTO)
 		{
 			try
 			{
-				var alcoholFamilyResponseDTO = await _AlcoholFamilyService.UpdateAlcoholFamilyAsync(id, AlcoholFamilyDTO);
+				var alcoholFamilyResponseDTO = await _AlcoholFamilyService.UpdateAlcoholFamilyAsync(id, alcoholFamilyRequestDTO);
 				return Ok(alcoholFamilyResponseDTO);
 			}
 			catch (InvalidOperationException ex)
