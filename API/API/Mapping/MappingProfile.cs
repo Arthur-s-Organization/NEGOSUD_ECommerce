@@ -2,10 +2,12 @@
 using API.Models;
 using AutoMapper;
 using API.Services;
+using API.Models.DTOs.ResponseDTOs;
+using API.Models.DTOs.RequestDTOs;
 
 namespace API.Mapping
 {
-	public class MappingProfile : Profile
+    public class MappingProfile : Profile
 	{
 		public MappingProfile()
 		{
@@ -18,8 +20,12 @@ namespace API.Mapping
 			CreateMap<Address, AddressDTO>();
 			CreateMap<AddressDTO, Address>();
 
-			CreateMap<AlcoholFamily, AlcoholFamilyDTO>();
-			CreateMap<AlcoholFamilyDTO, AlcoholFamily>();
+
+			CreateMap<AlcoholFamily, AlcoholFamilyRequestDTO>();
+			CreateMap<AlcoholFamilyRequestDTO, AlcoholFamily>();
+			CreateMap<AlcoholFamily, AlcoholFamilyResponseDTO>();
+			CreateMap<AlcoholFamilyResponseDTO, AlcoholFamily>();
+
 
 			CreateMap<AlcoholItem, AlcoholItemDTO>();
 			CreateMap<AlcoholItemDTO, AlcoholItem>();
