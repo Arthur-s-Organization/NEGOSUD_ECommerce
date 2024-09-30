@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using API.Models.DTOs.RequestDTOs;
 using API.Services.IServices;
+using API.Models.DTOs.ResponseDTOs;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
+	[Route("api/[controller]")]
 	[ApiController]
 	public class AdressController : ControllerBase
 	{
@@ -18,54 +19,66 @@ namespace API.Controllers
 		}
 
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<Address>>> GetAllAddresss()
+		public async Task<ActionResult<IEnumerable<AddressResponseDTO>>> GetAllAddresss()
 		{
-			var Addresss = await _AddressService.GetAllAddresssAsync();
+			var addressResponseDTO = await _AddressService.GetAllAddresssAsync();
 
-			return Ok(Addresss);
+			return Ok(addressResponseDTO);
 		}
 
 
 		[HttpGet("{id}")]
-		public async Task<ActionResult<Address>> GetAddressById(Guid id)
+		public async Task<ActionResult<AddressResponseDTO>> GetAddressById(Guid id)
 		{
-			var Address = await _AddressService.GetAddressByIdAsync(id);
-			if (Address == null)
+			try
 			{
-				return BadRequest("Address not found");
+				var addressResponseDTO = await _AddressService.GetAddressByIdAsync(id);
+				return Ok(addressResponseDTO);
+
 			}
-			return Ok(Address);
+
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<Address>> AddAddress(AddressRequestDTO AddressDTO)
+		public async Task<ActionResult<AddressResponseDTO>> AddAddress(AddressRequestDTO addressRequestDTO)
 		{
-			var createdAddress = await _AddressService.AddAddressAsync(AddressDTO);
+			var addressResponseDTO = await _AddressService.AddAddressAsync(addressRequestDTO);
 
-			return createdAddress;
+			return addressResponseDTO;
 		}
 
 		[HttpPut("{id}")]
-		public async Task<ActionResult<Address>> UpdateAddress(Guid id, AddressRequestDTO AddressDTO)
+		public async Task<ActionResult<AddressResponseDTO>> UpdateAddress(Guid id, AddressRequestDTO addressRequestDTO)
 		{
-			var updatedAddress = await _AddressService.UpdateAddressAsync(id, AddressDTO);
-
-			if (updatedAddress == null)
+			try
 			{
-				return BadRequest("Address doesn't exists");
+				var addressResponseDTO = await _AddressService.UpdateAddressAsync(id, addressRequestDTO);
+				return Ok(addressResponseDTO);
 			}
-			return Ok(updatedAddress);
+
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		[HttpDelete("{id}")]
-		public async Task<ActionResult<Address>> DeleteAddress(Guid id)
+		public async Task<ActionResult<AddressResponseDTO>> DeleteAddress(Guid id)
 		{
-			var deletedAddress = await _AddressService.DeleteAddressAsync(id);
-			if (deletedAddress == null)
+			try
 			{
-				return BadRequest($"Unable to delete Address {id}");
+				var addressResponseDTO = await _AddressService.DeleteAddressAsync(id);
+				return Ok(addressResponseDTO);
 			}
-			return Ok(deletedAddress);
+
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 	}
