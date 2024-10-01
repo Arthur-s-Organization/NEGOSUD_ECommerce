@@ -44,6 +44,7 @@ namespace API.Services
 
 			var alcoholItem = _mapper.Map<AlcoholItem>(alcoholItemRequestDTO);
 			alcoholItem.Slug = SlugHelper.GenerateSlug(alcoholItem.Name);
+			alcoholItem.CreationDate = DateTime.Now;
 			await _context.AlcoholItems.AddAsync(alcoholItem);
 			await _context.SaveChangesAsync();
 
