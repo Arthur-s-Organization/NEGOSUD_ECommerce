@@ -12,6 +12,8 @@ namespace API.Mapping
 		{
 			CreateMap<Customer, CustomerRequestDTO>();
 			CreateMap<CustomerRequestDTO, Customer>();
+			CreateMap<Customer, CustomerResponseDTO>();
+			CreateMap<CustomerResponseDTO, Customer>();
 
 			CreateMap<Supplier, SupplierRequestDTO>();
 			CreateMap<SupplierRequestDTO, Supplier>();

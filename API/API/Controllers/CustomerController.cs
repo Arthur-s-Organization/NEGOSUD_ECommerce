@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using API.Models.DTOs.RequestDTOs;
 using API.Services.IServices;
+using API.Models.DTOs.ResponseDTOs;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
+	[Route("api/[controller]")]
 	[ApiController]
 	public class CustomerController : ControllerBase
 	{
@@ -18,67 +19,86 @@ namespace API.Controllers
 		}
 
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<Customer>>> GetAllCustomers()
+		public async Task<ActionResult<IEnumerable<CustomerResponseDTO>>> GetAllCustomers()
 		{
-			var Customers = await _CustomerService.GetAllCustomersAsync();
+			var customerResponseDTOs = await _CustomerService.GetAllCustomersAsync();
 
-			return Ok(Customers);
+			return Ok(customerResponseDTOs);
 		}
 
 
 		[HttpGet("{id}")]
-		public async Task<ActionResult<Customer>> GetCustomerById(Guid id)
+		public async Task<ActionResult<CustomerResponseDTO>> GetCustomerById(Guid id)
 		{
-			var Customer = await _CustomerService.GetCustomerByIdAsync(id);
-			if (Customer == null)
+			try
 			{
-				return BadRequest("Customer not found");
+				var customerResponseDTO = await _CustomerService.GetCustomerByIdAsync(id);
+				return Ok(customerResponseDTO);
 			}
-			return Ok(Customer);
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<Customer>> AddCustomer(CustomerRequestDTO CustomerDTO)
+		public async Task<ActionResult<CustomerResponseDTO>> AddCustomer(CustomerRequestDTO customerRequestDTO)
 		{
-			var createdCustomer = await _CustomerService.AddCustomerAsync(CustomerDTO);
-
-			return createdCustomer;
+			try
+			{
+				var customerResponseDTO = await _CustomerService.AddCustomerAsync(customerRequestDTO);
+				return customerResponseDTO;
+			}
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		[HttpPut("{id}")]
-		public async Task<ActionResult<Customer>> UpdateCustomer(Guid id, CustomerRequestDTO CustomerDTO)
+		public async Task<ActionResult<CustomerResponseDTO>> UpdateCustomer(Guid id, CustomerRequestDTO customerRequestDTO)
 		{
-			var updatedCustomer = await _CustomerService.UpdateCustomerAsync(id, CustomerDTO);
-
-			if (updatedCustomer == null)
+			try
 			{
-				return BadRequest("Customer doesn't exists");
+				var customerResponseDTO = await _CustomerService.UpdateCustomerAsync(id, customerRequestDTO);
+				return Ok(customerResponseDTO);
 			}
-			return Ok(updatedCustomer);
+
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
+
 
 		[HttpDelete("{id}")]
-		public async Task<ActionResult<Customer>> DeleteCustomer(Guid id)
+		public async Task<ActionResult<CustomerResponseDTO>> DeleteCustomer(Guid id)
 		{
-			var deletedCustomer = await _CustomerService.DeleteCustomerAsync(id);
-			if (deletedCustomer == null)
+			try
 			{
-				return BadRequest($"Unable to delete Customer {id}");
+				var customerResponseDTO = await _CustomerService.DeleteCustomerAsync(id);
+				return Ok(customerResponseDTO);
+
 			}
-			return Ok(deletedCustomer);
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
-
-
 		[HttpPost("{CustomerId}/Adresses/{AdressId}")]
-		public async Task<ActionResult> AddAdressToCustomer(Guid CustomerId, Guid AdressId)
+		public async Task<ActionResult<CustomerResponseDTO>> AddAdressToCustomer(Guid CustomerId, Guid AdressId)
 		{
-			var customer = await _CustomerService.AddAdressToCustomerAsync(CustomerId, AdressId);
-			if (customer == null)
+			try
 			{
-				return BadRequest($"Impossible d'ajouter l'adresse {AdressId} au Customer {CustomerId}");
+				var customerResponseDTO = await _CustomerService.AddAdressToCustomerAsync(CustomerId, AdressId);
+				return Ok(customerResponseDTO);
+
 			}
-			return Ok(customer);
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 	}
 }

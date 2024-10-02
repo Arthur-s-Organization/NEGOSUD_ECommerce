@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Services
 {
-    public class CommonItemService : ICommonItemService
+	public class CommonItemService : ICommonItemService
 	{
 		private readonly DataContext _context;
 		private readonly IMapper _mapper;
@@ -19,72 +19,85 @@ namespace API.Services
 			_context = context;
 			_mapper = mapper;
 		}
-		public async Task<CommonItem> AddCommonItemAsync(CommonItemRequestDTO CommonItemDTO)
+		public async Task<CommonItemResponseDTO> AddCommonItemAsync(CommonItemRequestDTO commonItemRequestDTO)
 		{
-			var Supplier = _context.Suppliers.SingleOrDefault(s => s.SupplierId == CommonItemDTO.SupplierId);
+			var Supplier = _context.Suppliers.SingleOrDefault(s => s.SupplierId == commonItemRequestDTO.SupplierId);
 
 			if (Supplier == null)
 			{
-				return null;
+				throw new InvalidOperationException($"Unable to add : supplier '{commonItemRequestDTO.SupplierId}' doesn't exists");
 			}
 
-			var commonItem = _mapper.Map<CommonItem>(CommonItemDTO);
+			var commonItemNameExist = await _context.AlcoholItems.SingleOrDefaultAsync(ai => ai.Name == commonItemRequestDTO.Name && ai.SupplierId == commonItemRequestDTO.SupplierId);
+			if (commonItemNameExist != null)
+			{
+				throw new InvalidOperationException($"Unable to add : a commonItem named '{commonItemRequestDTO.Name}' already exsists for supplier '{commonItemRequestDTO.SupplierId}'");
+			}
 
+			var commonItem = _mapper.Map<CommonItem>(commonItemRequestDTO);
 			commonItem.Slug = SlugHelper.GenerateSlug(commonItem.Name);
-
+			commonItem.CreationDate = DateTime.Now;
 			await _context.CommonItems.AddAsync(commonItem);
 			await _context.SaveChangesAsync();
 
-			return commonItem;
+			var commonItemResponseDTO = _mapper.Map<CommonItemResponseDTO>(commonItem);
+			return commonItemResponseDTO;
 
 
 		}
 
-		public async Task<CommonItem> DeleteCommonItemAsync(Guid id)
+		public async Task<CommonItemResponseDTO> DeleteCommonItemAsync(Guid id)
 		{
-			var CommonItem = await _context.CommonItems.SingleOrDefaultAsync(ci => ci.ItemId == id);
-			if (CommonItem is null)
+			var commonItem = await _context.CommonItems.SingleOrDefaultAsync(ci => ci.ItemId == id);
+			if (commonItem is null)
 			{
-				return null;
+				throw new InvalidOperationException($"Unable to delete : commonItem '{id}' doesn't exists");
 			}
-			_context.CommonItems.Remove(CommonItem);
+			_context.CommonItems.Remove(commonItem);
 			await _context.SaveChangesAsync();
-			return CommonItem;
+
+			var commonItemResponseDTO = _mapper.Map<CommonItemResponseDTO>(commonItem);
+			return commonItemResponseDTO;
 		}
 
-		public async Task<CommonItem> GetCommonItemByIdAsync(Guid id)
+		public async Task<CommonItemResponseDTO> GetCommonItemByIdAsync(Guid id)
 		{
-			var CommonItem = await _context.CommonItems
+			var commonItem = await _context.CommonItems
 				.Include(ai => ai.Supplier)
 				.SingleOrDefaultAsync(ci => ci.ItemId == id);
-			if (CommonItem is null)
+			if (commonItem is null)
 			{
-				return null;
+				throw new InvalidOperationException($"Unable to delete : clcoholItem '{id}' doesn't exists");
 			}
-			return CommonItem;
+
+			var commonItemResponseDTO = _mapper.Map<CommonItemResponseDTO>(commonItem);
+			return commonItemResponseDTO;
 		}
 
-		public async Task<IEnumerable<CommonItem>> GetAllCommonItemsAsync()
+		public async Task<IEnumerable<CommonItemResponseDTO>> GetAllCommonItemsAsync()
 		{
-			var CommonItems = await _context.CommonItems
+			var commonItems = await _context.CommonItems
 				.Include(ai => ai.Supplier)
 				.ToListAsync();
-			return CommonItems;
+
+			var commonItemsResponseDTO = _mapper.Map<IEnumerable<CommonItemResponseDTO>>(commonItems);
+			return commonItemsResponseDTO;
 		}
 
-		public async Task<CommonItem> UpdateCommonItemAsync(Guid id, CommonItemRequestDTO CommonItemDTO)
+		public async Task<CommonItemResponseDTO> UpdateCommonItemAsync(Guid id, CommonItemRequestDTO CommonItemRequestDTO)
 		{
-			var existingCommonItem = await _context.CommonItems.FindAsync(id);
+			var commonItem = await _context.CommonItems.FindAsync(id);
 
-			if (existingCommonItem == null)
+			if (commonItem == null)
 			{
-				return null;
+				throw new InvalidOperationException($"Unable to modify : commonItem '{id}' doesn't exists");
 			}
 
-			_mapper.Map(CommonItemDTO, existingCommonItem);
-
+			_mapper.Map(CommonItemRequestDTO, commonItem);
 			await _context.SaveChangesAsync();
-			return existingCommonItem;
+
+			var commonItemResponseDTO = _mapper.Map<CommonItemResponseDTO>(commonItem);
+			return commonItemResponseDTO;
 
 		}
 

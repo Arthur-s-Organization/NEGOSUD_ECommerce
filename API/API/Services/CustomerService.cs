@@ -4,10 +4,11 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using API.Models.DTOs.RequestDTOs;
 using API.Services.IServices;
+using API.Models.DTOs.ResponseDTOs;
 
 namespace API.Services
 {
-    public class CustomerService : ICustomerService
+	public class CustomerService : ICustomerService
 	{
 		private readonly DataContext _context;
 		private readonly IMapper _mapper;
@@ -18,78 +19,110 @@ namespace API.Services
 			_mapper = mapper;
 		}
 
-		public async Task<Customer> AddCustomerAsync(CustomerRequestDTO customerDTO)
+		public async Task<CustomerResponseDTO> AddCustomerAsync(CustomerRequestDTO customerRequestDTO)
 		{
-			var Customer = _mapper.Map<Customer>(customerDTO);
-			await _context.Customers.AddAsync(Customer);
+			var customer = _mapper.Map<Customer>(customerRequestDTO);
+			await _context.Customers.AddAsync(customer);
 			await _context.SaveChangesAsync();
 
-			return Customer;
+			var customerResponseDTO = _mapper.Map<CustomerResponseDTO>(customer);
+			return customerResponseDTO;
 		}
 
-		public async Task<Customer> DeleteCustomerAsync(Guid id)
+		public async Task<CustomerResponseDTO> DeleteCustomerAsync(Guid id)
 		{
-			var Customer = await _context.Customers.SingleOrDefaultAsync(c => c.CustomerId == id);
-			if (Customer is null)
+			var customer = await _context.Customers.SingleOrDefaultAsync(c => c.CustomerId == id);
+			if (customer is null)
 			{
-				return null;
+				throw new InvalidOperationException($"Unable to delete : customer '{id}' doesn't exists");
 			}
-			_context.Customers.Remove(Customer);
+			_context.Customers.Remove(customer);
 			await _context.SaveChangesAsync();
-			return Customer;
+
+			var customerResponseDTO = _mapper.Map<CustomerResponseDTO>(customer);
+			return customerResponseDTO;
 		}
 
-		public async Task<IEnumerable<Customer>> GetAllCustomersAsync()
+		public async Task<IEnumerable<CustomerResponseDTO>> GetAllCustomersAsync()
 		{
-			var Customers = await _context.Customers.Include(c => c.CustomerOrders).Include(c => c.Address).ToListAsync();
-			return Customers;
+			var customers = await _context.Customers.Include(c => c.Address).ToListAsync();
+
+			var custmersResponseDTO = _mapper.Map<IEnumerable<CustomerResponseDTO>>(customers);
+
+			return custmersResponseDTO;
 		}
 
-		public async Task<Customer> GetCustomerByIdAsync(Guid id)
+		public async Task<CustomerResponseDTO> GetCustomerByIdAsync(Guid id)
 		{
-			var Customer = await _context.Customers.Include(c => c.CustomerOrders).Include(c => c.Address).SingleOrDefaultAsync(c => c.CustomerId == id);
-			if (Customer is null)
+			var customer = await _context.Customers.Include(c => c.Address).SingleOrDefaultAsync(c => c.CustomerId == id);
+			if (customer is null)
+
 			{
-				return null;
+				throw new InvalidOperationException($"Unable to get : customer '{id}' doesn't exists");
 			}
-			return Customer;
+			var customerResponseDTO = _mapper.Map<CustomerResponseDTO>(customer);
+			return customerResponseDTO;
 		}
 
-		public async Task<Customer> UpdateCustomerAsync(Guid id, CustomerRequestDTO customerDTO)
+		public async Task<CustomerResponseDTO> UpdateCustomerAsync(Guid id, CustomerRequestDTO customerRequestDTO)
 		{
 
-			var existingCustomer = await _context.Customers.FindAsync(id);
-			if (existingCustomer == null)
+			var customer = await _context.Customers.FindAsync(id);
+			if (customer == null)
 			{
-				return null;
+				throw new InvalidOperationException($"Unable to modify : customer '{id}' doesn't exists");
 			}
 
-			_mapper.Map(customerDTO, existingCustomer);
+			_mapper.Map(customerRequestDTO, customer);
 
 			await _context.SaveChangesAsync();
-			return existingCustomer;
+			var customerResponseDTO = _mapper.Map<CustomerResponseDTO>(customer);
+			return customerResponseDTO;
 		}
 
-		public async Task<Customer> AddAdressToCustomerAsync(Guid CustomerId, Guid AdressId)
+		public async Task<CustomerResponseDTO> AddAdressToCustomerAsync(Guid customerId, Guid adressId)
 		{
-			var Customer = await _context.Customers
+			var customer = await _context.Customers
 				.Include(c => c.Address)
-				.SingleOrDefaultAsync(c => c.CustomerId == CustomerId);
+				.SingleOrDefaultAsync(c => c.CustomerId == customerId);
 
-			var Adress = await _context.Addresses
+			var adress = await _context.Addresses
 				.Include(a => a.Supplier)
 				.Include(a => a.Customer)
-				.SingleOrDefaultAsync(a => a.AddressId == AdressId);
+				.SingleOrDefaultAsync(a => a.AddressId == adressId);
 
-			if (Customer == null || Adress == null || Customer.Address != null || Adress.Customer != null || Adress.Supplier != null)
+
+			if (customer == null)
 			{
-				return null;  // Ou une autre gestion des erreurs, à voir
+				throw new InvalidOperationException($"Unable to add adress : customer '{customerId}' doesn't exists");
 			}
 
-			Customer.Address = Adress;
+			if (adress == null)
+			{
+				throw new InvalidOperationException($"Unable to add adress : adress '{adressId}' doesn't exists");
+			}
+
+			if (customer.Address != null)
+			{
+				throw new InvalidOperationException($"Unable to add adress : customer '{customerId}' already has an adress");
+			}
+
+			if (adress.Supplier != null)
+			{
+				throw new InvalidOperationException($"Unable to add adress :  adress '{adressId}' already own to a supplier");
+			}
+
+			if (adress.Customer != null)
+			{
+				throw new InvalidOperationException($"Unable to add adress :  adress '{adressId}' already own to an other customer");
+			}
+
+			customer.Address = adress;
 			await _context.SaveChangesAsync();
 
-			return Customer;
+			var customerResponseDTO = _mapper.Map<CustomerResponseDTO>(customer);
+			return customerResponseDTO;
 		}
 	}
+
 }

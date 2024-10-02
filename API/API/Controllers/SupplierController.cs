@@ -21,9 +21,9 @@ namespace API.Controllers
 		[HttpGet]
 		public async Task<ActionResult<IEnumerable<SupplierResponseDTO>>> GetAllSuppliers()
 		{
-			var supplierResponseDTO = await _SupplierService.GetAllSuppliersAsync();
+			var supplierResponseDTOs = await _SupplierService.GetAllSuppliersAsync();
 
-			return Ok(supplierResponseDTO);
+			return Ok(supplierResponseDTOs);
 		}
 
 

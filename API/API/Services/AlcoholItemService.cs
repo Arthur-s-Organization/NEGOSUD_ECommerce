@@ -63,9 +63,7 @@ namespace API.Services
 			_context.AlcoholItems.Remove(alcoholItem);
 			await _context.SaveChangesAsync();
 
-
 			var alcoholItemResponseDTO = _mapper.Map<AlcoholItemResponseDTO>(alcoholItem);
-
 			return alcoholItemResponseDTO;
 		}
 
@@ -81,7 +79,6 @@ namespace API.Services
 			}
 
 			var alcoholItemResponseDTO = _mapper.Map<AlcoholItemResponseDTO>(alcoholItem);
-
 			return alcoholItemResponseDTO;
 		}
 
@@ -94,7 +91,6 @@ namespace API.Services
 				.ToListAsync();
 
 			var alcoholItemsResponseDTO = _mapper.Map<IEnumerable<AlcoholItemResponseDTO>>(alcoholItems);
-
 			return alcoholItemsResponseDTO;
 		}
 

@@ -22,9 +22,9 @@ namespace API.Controllers
 		[HttpGet]
 		public async Task<ActionResult<IEnumerable<AlcoholItemResponseDTO>>> GetAllAlcoholItems()
 		{
-			var alcoholItemResponseDTO = await _AlcoholItemService.GetAllAlcoholItemsAsync();
+			var alcoholItemResponseDTOs = await _AlcoholItemService.GetAllAlcoholItemsAsync();
 
-			return Ok(alcoholItemResponseDTO);
+			return Ok(alcoholItemResponseDTOs);
 		}
 
 
@@ -96,8 +96,8 @@ namespace API.Controllers
 		{
 			try
 			{
-				var alcoholItemResponseDTO = await _AlcoholItemService.GetAllAlcoholItemsBySupplierAsync(supplierId);
-				return Ok(alcoholItemResponseDTO);
+				var alcoholItemResponseDTOs = await _AlcoholItemService.GetAllAlcoholItemsBySupplierAsync(supplierId);
+				return Ok(alcoholItemResponseDTOs);
 			}
 
 			catch (InvalidOperationException ex)
@@ -105,6 +105,5 @@ namespace API.Controllers
 				return BadRequest(ex.Message);
 			}
 		}
-
 	}
 }
