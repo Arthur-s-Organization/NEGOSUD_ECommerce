@@ -1,6 +1,7 @@
 ﻿using API.Data;
 using API.Models;
 using API.Models.DTOs.RequestDTOs;
+using API.Models.DTOs.ResponseDTOs;
 using API.Services.IServices;
 using API.Utils;
 using AutoMapper;
@@ -85,6 +86,24 @@ namespace API.Services
 			await _context.SaveChangesAsync();
 			return existingCommonItem;
 
+		}
+
+		public async Task<IEnumerable<CommonItemResponseDTO>> GetAllCommonItemsBySupplierAsync(Guid supplierId)
+		{
+			var supplier = await _context.Suppliers.FindAsync(supplierId);
+			if (supplier == null)
+			{
+				throw new InvalidOperationException($"Unable to get : supplier '{supplierId}' doesn't exists");
+			}
+
+			var commonItems = await _context.CommonItems
+				.Include(i => i.Supplier)
+				.Where(i => i.SupplierId == supplierId)
+				.ToListAsync();
+
+			var commonItemsResponseDTO = _mapper.Map<IEnumerable<CommonItemResponseDTO>>(commonItems);
+
+			return commonItemsResponseDTO;
 		}
 	}
 }

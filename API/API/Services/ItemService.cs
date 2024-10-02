@@ -70,7 +70,6 @@ namespace API.Services
 				.Concat(commonItemsResponseDTO.Cast<ItemResponseDTO>());
 
 			return allItemsResponseDTO;
-
 		}
 	}
 }

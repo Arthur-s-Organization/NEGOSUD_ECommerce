@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using API.Models.DTOs.RequestDTOs;
 using API.Services.IServices;
 using API.Models.DTOs.ResponseDTOs;
+using API.Services;
 
 namespace API.Controllers
 {
@@ -82,6 +83,21 @@ namespace API.Controllers
 				var alcoholItemResponseDTO = await _AlcoholItemService.DeleteAlcoholItemAsync(id);
 				return Ok(alcoholItemResponseDTO);
 
+			}
+
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
+
+		[HttpGet("Supplier{supplierId}")]
+		public async Task<ActionResult<IEnumerable<ItemResponseDTO>>> GetAllAlcoholBySuppliers(Guid supplierId)
+		{
+			try
+			{
+				var alcoholItemResponseDTO = await _AlcoholItemService.GetAllAlcoholItemsBySupplierAsync(supplierId);
+				return Ok(alcoholItemResponseDTO);
 			}
 
 			catch (InvalidOperationException ex)

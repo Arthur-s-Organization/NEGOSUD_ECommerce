@@ -11,5 +11,7 @@ namespace API.Services.IServices
         public Task<AlcoholItemResponseDTO> GetAlcoholItemByIdAsync(Guid id);
         public Task<AlcoholItemResponseDTO> UpdateAlcoholItemAsync(Guid id, AlcoholItemRequestDTO AlcoholItemDTO);
         public Task<AlcoholItemResponseDTO> DeleteAlcoholItemAsync(Guid id);
-    }
+        public Task<IEnumerable<AlcoholItemResponseDTO>> GetAllAlcoholItemsBySupplierAsync(Guid supplierId);
+
+	}
 }

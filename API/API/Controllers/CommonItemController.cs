@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using API.Models.DTOs.RequestDTOs;
 using API.Services.IServices;
+using API.Models.DTOs.ResponseDTOs;
+using API.Services;
 
 namespace API.Controllers
 {
@@ -70,6 +72,21 @@ namespace API.Controllers
 				return BadRequest($"Unable to delete CommonItem {id}");
 			}
 			return Ok(deletedCommonItem);
+		}
+
+		[HttpGet("Supplier{supplierId}")]
+		public async Task<ActionResult<IEnumerable<ItemResponseDTO>>> GetAllCommonItemsBySuppliers(Guid supplierId)
+		{
+			try
+			{
+				var commonItemResponseDTO = await _CommonItemService.GetAllCommonItemsBySupplierAsync(supplierId);
+				return Ok(commonItemResponseDTO);
+			}
+
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 	}
 }

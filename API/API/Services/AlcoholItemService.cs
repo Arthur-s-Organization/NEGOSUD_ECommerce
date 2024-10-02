@@ -115,7 +115,7 @@ namespace API.Services
 			var supplier = _context.Suppliers.SingleOrDefault(ai => ai.SupplierId == alcoholItemRequestDTO.SupplierId);
 			if (supplier == null)
 			{
-				throw new InvalidOperationException($"Unable to add : supplier '{alcoholItemRequestDTO.SupplierId}' doesn't exists");
+				throw new InvalidOperationException($"Unable to modify : supplier '{alcoholItemRequestDTO.SupplierId}' doesn't exists");
 			}
 
 			var alcoholItemNameExist = await _context.AlcoholItems.SingleOrDefaultAsync(ai => ai.Name == alcoholItemRequestDTO.Name && ai.ItemId != id && ai.SupplierId == alcoholItemRequestDTO.SupplierId);
@@ -130,6 +130,24 @@ namespace API.Services
 			var alcoholItemResponseDTO = _mapper.Map<AlcoholItemResponseDTO>(alcoholItem);
 
 			return alcoholItemResponseDTO;
+		}
+
+		public async Task<IEnumerable<AlcoholItemResponseDTO>> GetAllAlcoholItemsBySupplierAsync(Guid supplierId)
+		{
+			var supplier = await _context.Suppliers.FindAsync(supplierId);
+			if (supplier == null)
+			{
+				throw new InvalidOperationException($"Unable to get : supplier '{supplierId}' doesn't exists");
+			}
+
+			var alcoholItems = await _context.AlcoholItems
+				.Include(i => i.Supplier)
+				.Where(i => i.SupplierId == supplierId)
+				.ToListAsync();
+
+			var alcoholItemsResponseDTO = _mapper.Map<IEnumerable<AlcoholItemResponseDTO>>(alcoholItems);
+
+			return alcoholItemsResponseDTO;
 		}
 
 	}

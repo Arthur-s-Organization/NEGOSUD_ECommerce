@@ -26,13 +26,13 @@ namespace API.Controllers
 		}
 
 
-		[HttpGet("/Supplier{supplierId}")]
+		[HttpGet("Supplier{supplierId}")]
 		public async Task<ActionResult<IEnumerable<ItemResponseDTO>>> GetAllItemsBySuppliers(Guid supplierId)
 		{
 			try
 			{
-				var ItemResponseDTO = await _ItemService.GetAllItemsBySupplierAsync(supplierId);
-				return Ok(ItemResponseDTO);
+				var itemResponseDTO = await _ItemService.GetAllItemsBySupplierAsync(supplierId);
+				return Ok(itemResponseDTO);
 			}
 
 			catch (InvalidOperationException ex)
