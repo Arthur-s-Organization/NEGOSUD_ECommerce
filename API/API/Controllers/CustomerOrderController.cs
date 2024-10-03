@@ -6,7 +6,7 @@ using API.Services.IServices;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
+	[Route("api/[controller]")]
 	[ApiController]
 	public class CustomerOrderController : ControllerBase
 	{
@@ -29,58 +29,73 @@ namespace API.Controllers
 		[HttpGet("{id}")]
 		public async Task<ActionResult<CustomerOrder>> GetCustomerOrderById(Guid id)
 		{
-			var CustomerOrder = await _CustomerOrderService.GetCustomerOrderByIdAsync(id);
-			if (CustomerOrder == null)
+			try
 			{
-				return BadRequest("CustomerOrder not found");
+				var customerOrder = await _CustomerOrderService.GetCustomerOrderByIdAsync(id);
+				return Ok(customerOrder);
 			}
-			return Ok(CustomerOrder);
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<CustomerOrder>> AddCustomerOrder(CustomerOrderRequestDTO CustomerOrderDTO)
+		public async Task<ActionResult<CustomerOrder>> AddCustomerOrder(CustomerOrderRequestDTO customerOrderRequestDTO)
 		{
-			var createdCustomerOrder = await _CustomerOrderService.AddCustomerOrderAsync(CustomerOrderDTO);
-
-			if (createdCustomerOrder == null)
+			try
 			{
-				return BadRequest("Customer Id not found");
+				var customerOrder = await _CustomerOrderService.AddCustomerOrderAsync(customerOrderRequestDTO);
+				return Ok(customerOrder);
 			}
-			return Ok(createdCustomerOrder);
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+
 		}
 
 		[HttpPut("{id}")]
-		public async Task<ActionResult<CustomerOrder>> UpdateCustomerOrder(Guid id, CustomerOrderRequestDTO CustomerOrderDTO)
+		public async Task<ActionResult<CustomerOrder>> UpdateCustomerOrder(Guid id, CustomerOrderRequestDTO customerOrderRequestDTO)
 		{
-			var updatedCustomerOrder = await _CustomerOrderService.UpdateCustomerOrderAsync(id, CustomerOrderDTO);
-
-			if (updatedCustomerOrder == null)
+			try
 			{
-				return BadRequest("CustomerOrder doesn't exists");
+				var customerOrder = await _CustomerOrderService.UpdateCustomerOrderAsync(id, customerOrderRequestDTO);
+				return Ok(customerOrder);
 			}
-			return Ok(updatedCustomerOrder);
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		[HttpDelete("{id}")]
 		public async Task<ActionResult<CustomerOrder>> DeleteCustomerOrder(Guid id)
 		{
-			var deletedCustomerOrder = await _CustomerOrderService.DeleteCustomerOrderAsync(id);
-			if (deletedCustomerOrder == null)
+			try
 			{
-				return BadRequest($"Unable to delete CustomerOrder {id}");
+				var customerOrder = await _CustomerOrderService.DeleteCustomerOrderAsync(id);
+				return Ok(customerOrder);
 			}
-			return Ok(deletedCustomerOrder);
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		[HttpPost("{customerOrderId}/Items/{itemId}/ItemQuantity{itemQuantity}")]
 		public async Task<ActionResult<OrderDetail>> AddItemToCustomerOrder(Guid customerOrderId, Guid itemId, int itemQuantity)
 		{
-			var orderDetail = await _CustomerOrderService.AddItemToCustomerOrderAsync(customerOrderId, itemId, itemQuantity);
-			if (orderDetail == null)
+			try
 			{
-				return BadRequest($"Order {customerOrderId} already contains item {itemId}");
+				var orderDetail = await _CustomerOrderService.AddItemToCustomerOrderAsync(customerOrderId, itemId, itemQuantity);
+				return Ok(orderDetail);
 			}
-			return Ok(orderDetail);
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 	}
