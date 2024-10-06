@@ -1,4 +1,5 @@
-﻿using API.Models.DTOs.ResponseDTOs;
+﻿using API.Models.DTOs.RequestDTOs;
+using API.Models.DTOs.ResponseDTOs;
 using API.Services;
 using API.Services.IServices;
 using Microsoft.AspNetCore.Http;
@@ -40,6 +41,36 @@ namespace API.Controllers
 				return BadRequest(ex.Message);
 			}
 		}
+
+		[HttpGet("topselling/{topCount}")]
+		public async Task<ActionResult<IEnumerable<ItemResponseDTO>>> GetTopSellingItems(int topCount)
+		{
+			var itemResponseDTO = await _ItemService.GetTopSellingItemsAsync(topCount);
+			return Ok(itemResponseDTO);
+		}
+
+		[HttpGet("recent/{topCount}")]
+		public async Task<ActionResult<IEnumerable<ItemResponseDTO>>> GetRecentlyAddedItems(int topCount)
+		{
+			var itemResponseDTO = await _ItemService.GetRecentlyAddedItemsAsync(topCount);
+			return Ok(itemResponseDTO);
+		}
+
+		[HttpGet("filter")]
+		public async Task<IActionResult> GetFilteredItems([FromQuery] ItemFilterRequestDTO filters)
+		{
+			try
+			{
+				var result = await _ItemService.GetFilteredItemsAsync(filters);
+				return Ok(result);
+			}
+
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
+
 	}
 }
 

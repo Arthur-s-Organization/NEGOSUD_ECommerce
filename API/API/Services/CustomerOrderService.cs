@@ -106,11 +106,73 @@ namespace API.Services
 
 		public async Task<CustomerOrderResponseDTO> UpdateCustomerOrderAsync(Guid id, CustomerOrderRequestDTO customerOrderRequestDTO)
 		{
-			var customerOrder = await _context.CustomerOrders.FindAsync(id);
+			var customerOrder = await _context.CustomerOrders
+				.Include(co => co.OrderDetails)
+					.ThenInclude(od => od.Item)
+				.FirstOrDefaultAsync(co => co.OrderID == id);
+
 
 			if (customerOrder == null)
 			{
 				throw new InvalidOperationException($"Unable to update : customerOrder '{id}' doesn't exists");
+			}
+
+			// Cas ou la commande client passe en statit "payée" (donc validée)
+			if (customerOrderRequestDTO.Status == "1")
+			{
+				foreach (var orderDetail in customerOrder.OrderDetails)
+				{
+					var item = await _context.Items.FindAsync(orderDetail.ItemId);
+					// On repasse une commande fournisseur si la commande client fait baisser nos stocks en dessous de 10
+					if (item != null && (item.Stock - orderDetail.Quantity < 10))
+					{
+						var newSupplierOrder = new SupplierOrder
+						{
+							OrderDate = DateTime.Now,
+							Status = "0",
+							SupplierId = item.SupplierId
+						};
+
+						await _context.SupplierOrders.AddAsync(newSupplierOrder);
+						await _context.SaveChangesAsync();
+
+						var newOrderDetail = new OrderDetail
+						{
+							OrderId = newSupplierOrder.OrderID,
+							ItemId = item.ItemId,
+							Quantity = orderDetail.Quantity + 20
+						};
+
+						await _context.OrderDetails.AddAsync(newOrderDetail);
+
+					}
+				}
+				await _context.SaveChangesAsync();
+			}
+
+
+			// Cas ou la commande client passe en statut  "expédiée"
+			if (customerOrderRequestDTO.Status == "3")
+			{
+				foreach (var orderDetail in customerOrder.OrderDetails)
+				{
+					var item = await _context.Items.FindAsync(orderDetail.ItemId);
+					// On vérifie que l'on a assez de stock pour envoyer la commande
+					if (orderDetail.Quantity > item.Stock)
+					{
+						throw new InvalidOperationException($"Unable to update : There is not enough stock to ship the order");
+					}
+				}
+
+				foreach (var orderDetail in customerOrder.OrderDetails)
+				{
+					var item = await _context.Items.FindAsync(orderDetail.ItemId);
+					if (item != null)
+					{
+						item.Stock -= orderDetail.Quantity;
+					}
+				}
+				await _context.SaveChangesAsync();
 			}
 
 			_mapper.Map(customerOrderRequestDTO, customerOrder);

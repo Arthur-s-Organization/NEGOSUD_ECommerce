@@ -9,5 +9,8 @@ namespace API.Services.IServices
 		public Task<ItemResponseDTO> GetItemByIdAsync(Guid id);
 		public Task<IEnumerable<ItemResponseDTO>> GetAllItemsBySupplierAsync(Guid supplierId);
 		public Task<ItemResponseDTO> DeleteItemAsync(Guid id);
+		public Task<IEnumerable<ItemResponseDTO>> GetTopSellingItemsAsync(int topCount);
+		public Task<IEnumerable<ItemResponseDTO>> GetRecentlyAddedItemsAsync(int topCount);
+		public Task<IEnumerable<ItemResponseDTO>> GetFilteredItemsAsync(ItemFilterRequestDTO filters);
 	}
 }

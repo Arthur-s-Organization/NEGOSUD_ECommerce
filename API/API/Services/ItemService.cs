@@ -1,8 +1,11 @@
 ﻿using API.Data;
+using API.Models;
+using API.Models.DTOs.RequestDTOs;
 using API.Models.DTOs.ResponseDTOs;
 using API.Services.IServices;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace API.Services
 {
@@ -38,6 +41,71 @@ namespace API.Services
 				.Concat(commonItemsResponseDTO.Cast<ItemResponseDTO>());
 
 			return allItemsResponseDTO;
+		}
+
+		public async Task<IEnumerable<ItemResponseDTO>> GetTopSellingItemsAsync(int topCount)
+		{
+			var items = await _context.Items
+				.Include(i => i.Supplier)
+				.OrderByDescending(i => i.QuantitySold)
+			.Take(topCount)
+			.ToListAsync();
+
+			var ItemResponseDTO = _mapper.Map<IEnumerable<ItemResponseDTO>>(items);
+			return ItemResponseDTO;
+
+		}
+
+		public async Task<IEnumerable<ItemResponseDTO>> GetRecentlyAddedItemsAsync(int topCount)
+		{
+			var items = await _context.Items
+				.Include(i => i.Supplier)
+				.OrderByDescending(i => i.CreationDate)
+			.Take(topCount)
+			.ToListAsync();
+
+			var ItemResponseDTO = _mapper.Map<IEnumerable<ItemResponseDTO>>(items);
+			return ItemResponseDTO;
+
+		}
+
+		public async Task<IEnumerable<ItemResponseDTO>> GetFilteredItemsAsync(ItemFilterRequestDTO filters)
+		{
+			if (filters.MaxPrice < filters.MinPrice)
+			{
+				throw new InvalidOperationException($"Unable to get : Max Price is inferior to Min Price");
+			}
+			var query = _context.Items
+				.Include(ai => ai.Supplier)
+				.AsQueryable();
+
+
+			//if (filters.AlcoholFamilyId.HasValue)
+			//{
+			//	query = query.Where(ai => ai.AlcoholFamilyId == filters.AlcoholFamilyId.Value);
+			//}
+
+			if (filters.SupplierId.HasValue)
+			{
+				query = query.Where(ai => ai.SupplierId == filters.SupplierId.Value);
+			}
+
+			if (filters.MinPrice.HasValue)
+			{
+				query = query.Where(ai => ai.Price >= filters.MinPrice.Value);
+			}
+
+			if (filters.MaxPrice.HasValue)
+			{
+				query = query.Where(ai => ai.Price <= filters.MaxPrice.Value);
+			}
+
+			var filteredItems = await query.ToListAsync();
+
+			var itemsResponseDTO = _mapper.Map<IEnumerable<ItemResponseDTO>>(filteredItems);
+
+			return itemsResponseDTO;
+
 		}
 
 		public async Task<ItemResponseDTO> GetItemByIdAsync(Guid id)

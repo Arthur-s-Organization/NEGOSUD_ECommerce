@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Services
 {
-    public class SupplierOrderService : ISupplierOrderService
+	public class SupplierOrderService : ISupplierOrderService
 	{
 		private readonly DataContext _context;
 		private readonly IMapper _mapper;
@@ -100,11 +100,28 @@ namespace API.Services
 
 		public async Task<SupplierOrderResponseDTO> UpdateSupplierOrderAsync(Guid id, SupplierOrderRequestDTO SupplierOrderRequestDTO)
 		{
-			var supplierOrder = await _context.SupplierOrders.FindAsync(id);
+			var supplierOrder = await _context.SupplierOrders
+				.Include(so => so.OrderDetails)
+					.ThenInclude(od => od.Item)
+				.FirstOrDefaultAsync(so => so.OrderID == id);
 
 			if (supplierOrder == null)
 			{
 				throw new InvalidOperationException($"Unable to update : supplierOrder '{id}' doesn't exists");
+			}
+
+
+			if (SupplierOrderRequestDTO.Status == "3")
+			{
+				foreach (var orderDetail in supplierOrder.OrderDetails)
+				{
+					var item = await _context.Items.FindAsync(orderDetail.ItemId);
+					if (item != null)
+					{
+						item.Stock += orderDetail.Quantity;
+					}
+				}
+				await _context.SaveChangesAsync();
 			}
 
 			_mapper.Map(SupplierOrderRequestDTO, supplierOrder);
@@ -114,7 +131,7 @@ namespace API.Services
 			return supplierOrderResponseDTO;
 		}
 
-		public async Task<OrderDetail> AddItemToSupplierOrderAsync(Guid supplierOrderId, Guid itemId , int itemQuantity)
+		public async Task<OrderDetail> AddItemToSupplierOrderAsync(Guid supplierOrderId, Guid itemId, int itemQuantity)
 		{
 			var supplierOrder = await _context.SupplierOrders.SingleOrDefaultAsync(so => so.OrderID == supplierOrderId);
 
