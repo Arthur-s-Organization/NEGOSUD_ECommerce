@@ -53,11 +53,13 @@ namespace API.Mapping
 			CreateMap<CustomerOrder, CustomerOrderResponseDTO>();
 			CreateMap<CustomerOrderResponseDTO, CustomerOrder>();
 
-			CreateMap<OrderDetail, CustomerOrderDetailResponseDTO>();
-			CreateMap<CustomerOrderDetailResponseDTO, OrderDetail>();
-
 			CreateMap<SupplierOrder, SupplierOrderRequestDTO>();
 			CreateMap<SupplierOrderRequestDTO, SupplierOrder>();
+			CreateMap<SupplierOrder, SupplierOrderResponseDTO>();
+			CreateMap<SupplierOrderResponseDTO, SupplierOrder>();
+
+			CreateMap<OrderDetail, OrderDetailResponseDTO>();
+			CreateMap<OrderDetailResponseDTO, OrderDetail>();
 		}
 
 	}

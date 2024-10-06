@@ -18,16 +18,16 @@ namespace API.Services
 			_context = context;
 			_mapper = mapper;
 		}
-		public async Task<CustomerOrderResponseDTO> AddCustomerOrderAsync(CustomerOrderRequestDTO customerOrderDTO)
+		public async Task<CustomerOrderResponseDTO> AddCustomerOrderAsync(CustomerOrderRequestDTO customerOrderRequestDTO)
 		{
-			var customer = _context.Customers.SingleOrDefault(c => c.CustomerId == customerOrderDTO.CustomerId);
+			var customer = _context.Customers.SingleOrDefault(c => c.CustomerId == customerOrderRequestDTO.CustomerId);
 
 			if (customer == null)
 			{
-				throw new InvalidOperationException($"Unable to add : customer '{customerOrderDTO.CustomerId}' doesn't exists");
+				throw new InvalidOperationException($"Unable to add : customer '{customerOrderRequestDTO.CustomerId}' doesn't exists");
 			}
 
-			var customerOrder = _mapper.Map<CustomerOrder>(customerOrderDTO);
+			var customerOrder = _mapper.Map<CustomerOrder>(customerOrderRequestDTO);
 			await _context.CustomerOrders.AddAsync(customerOrder);
 			await _context.SaveChangesAsync();
 

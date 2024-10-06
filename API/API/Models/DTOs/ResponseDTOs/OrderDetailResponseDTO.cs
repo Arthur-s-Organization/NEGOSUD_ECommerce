@@ -1,6 +1,6 @@
 ﻿namespace API.Models.DTOs.ResponseDTOs
 {
-	public class CustomerOrderDetailResponseDTO
+	public class OrderDetailResponseDTO
 	{
 		public Guid ItemId { get; set; }
 		public virtual ItemResponseDTO Item { get; set; }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using API.Models.DTOs.RequestDTOs;
 using API.Services.IServices;
+using API.Models.DTOs.ResponseDTOs;
 
 namespace API.Controllers
 {
@@ -20,9 +21,8 @@ namespace API.Controllers
 		[HttpGet]
 		public async Task<ActionResult<IEnumerable<CustomerOrder>>> GetAllCustomerOrders()
 		{
-			var CustomerOrders = await _CustomerOrderService.GetAllCustomerOrdersAsync();
-
-			return Ok(CustomerOrders);
+			var CustomerOrdersResponseDTO = await _CustomerOrderService.GetAllCustomerOrdersAsync();
+			return Ok(CustomerOrdersResponseDTO);
 		}
 
 
@@ -31,8 +31,8 @@ namespace API.Controllers
 		{
 			try
 			{
-				var customerOrder = await _CustomerOrderService.GetCustomerOrderByIdAsync(id);
-				return Ok(customerOrder);
+				var CustomerOrdersResponseDTO = await _CustomerOrderService.GetCustomerOrderByIdAsync(id);
+				return Ok(CustomerOrdersResponseDTO);
 			}
 			catch (InvalidOperationException ex)
 			{
@@ -42,12 +42,12 @@ namespace API.Controllers
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<CustomerOrder>> AddCustomerOrder(CustomerOrderRequestDTO customerOrderRequestDTO)
+		public async Task<ActionResult<CustomerOrderResponseDTO>> AddCustomerOrder(CustomerOrderRequestDTO customerOrderRequestDTO)
 		{
 			try
 			{
-				var customerOrder = await _CustomerOrderService.AddCustomerOrderAsync(customerOrderRequestDTO);
-				return Ok(customerOrder);
+				var CustomerOrdersResponseDTO = await _CustomerOrderService.AddCustomerOrderAsync(customerOrderRequestDTO);
+				return Ok(CustomerOrdersResponseDTO);
 			}
 			catch (InvalidOperationException ex)
 			{
@@ -57,12 +57,12 @@ namespace API.Controllers
 		}
 
 		[HttpPut("{id}")]
-		public async Task<ActionResult<CustomerOrder>> UpdateCustomerOrder(Guid id, CustomerOrderRequestDTO customerOrderRequestDTO)
+		public async Task<ActionResult<CustomerOrderResponseDTO>> UpdateCustomerOrder(Guid id, CustomerOrderRequestDTO customerOrderRequestDTO)
 		{
 			try
 			{
-				var customerOrder = await _CustomerOrderService.UpdateCustomerOrderAsync(id, customerOrderRequestDTO);
-				return Ok(customerOrder);
+				var CustomerOrdersResponseDTO = await _CustomerOrderService.UpdateCustomerOrderAsync(id, customerOrderRequestDTO);
+				return Ok(CustomerOrdersResponseDTO);
 			}
 			catch (InvalidOperationException ex)
 			{
@@ -71,12 +71,12 @@ namespace API.Controllers
 		}
 
 		[HttpDelete("{id}")]
-		public async Task<ActionResult<CustomerOrder>> DeleteCustomerOrder(Guid id)
+		public async Task<ActionResult<CustomerOrderResponseDTO>> DeleteCustomerOrder(Guid id)
 		{
 			try
 			{
-				var customerOrder = await _CustomerOrderService.DeleteCustomerOrderAsync(id);
-				return Ok(customerOrder);
+				var CustomerOrdersResponseDTO = await _CustomerOrderService.DeleteCustomerOrderAsync(id);
+				return Ok(CustomerOrdersResponseDTO);
 			}
 			catch (InvalidOperationException ex)
 			{

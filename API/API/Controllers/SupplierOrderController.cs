@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using API.Models.DTOs.RequestDTOs;
 using API.Services.IServices;
+using API.Models.DTOs.ResponseDTOs;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
+	[Route("api/[controller]")]
 	[ApiController]
 	public class SupplierOrderController : ControllerBase
 	{
@@ -18,58 +19,71 @@ namespace API.Controllers
 		}
 
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<SupplierOrder>>> GetAllSupplierOrders()
+		public async Task<ActionResult<IEnumerable<SupplierOrderResponseDTO>>> GetAllSupplierOrders()
 		{
-			var SupplierOrders = await _SupplierOrderService.GetAllSupplierOrdersAsync();
-
-			return Ok(SupplierOrders);
+			var supplierOrdersReponseDTO = await _SupplierOrderService.GetAllSupplierOrdersAsync();
+			return Ok(supplierOrdersReponseDTO);
 		}
 
 
 		[HttpGet("{id}")]
-		public async Task<ActionResult<SupplierOrder>> GetSupplierOrderById(Guid id)
+		public async Task<ActionResult<SupplierOrderResponseDTO>> GetSupplierOrderById(Guid id)
 		{
-			var SupplierOrder = await _SupplierOrderService.GetSupplierOrderByIdAsync(id);
-			if (SupplierOrder == null)
+			try
 			{
-				return BadRequest("SupplierOrder not found");
+				var supplierOrderReponseDTO = await _SupplierOrderService.GetSupplierOrderByIdAsync(id);
+				return Ok(supplierOrderReponseDTO);
+
 			}
-			return Ok(SupplierOrder);
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<SupplierOrder>> AddSupplierOrder(SupplierOrderRequestDTO SupplierOrderDTO)
+		public async Task<ActionResult<SupplierOrderResponseDTO>> AddSupplierOrder(SupplierOrderRequestDTO SupplierOrderDTO)
 		{
-			var createdSupplierOrder = await _SupplierOrderService.AddSupplierOrderAsync(SupplierOrderDTO);
-
-			if (createdSupplierOrder == null)
+			try
 			{
-				return BadRequest("Supplier Id not found");
+				var supplierOrderReponseDTO = await _SupplierOrderService.AddSupplierOrderAsync(SupplierOrderDTO);
+				return Ok(supplierOrderReponseDTO);
+
 			}
-			return Ok(createdSupplierOrder);
+
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		[HttpPut("{id}")]
-		public async Task<ActionResult<SupplierOrder>> UpdateSupplierOrder(Guid id, SupplierOrderRequestDTO SupplierOrderDTO)
+		public async Task<ActionResult<SupplierOrderResponseDTO>> UpdateSupplierOrder(Guid id, SupplierOrderRequestDTO SupplierOrderDTO)
 		{
-			var updatedSupplierOrder = await _SupplierOrderService.UpdateSupplierOrderAsync(id, SupplierOrderDTO);
-
-			if (updatedSupplierOrder == null)
+			try
 			{
-				return BadRequest("SupplierOrder doesn't exists");
+				var supplierOrderResponseDTO = await _SupplierOrderService.UpdateSupplierOrderAsync(id, SupplierOrderDTO);
+				return Ok(supplierOrderResponseDTO);
 			}
-			return Ok(updatedSupplierOrder);
+
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		[HttpDelete("{id}")]
-		public async Task<ActionResult<SupplierOrder>> DeleteSupplierOrder(Guid id)
+		public async Task<ActionResult<SupplierOrderResponseDTO>> DeleteSupplierOrder(Guid id)
 		{
-			var deletedSupplierOrder = await _SupplierOrderService.DeleteSupplierOrderAsync(id);
-			if (deletedSupplierOrder == null)
+			try
 			{
-				return BadRequest($"Unable to delete SupplierOrder {id}");
+				var supplierOrderResponseDTO = await _SupplierOrderService.DeleteSupplierOrderAsync(id);
+				return Ok(supplierOrderResponseDTO);
 			}
-			return Ok(deletedSupplierOrder);
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		[HttpPost("{supplierOrderId}/Items/{itemId}/ItemQuantity{itemQuantity}")]
