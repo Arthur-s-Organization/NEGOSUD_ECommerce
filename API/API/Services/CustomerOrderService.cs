@@ -1,6 +1,8 @@
 ﻿using API.Data;
 using API.Models;
-using API.Models.DTOs;
+using API.Models.DTOs.RequestDTOs;
+using API.Models.DTOs.ResponseDTOs;
+using API.Services.IServices;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,35 +18,38 @@ namespace API.Services
 			_context = context;
 			_mapper = mapper;
 		}
-		public async Task<CustomerOrder> AddCustomerOrderAsync(CustomerOrderDTO CustomerOrderDTO)
+		public async Task<CustomerOrderResponseDTO> AddCustomerOrderAsync(CustomerOrderRequestDTO customerOrderRequestDTO)
 		{
-			var existingCustomer = _context.Customers.SingleOrDefault(c => c.CustomerId == CustomerOrderDTO.CustomerId);
+			var customer = _context.Customers.SingleOrDefault(c => c.CustomerId == customerOrderRequestDTO.CustomerId);
 
-			if (existingCustomer == null)
+			if (customer == null)
 			{
-				return null;
+				throw new InvalidOperationException($"Unable to add : customer '{customerOrderRequestDTO.CustomerId}' doesn't exists");
 			}
 
-			var CustomerOrder = _mapper.Map<CustomerOrder>(CustomerOrderDTO);
-			await _context.CustomerOrders.AddAsync(CustomerOrder);
+			var customerOrder = _mapper.Map<CustomerOrder>(customerOrderRequestDTO);
+			await _context.CustomerOrders.AddAsync(customerOrder);
 			await _context.SaveChangesAsync();
 
-			return CustomerOrder;
+			var customerOrderResponseDTO = _mapper.Map<CustomerOrderResponseDTO>(customerOrder);
+			return customerOrderResponseDTO;
 		}
 
-		public async Task<CustomerOrder> DeleteCustomerOrderAsync(Guid id)
+		public async Task<CustomerOrderResponseDTO> DeleteCustomerOrderAsync(Guid id)
 		{
-			var CustomerOrder = await _context.CustomerOrders.SingleOrDefaultAsync(co => co.OrderID == id);
-			if (CustomerOrder is null)
+			var customerOrder = await _context.CustomerOrders.SingleOrDefaultAsync(co => co.OrderID == id);
+			if (customerOrder is null)
 			{
-				return null;
+				throw new InvalidOperationException($"Unable to delete : customer '{id}' doesn't exists");
 			}
-			_context.CustomerOrders.Remove(CustomerOrder);
+			_context.CustomerOrders.Remove(customerOrder);
 			await _context.SaveChangesAsync();
-			return CustomerOrder;
+
+			var customerOrderResponseDTO = _mapper.Map<CustomerOrderResponseDTO>(customerOrder);
+			return customerOrderResponseDTO;
 		}
 
-		public async Task<IEnumerable<CustomerOrder>> GetAllCustomerOrdersAsync()
+		public async Task<IEnumerable<CustomerOrderResponseDTO>> GetAllCustomerOrdersAsync()
 		{
 			//var CustomerOrders = await _context.CustomerOrders
 			//	.Include(co => co.OrderDetails)
@@ -52,57 +57,63 @@ namespace API.Services
 			//	.ToListAsync();
 
 
-			var CustomerOrders = await _context.CustomerOrders
+			var customerOrders = await _context.CustomerOrders
 				.Include(co => co.OrderDetails)
 				.ThenInclude(od => od.Item) // Inclut les items liés à chaque OrderDetail
 				.Include(co => co.Customer)
 				.ToListAsync();
-			return CustomerOrders;
+
+			var customerOrderResponseDTOs = _mapper.Map<IEnumerable<CustomerOrderResponseDTO>>(customerOrders);
+
+			return customerOrderResponseDTOs;
 		}
 
-		public async Task<CustomerOrder> GetCustomerOrderByIdAsync(Guid id)
+		public async Task<CustomerOrderResponseDTO> GetCustomerOrderByIdAsync(Guid id)
 		{
-			var CustomerOrder = await _context.CustomerOrders
+			var customerOrder = await _context.CustomerOrders
 				.Include(co => co.OrderDetails)
 				.ThenInclude(od => od.Item) // Inclut les items liés à chaque OrderDetail
 				.Include(co => co.Customer)
 				.SingleOrDefaultAsync(co => co.OrderID == id);
-			if (CustomerOrder is null)
+			if (customerOrder is null)
 			{
-				return null;
-			}
-			return CustomerOrder;
-		}
-
-		public async Task<CustomerOrder> UpdateCustomerOrderAsync(Guid id, CustomerOrderDTO CustomerOrderDTO)
-		{
-			var existingCustomerOrder = await _context.CustomerOrders.FindAsync(id);
-
-			if (existingCustomerOrder == null)
-			{
-				return null;
+				{
+					throw new InvalidOperationException($"Unable to get : customerOrder '{id}' doesn't exists");
+				}
 			}
 
-			_mapper.Map(CustomerOrderDTO, existingCustomerOrder);
-
-			await _context.SaveChangesAsync();
-			return existingCustomerOrder;
+			var customerOrderResponseDTO = _mapper.Map<CustomerOrderResponseDTO>(customerOrder);
+			return customerOrderResponseDTO;
 		}
 
-		public async Task<OrderDetail> AddItemToCustomerOrderAsync(Guid customerOrderId, Guid itemId)
+		public async Task<CustomerOrderResponseDTO> UpdateCustomerOrderAsync(Guid id, CustomerOrderRequestDTO customerOrderRequestDTO)
 		{
-			var customerOrder = await _context.CustomerOrders.SingleOrDefaultAsync(co => co.OrderID == customerOrderId);
+			var customerOrder = await _context.CustomerOrders.FindAsync(id);
 
 			if (customerOrder == null)
 			{
-				return null;
+				throw new InvalidOperationException($"Unable to update : customerOrder '{id}' doesn't exists");
+			}
+
+			_mapper.Map(customerOrderRequestDTO, customerOrder);
+			await _context.SaveChangesAsync();
+
+			var customerOrderResponseDTO = _mapper.Map<CustomerOrderResponseDTO>(customerOrder);
+			return customerOrderResponseDTO;
+		}
+
+		public async Task<OrderDetail> AddItemToCustomerOrderAsync(Guid customerOrderId, Guid itemId, int itemQuantity)
+		{
+			var customerOrder = await _context.CustomerOrders.SingleOrDefaultAsync(co => co.OrderID == customerOrderId);
+			if (customerOrder == null)
+			{
+				throw new InvalidOperationException($"Unable to add : customerOrder '{customerOrderId}' doesn't exists");
 			}
 
 			var item = await _context.Items.SingleOrDefaultAsync(i => i.ItemId == itemId);
-
 			if (item == null)
 			{
-				return null;
+				throw new InvalidOperationException($"Unable to add : item '{itemId}' doesn't exists");
 			}
 
 			var existingOrderDetail = await _context.OrderDetails
@@ -110,14 +121,14 @@ namespace API.Services
 
 			if (existingOrderDetail != null)
 			{
-				return null;
+				throw new InvalidOperationException($"Unable to add : this orderDetail already exists");
 			}
 
 			var orderDetail = new OrderDetail
 			{
 				OrderId = customerOrderId,
 				ItemId = itemId,
-				Quantity = 3
+				Quantity = itemQuantity
 			};
 
 			await _context.OrderDetails.AddAsync(orderDetail);

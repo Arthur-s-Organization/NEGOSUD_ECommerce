@@ -1,8 +1,9 @@
-﻿using API.Models.DTOs;
-using API.Models;
-using API.Services;
+﻿using API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using API.Models.DTOs.RequestDTOs;
+using API.Services.IServices;
+using API.Models.DTOs.ResponseDTOs;
 
 namespace API.Controllers
 {
@@ -20,67 +21,81 @@ namespace API.Controllers
 		[HttpGet]
 		public async Task<ActionResult<IEnumerable<CustomerOrder>>> GetAllCustomerOrders()
 		{
-			var CustomerOrders = await _CustomerOrderService.GetAllCustomerOrdersAsync();
-
-			return Ok(CustomerOrders);
+			var CustomerOrdersResponseDTO = await _CustomerOrderService.GetAllCustomerOrdersAsync();
+			return Ok(CustomerOrdersResponseDTO);
 		}
 
 
 		[HttpGet("{id}")]
 		public async Task<ActionResult<CustomerOrder>> GetCustomerOrderById(Guid id)
 		{
-			var CustomerOrder = await _CustomerOrderService.GetCustomerOrderByIdAsync(id);
-			if (CustomerOrder == null)
+			try
 			{
-				return BadRequest("CustomerOrder not found");
+				var CustomerOrdersResponseDTO = await _CustomerOrderService.GetCustomerOrderByIdAsync(id);
+				return Ok(CustomerOrdersResponseDTO);
 			}
-			return Ok(CustomerOrder);
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<CustomerOrder>> AddCustomerOrder(CustomerOrderDTO CustomerOrderDTO)
+		public async Task<ActionResult<CustomerOrderResponseDTO>> AddCustomerOrder(CustomerOrderRequestDTO customerOrderRequestDTO)
 		{
-			var createdCustomerOrder = await _CustomerOrderService.AddCustomerOrderAsync(CustomerOrderDTO);
-
-			if (createdCustomerOrder == null)
+			try
 			{
-				return BadRequest("Customer Id not found");
+				var CustomerOrdersResponseDTO = await _CustomerOrderService.AddCustomerOrderAsync(customerOrderRequestDTO);
+				return Ok(CustomerOrdersResponseDTO);
 			}
-			return Ok(createdCustomerOrder);
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+
 		}
 
 		[HttpPut("{id}")]
-		public async Task<ActionResult<CustomerOrder>> UpdateCustomerOrder(Guid id, CustomerOrderDTO CustomerOrderDTO)
+		public async Task<ActionResult<CustomerOrderResponseDTO>> UpdateCustomerOrder(Guid id, CustomerOrderRequestDTO customerOrderRequestDTO)
 		{
-			var updatedCustomerOrder = await _CustomerOrderService.UpdateCustomerOrderAsync(id, CustomerOrderDTO);
-
-			if (updatedCustomerOrder == null)
+			try
 			{
-				return BadRequest("CustomerOrder doesn't exists");
+				var CustomerOrdersResponseDTO = await _CustomerOrderService.UpdateCustomerOrderAsync(id, customerOrderRequestDTO);
+				return Ok(CustomerOrdersResponseDTO);
 			}
-			return Ok(updatedCustomerOrder);
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		[HttpDelete("{id}")]
-		public async Task<ActionResult<CustomerOrder>> DeleteCustomerOrder(Guid id)
+		public async Task<ActionResult<CustomerOrderResponseDTO>> DeleteCustomerOrder(Guid id)
 		{
-			var deletedCustomerOrder = await _CustomerOrderService.DeleteCustomerOrderAsync(id);
-			if (deletedCustomerOrder == null)
+			try
 			{
-				return BadRequest($"Unable to delete CustomerOrder {id}");
+				var CustomerOrdersResponseDTO = await _CustomerOrderService.DeleteCustomerOrderAsync(id);
+				return Ok(CustomerOrdersResponseDTO);
 			}
-			return Ok(deletedCustomerOrder);
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
-		[HttpPost("{customerOrderId}/Items/{itemId}")]
-		public async Task<ActionResult<OrderDetail>> AddItemToCustomerOrder(Guid customerOrderId, Guid itemId)
+		[HttpPost("{customerOrderId}/Items/{itemId}/ItemQuantity{itemQuantity}")]
+		public async Task<ActionResult<OrderDetail>> AddItemToCustomerOrder(Guid customerOrderId, Guid itemId, int itemQuantity)
 		{
-			var orderDetail = await _CustomerOrderService.AddItemToCustomerOrderAsync(customerOrderId, itemId);
-			if (orderDetail == null)
+			try
 			{
-				return BadRequest($"Order {customerOrderId} already contains item {itemId}");
+				var orderDetail = await _CustomerOrderService.AddItemToCustomerOrderAsync(customerOrderId, itemId, itemQuantity);
+				return Ok(orderDetail);
 			}
-			return Ok(orderDetail);
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 	}

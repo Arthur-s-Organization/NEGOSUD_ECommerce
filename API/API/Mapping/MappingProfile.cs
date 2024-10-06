@@ -1,37 +1,65 @@
-﻿using API.Models.DTOs;
-using API.Models;
+﻿using API.Models;
 using AutoMapper;
 using API.Services;
+using API.Models.DTOs.ResponseDTOs;
+using API.Models.DTOs.RequestDTOs;
 
 namespace API.Mapping
 {
-	public class MappingProfile : Profile
+    public class MappingProfile : Profile
 	{
 		public MappingProfile()
 		{
-			CreateMap<Customer, CustomerDTO>();
-			CreateMap<CustomerDTO, Customer>();
+			CreateMap<Customer, CustomerRequestDTO>();
+			CreateMap<CustomerRequestDTO, Customer>();
+			CreateMap<Customer, CustomerResponseDTO>();
+			CreateMap<CustomerResponseDTO, Customer>();
 
-			CreateMap<Supplier, SupplierDTO>();
-			CreateMap<SupplierDTO, Supplier>();
+			CreateMap<Supplier, SupplierRequestDTO>();
+			CreateMap<SupplierRequestDTO, Supplier>();
+			CreateMap<Supplier, SupplierResponseDTO>();
+			CreateMap<SupplierResponseDTO, Supplier>();
 
-			CreateMap<Address, AddressDTO>();
-			CreateMap<AddressDTO, Address>();
+			CreateMap<Address, AddressRequestDTO>();
+			CreateMap<AddressRequestDTO, Address>();
+			CreateMap<Address, AddressResponseDTO>();
+			CreateMap<AddressResponseDTO, Address>();
 
-			CreateMap<AlcoholFamily, AlcoholFamilyDTO>();
-			CreateMap<AlcoholFamilyDTO, AlcoholFamily>();
 
-			CreateMap<AlcoholItem, AlcoholItemDTO>();
-			CreateMap<AlcoholItemDTO, AlcoholItem>();
+			CreateMap<AlcoholFamily, AlcoholFamilyRequestDTO>();
+			CreateMap<AlcoholFamilyRequestDTO, AlcoholFamily>();
+			CreateMap<AlcoholFamily, AlcoholFamilyResponseDTO>();
+			CreateMap<AlcoholFamilyResponseDTO, AlcoholFamily>();
+
+
+			CreateMap<AlcoholItem, AlcoholItemRequestDTO>();
+			CreateMap<AlcoholItemRequestDTO, AlcoholItem>();
+			CreateMap<AlcoholItem, AlcoholItemResponseDTO>();
+			CreateMap<AlcoholItemResponseDTO, AlcoholItem>();
 			
-			CreateMap<CommonItem, CommonItemDTO>();
-			CreateMap<CommonItemDTO, CommonItem>();
-			
-			CreateMap<CustomerOrder, CustomerOrderDTO>();
-			CreateMap<CustomerOrderDTO, CustomerOrder>();
-			
-			CreateMap<SupplierOrder, SupplierOrderDTO>();
-			CreateMap<SupplierOrderDTO, SupplierOrder>();
+			CreateMap<CommonItem, CommonItemRequestDTO>();
+			CreateMap<CommonItemRequestDTO, CommonItem>();
+			CreateMap<CommonItem, CommonItemResponseDTO>();
+			CreateMap<CommonItemResponseDTO, CommonItem>();
+
+			CreateMap<AlcoholItem, ItemResponseDTO>();
+			//.Include<AlcoholItem, AlcoholItemResponseDTO>();
+
+			CreateMap<CommonItem, ItemResponseDTO>();
+			//	.Include<CommonItem, CommonItemResponseDTO>();
+
+			CreateMap<CustomerOrder, CustomerOrderRequestDTO>();
+			CreateMap<CustomerOrderRequestDTO, CustomerOrder>();
+			CreateMap<CustomerOrder, CustomerOrderResponseDTO>();
+			CreateMap<CustomerOrderResponseDTO, CustomerOrder>();
+
+			CreateMap<SupplierOrder, SupplierOrderRequestDTO>();
+			CreateMap<SupplierOrderRequestDTO, SupplierOrder>();
+			CreateMap<SupplierOrder, SupplierOrderResponseDTO>();
+			CreateMap<SupplierOrderResponseDTO, SupplierOrder>();
+
+			CreateMap<OrderDetail, OrderDetailResponseDTO>();
+			CreateMap<OrderDetailResponseDTO, OrderDetail>();
 		}
 
 	}

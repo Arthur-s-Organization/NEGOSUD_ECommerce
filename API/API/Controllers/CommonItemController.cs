@@ -1,8 +1,10 @@
-﻿using API.Models.DTOs;
-using API.Models;
-using API.Services;
+﻿using API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using API.Models.DTOs.RequestDTOs;
+using API.Services.IServices;
+using API.Models.DTOs.ResponseDTOs;
+using API.Services;
 
 namespace API.Controllers
 {
@@ -18,58 +20,86 @@ namespace API.Controllers
 		}
 
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<CommonItem>>> GetAllCommonItems()
+		public async Task<ActionResult<IEnumerable<CommonItemResponseDTO>>> GetAllCommonItems()
 		{
-			var CommonItems = await _CommonItemService.GetAllCommonItemsAsync();
+			var commonItemResponseDTOs = await _CommonItemService.GetAllCommonItemsAsync();
 
-			return Ok(CommonItems);
+			return Ok(commonItemResponseDTOs);
 		}
 
 
 		[HttpGet("{id}")]
-		public async Task<ActionResult<CommonItem>> GetCommonItemById(Guid id)
+		public async Task<ActionResult<CommonItemResponseDTO>> GetCommonItemById(Guid id)
 		{
-			var CommonItem = await _CommonItemService.GetCommonItemByIdAsync(id);
-			if (CommonItem == null)
+			try
 			{
-				return BadRequest("CommonItem not found");
+				var commonItemResponseDTO = await _CommonItemService.GetCommonItemByIdAsync(id);
+				return Ok(commonItemResponseDTO);
+
 			}
-			return Ok(CommonItem);
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<CommonItem>> AddCommonItem(CommonItemDTO CommonItemDTO)
+		public async Task<ActionResult<CommonItemResponseDTO>> AddCommonItem(CommonItemRequestDTO CommonItemDTO)
 		{
-			var createdCommonItem = await _CommonItemService.AddCommonItemAsync(CommonItemDTO);
-
-			if (createdCommonItem == null)
+			try
 			{
-				return BadRequest("SupplierId not found");
+				var commonItemResponseDTO = await _CommonItemService.AddCommonItemAsync(CommonItemDTO);
+				return Ok(commonItemResponseDTO);
 			}
-			return Ok(createdCommonItem);
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		[HttpPut("{id}")]
-		public async Task<ActionResult<CommonItem>> UpdateCommonItem(Guid id, CommonItemDTO CommonItemDTO)
+		public async Task<ActionResult<CommonItemResponseDTO>> UpdateCommonItem(Guid id, CommonItemRequestDTO CommonItemDTO)
 		{
-			var updatedCommonItem = await _CommonItemService.UpdateCommonItemAsync(id, CommonItemDTO);
-
-			if (updatedCommonItem == null)
+			try
 			{
-				return BadRequest("CommonItem doesn't exists");
+				var commonItemResponseDTO = await _CommonItemService.UpdateCommonItemAsync(id, CommonItemDTO);
+				return Ok(commonItemResponseDTO);
 			}
-			return Ok(updatedCommonItem);
+
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		[HttpDelete("{id}")]
-		public async Task<ActionResult<CommonItem>> DeleteCommonItem(Guid id)
+		public async Task<ActionResult<CommonItemResponseDTO>> DeleteCommonItem(Guid id)
 		{
-			var deletedCommonItem = await _CommonItemService.DeleteCommonItemAsync(id);
-			if (deletedCommonItem == null)
+			try
 			{
-				return BadRequest($"Unable to delete CommonItem {id}");
+				var commonItemResponseDTO = await _CommonItemService.DeleteCommonItemAsync(id);
+				return Ok(commonItemResponseDTO);
 			}
-			return Ok(deletedCommonItem);
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+
+		}
+
+		[HttpGet("Supplier{supplierId}")]
+		public async Task<ActionResult<IEnumerable<CommonItemResponseDTO>>> GetAllCommonItemsBySuppliers(Guid supplierId)
+		{
+			try
+			{
+				var commonItemResponseDTOs = await _CommonItemService.GetAllCommonItemsBySupplierAsync(supplierId);
+				return Ok(commonItemResponseDTOs);
+			}
+
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 	}
 }

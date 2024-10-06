@@ -1,12 +1,14 @@
 ﻿using API.Data;
 using API.Models;
-using API.Models.DTOs;
+using API.Models.DTOs.RequestDTOs;
+using API.Models.DTOs.ResponseDTOs;
+using API.Services.IServices;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Services
 {
-	public class SupplierOrderService : ISupplierOrderService
+    public class SupplierOrderService : ISupplierOrderService
 	{
 		private readonly DataContext _context;
 		private readonly IMapper _mapper;
@@ -16,87 +18,95 @@ namespace API.Services
 			_context = context;
 			_mapper = mapper;
 		}
-		public async Task<SupplierOrder> AddSupplierOrderAsync(SupplierOrderDTO SupplierOrderDTO)
+		public async Task<SupplierOrderResponseDTO> AddSupplierOrderAsync(SupplierOrderRequestDTO supplierOrderRequestDTO)
 		{
-			var existingSupplier = _context.Suppliers.SingleOrDefault(s => s.SupplierId == SupplierOrderDTO.SupplierId);
+			var supplier = _context.Suppliers.SingleOrDefault(s => s.SupplierId == supplierOrderRequestDTO.SupplierId);
 
-			if (existingSupplier == null)
+			if (supplier == null)
 			{
-				return null;
+				throw new InvalidOperationException($"Unable to add : supplier '{supplierOrderRequestDTO.SupplierId}' doesn't exists");
 			}
 
-			var SupplierOrder = _mapper.Map<SupplierOrder>(SupplierOrderDTO);
-			await _context.SupplierOrders.AddAsync(SupplierOrder);
+			var supplierOrder = _mapper.Map<SupplierOrder>(supplierOrderRequestDTO);
+			await _context.SupplierOrders.AddAsync(supplierOrder);
 			await _context.SaveChangesAsync();
 
-			return SupplierOrder;
+			var supplierOrderResponseDTO = _mapper.Map<SupplierOrderResponseDTO>(supplierOrder);
+			return supplierOrderResponseDTO;
 		}
 
-		public async Task<SupplierOrder> DeleteSupplierOrderAsync(Guid id)
+		public async Task<SupplierOrderResponseDTO> DeleteSupplierOrderAsync(Guid id)
 		{
-			var SupplierOrder = await _context.SupplierOrders.SingleOrDefaultAsync(so => so.OrderID == id);
-			if (SupplierOrder is null)
+			var supplierOrder = await _context.SupplierOrders.SingleOrDefaultAsync(so => so.OrderID == id);
+			if (supplierOrder is null)
 			{
-				return null;
+				throw new InvalidOperationException($"Unable to delete : supplier '{id}' doesn't exists");
 			}
-			_context.SupplierOrders.Remove(SupplierOrder);
+			_context.SupplierOrders.Remove(supplierOrder);
 			await _context.SaveChangesAsync();
-			return SupplierOrder;
+
+			var supplierOrderResponseDTO = _mapper.Map<SupplierOrderResponseDTO>(supplierOrder);
+			return supplierOrderResponseDTO;
 		}
 
-		public async Task<IEnumerable<SupplierOrder>> GetAllSupplierOrdersAsync()
+		public async Task<IEnumerable<SupplierOrderResponseDTO>> GetAllSupplierOrdersAsync()
 		{
-			var SupplierOrders = await _context.SupplierOrders
+			var supplierOrders = await _context.SupplierOrders
 				.Include(so => so.OrderDetails)
 				.ThenInclude(od => od.Item) // Inclut les items liés à chaque OrderDetail
 				.Include(so => so.Supplier)
 				.ToListAsync();
-			return SupplierOrders;
+
+			var supplierOrderResponseDTOs = _mapper.Map<IEnumerable<SupplierOrderResponseDTO>>(supplierOrders);
+			return supplierOrderResponseDTOs;
 		}
 
-		public async Task<SupplierOrder> GetSupplierOrderByIdAsync(Guid id)
+		public async Task<SupplierOrderResponseDTO> GetSupplierOrderByIdAsync(Guid id)
 		{
-			var SupplierOrder = await _context.SupplierOrders
+			var supplierOrder = await _context.SupplierOrders
 				.Include(so => so.OrderDetails)
 				.ThenInclude(od => od.Item) // Inclut les items liés à chaque OrderDetail
 				.Include(so => so.Supplier)
 				.SingleOrDefaultAsync(so => so.OrderID == id);
-			if (SupplierOrder is null)
+			if (supplierOrder is null)
 			{
-				return null;
+				throw new InvalidOperationException($"Unable to get : supplierOrder '{id}' doesn't exists");
 			}
-			return SupplierOrder;
+
+			var supplierOrderResponseDTO = _mapper.Map<SupplierOrderResponseDTO>(supplierOrder);
+			return supplierOrderResponseDTO;
 		}
 
-		public async Task<SupplierOrder> UpdateSupplierOrderAsync(Guid id, SupplierOrderDTO SupplierOrderDTO)
+		public async Task<SupplierOrderResponseDTO> UpdateSupplierOrderAsync(Guid id, SupplierOrderRequestDTO SupplierOrderRequestDTO)
 		{
-			var existingSupplierOrder = await _context.SupplierOrders.FindAsync(id);
+			var supplierOrder = await _context.SupplierOrders.FindAsync(id);
 
-			if (existingSupplierOrder == null)
+			if (supplierOrder == null)
 			{
-				return null;
+				throw new InvalidOperationException($"Unable to update : supplierOrder '{id}' doesn't exists");
 			}
 
-			_mapper.Map(SupplierOrderDTO, existingSupplierOrder);
-
+			_mapper.Map(SupplierOrderRequestDTO, supplierOrder);
 			await _context.SaveChangesAsync();
-			return existingSupplierOrder;
+
+			var supplierOrderResponseDTO = _mapper.Map<SupplierOrderResponseDTO>(supplierOrder);
+			return supplierOrderResponseDTO;
 		}
 
-		public async Task<OrderDetail> AddItemToSupplierOrderAsync(Guid supplierOrderId, Guid itemId)
+		public async Task<OrderDetail> AddItemToSupplierOrderAsync(Guid supplierOrderId, Guid itemId , int itemQuantity)
 		{
 			var supplierOrder = await _context.SupplierOrders.SingleOrDefaultAsync(so => so.OrderID == supplierOrderId);
 
 			if (supplierOrder == null)
 			{
-				return null;
+				throw new InvalidOperationException($"Unable to add : supplierOrder '{supplierOrderId}' doesn't exists");
 			}
 
 			var item = await _context.Items.SingleOrDefaultAsync(i => i.ItemId == itemId);
 
 			if (item == null)
 			{
-				return null;
+				throw new InvalidOperationException($"Unable to add : item '{itemId}' doesn't exists");
 			}
 
 			var existingOrderDetail = await _context.OrderDetails
@@ -104,14 +114,14 @@ namespace API.Services
 
 			if (existingOrderDetail != null)
 			{
-				return null;
+				throw new InvalidOperationException($"Unable to add : this orderDetail already exists");
 			}
 
 			var orderDetail = new OrderDetail
 			{
 				OrderId = supplierOrderId,
 				ItemId = itemId,
-				Quantity = 3
+				Quantity = itemQuantity
 			};
 
 			await _context.OrderDetails.AddAsync(orderDetail);

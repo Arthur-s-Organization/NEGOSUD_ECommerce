@@ -1,12 +1,12 @@
-﻿namespace API.Models
+﻿namespace API.Models.DTOs.ResponseDTOs
 {
-	public class AlcoholItem : Item
+	public class AlcoholItemResponseDTO : ItemResponseDTO
 	{
+		
 		public string AlcoholVolume { get; set; }
 		public string Year { get; set; }
 		public float Capacity { get; set; }
 		public DateTime ExpirationDate { get; set; }
-		public Guid AlcoholFamilyId { get; set; }
-		public AlcoholFamily AlcoholFamily { get; set; }
+		public AlcoholFamilyResponseDTO AlcoholFamily { get; set; }
 	}
 }

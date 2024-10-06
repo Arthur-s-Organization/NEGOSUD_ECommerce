@@ -1,8 +1,6 @@
-﻿using System.Numerics;
-
-namespace API.Models
+﻿namespace API.Models.DTOs.ResponseDTOs
 {
-	public class Item
+	public class ItemResponseDTO
 	{
 		public Guid ItemId { get; set; }
 		public string Name { get; set; }
@@ -14,10 +12,7 @@ namespace API.Models
 		public string OriginCountry { get; set; }
 		public DateTime CreationDate { get; set; }
 		public int QuantitySold { get; set; }
-		public byte[]? ItemImage { get; set; }
+		public virtual SupplierResponseDTO Supplier { get; set; }
 		public Guid SupplierId { get; set; }
-		public virtual Supplier Supplier { get; set; }
-
-		public virtual IEnumerable<OrderDetail> OrderDetails { get; set; } = new HashSet<OrderDetail>();
 	}
 }

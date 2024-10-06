@@ -1,8 +1,10 @@
-﻿using API.Models.DTOs;
-using API.Models;
-using API.Services;
+﻿using API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using API.Models.DTOs.RequestDTOs;
+using API.Services.IServices;
+using API.Models.DTOs.ResponseDTOs;
+using API.Services;
 
 namespace API.Controllers
 {
@@ -18,55 +20,90 @@ namespace API.Controllers
 		}
 
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<AlcoholItem>>> GetAllAlcoholItems()
+		public async Task<ActionResult<IEnumerable<AlcoholItemResponseDTO>>> GetAllAlcoholItems()
 		{
-			var AlcoholItems = await _AlcoholItemService.GetAllAlcoholItemsAsync();
+			var alcoholItemResponseDTOs = await _AlcoholItemService.GetAllAlcoholItemsAsync();
 
-			return Ok(AlcoholItems);
+			return Ok(alcoholItemResponseDTOs);
 		}
 
 
 		[HttpGet("{id}")]
-		public async Task<ActionResult<AlcoholItem>> GetAlcoholItemById(Guid id)
+		public async Task<ActionResult<AlcoholItemResponseDTO>> GetAlcoholItemById(Guid id)
 		{
-			var AlcoholItem = await _AlcoholItemService.GetAlcoholItemByIdAsync(id);
-			if (AlcoholItem == null)
+			try
 			{
-				return BadRequest("AlcoholItem not found");
+				var alcoholItemResponseDTO = await _AlcoholItemService.GetAlcoholItemByIdAsync(id);
+				return Ok(alcoholItemResponseDTO);
 			}
-			return Ok(AlcoholItem);
+
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<AlcoholItem>> AddAlcoholItem(AlcoholItemDTO AlcoholItemDTO)
+		public async Task<ActionResult<AlcoholItemResponseDTO>> AddAlcoholItem(AlcoholItemRequestDTO AlcoholItemDTO)
 		{
-			var createdAlcoholItem = await _AlcoholItemService.AddAlcoholItemAsync(AlcoholItemDTO);
+			try
+			{
+				var alcoholItemResponseDTO = await _AlcoholItemService.AddAlcoholItemAsync(AlcoholItemDTO);
+				return Ok(alcoholItemResponseDTO);
+			}
 
-			return createdAlcoholItem;
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+
 		}
 
 		[HttpPut("{id}")]
-		public async Task<ActionResult<AlcoholItem>> UpdateAlcoholItem(Guid id, AlcoholItemDTO AlcoholItemDTO)
+		public async Task<ActionResult<AlcoholItemResponseDTO>> UpdateAlcoholItem(Guid id, AlcoholItemRequestDTO AlcoholItemDTO)
 		{
-			var updatedAlcoholItem = await _AlcoholItemService.UpdateAlcoholItemAsync(id, AlcoholItemDTO);
-
-			if (updatedAlcoholItem == null)
+			try
 			{
-				return BadRequest("AlcoholItem doesn't exists");
+				var alcoholItemResponseDTO = await _AlcoholItemService.UpdateAlcoholItemAsync(id, AlcoholItemDTO);
+				return Ok(alcoholItemResponseDTO);
 			}
-			return Ok(updatedAlcoholItem);
+
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		[HttpDelete("{id}")]
-		public async Task<ActionResult<AlcoholItem>> DeleteAlcoholItem(Guid id)
+		public async Task<ActionResult<AlcoholItemResponseDTO>> DeleteAlcoholItem(Guid id)
 		{
-			var deletedAlcoholItem = await _AlcoholItemService.DeleteAlcoholItemAsync(id);
-			if (deletedAlcoholItem == null)
+			try
 			{
-				return BadRequest($"Unable to delete AlcoholItem {id}");
+				var alcoholItemResponseDTO = await _AlcoholItemService.DeleteAlcoholItemAsync(id);
+				return Ok(alcoholItemResponseDTO);
+
 			}
-			return Ok(deletedAlcoholItem);
+
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
+		[HttpGet("Supplier{supplierId}")]
+		public async Task<ActionResult<IEnumerable<ItemResponseDTO>>> GetAllAlcoholBySuppliers(Guid supplierId)
+		{
+			try
+			{
+				var alcoholItemResponseDTOs = await _AlcoholItemService.GetAllAlcoholItemsBySupplierAsync(supplierId);
+				return Ok(alcoholItemResponseDTOs);
+			}
+
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
 	}
 }

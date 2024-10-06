@@ -1,12 +1,15 @@
 ﻿using API.Data;
 using API.Models;
-using API.Models.DTOs;
+using API.Models.DTOs.RequestDTOs;
+using API.Models.DTOs.ResponseDTOs;
+using API.Services.IServices;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace API.Services
 {
-	public class AddressService : IAddressService
+    public class AddressService : IAddressService
 	{
 		private readonly DataContext _context;
 		private readonly IMapper _mapper;
@@ -16,54 +19,68 @@ namespace API.Services
 			_context = context;
 			_mapper = mapper;
 		}
-		public async Task<Address> AddAddressAsync(AddressDTO AddressDTO)
+		public async Task<AddressResponseDTO> AddAddressAsync(AddressRequestDTO addressDTO)
 		{
-			var Address = _mapper.Map<Address>(AddressDTO);
-			await _context.Addresses.AddAsync(Address);
+			var address = _mapper.Map<Address>(addressDTO);
+			await _context.Addresses.AddAsync(address);
 			await _context.SaveChangesAsync();
-			return Address;
+
+			var addressResponseDTO = _mapper.Map<AddressResponseDTO>(address);
+
+			return addressResponseDTO;
 		}
 
-		public async Task<Address> DeleteAddressAsync(Guid id)
+		public async Task<AddressResponseDTO> DeleteAddressAsync(Guid id)
 		{
-			var Address = await _context.Addresses.SingleOrDefaultAsync(a => a.AddressId == id);
-			if (Address is null)
+			var address = await _context.Addresses.SingleOrDefaultAsync(a => a.AddressId == id);
+			if (address is null)
 			{
-				return null;
+				throw new InvalidOperationException($"Unable to delete : Address '{id}' not found");
 			}
-			_context.Addresses.Remove(Address);
+			_context.Addresses.Remove(address);
 			await _context.SaveChangesAsync();
-			return Address;
+
+			var addressResponseDTO = _mapper.Map<AddressResponseDTO>(address);
+
+			return addressResponseDTO;
 		}
 
-		public async Task<Address> GetAddressByIdAsync(Guid id)
+		public async Task<AddressResponseDTO> GetAddressByIdAsync(Guid id)
 		{
-			var Address = await _context.Addresses.Include(a => a.Customer).Include(a => a.Supplier).SingleOrDefaultAsync(a => a.AddressId == id);
-			if (Address is null)
+			var address = await _context.Addresses.SingleOrDefaultAsync(a => a.AddressId == id);
+			if (address is null)
 			{
-				return null;
-			}
-			return Address;
-		}
-
-		public async Task<IEnumerable<Address>> GetAllAddresssAsync()
-		{
-			var Addresss = await _context.Addresses.Include(a => a.Customer).Include(a => a.Supplier).ToListAsync();
-			return Addresss;
-		}
-
-		public async Task<Address> UpdateAddressAsync(Guid id, AddressDTO AddressDTO)
-		{
-			var existingAddress = await _context.Addresses.FindAsync(id);
-			if (existingAddress == null)
-			{
-				return null;
+				throw new InvalidOperationException($"Unable to get : Address '{id}' not found");
 			}
 
-			_mapper.Map(AddressDTO, existingAddress);
+			var addressResponseDTO = _mapper.Map<AddressResponseDTO>(address);
 
+			return addressResponseDTO;
+		}
+
+		public async Task<IEnumerable<AddressResponseDTO>> GetAllAddresssAsync()
+		{
+			var addresss = await _context.Addresses.ToListAsync();
+
+			var addressesResponseDTO = _mapper.Map<IEnumerable<AddressResponseDTO>>(addresss);
+
+			return addressesResponseDTO;
+		}
+
+		public async Task<AddressResponseDTO> UpdateAddressAsync(Guid id, AddressRequestDTO AddressDTO)
+		{
+			var address = await _context.Addresses.FindAsync(id);
+			if (address == null)
+			{
+				throw new InvalidOperationException($"Unable tu Update : Address '{id}' not found");
+			}
+
+			_mapper.Map(AddressDTO, address);
 			await _context.SaveChangesAsync();
-			return existingAddress;
+
+			var addressResponseDTO = _mapper.Map<AddressResponseDTO>(address);
+
+			return addressResponseDTO;
 		}
 	}
 }

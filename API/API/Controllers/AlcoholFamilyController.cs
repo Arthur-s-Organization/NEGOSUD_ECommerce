@@ -1,12 +1,13 @@
-﻿using API.Models.DTOs;
-using API.Models;
-using API.Services;
+﻿using API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using API.Models.DTOs.ResponseDTOs;
+using API.Models.DTOs.RequestDTOs;
+using API.Services.IServices;
 
 namespace API.Controllers
 {
-	[Route("api/[controller]")]
+    [Route("api/[controller]")]
 	[ApiController]
 	public class AlcoholFamilyController : ControllerBase
 	{
@@ -18,54 +19,73 @@ namespace API.Controllers
 		}
 
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<AlcoholFamily>>> GetAllAlcoholFamilys()
+		public async Task<ActionResult<IEnumerable<AlcoholFamilyResponseDTO>>> GetAllAlcoholFamilys()
 		{
-			var AlcoholFamilys = await _AlcoholFamilyService.GetAllAlcoholFamilysAsync();
+			var alcoholFamiliesResponseDTO = await _AlcoholFamilyService.GetAllAlcoholFamiliesAsync();
 
-			return Ok(AlcoholFamilys);
+			return Ok(alcoholFamiliesResponseDTO);
 		}
 
 
 		[HttpGet("{id}")]
-		public async Task<ActionResult<AlcoholFamily>> GetAlcoholFamilyById(Guid id)
+		public async Task<ActionResult<AlcoholFamilyResponseDTO>> GetAlcoholFamilyById(Guid id)
 		{
-			var AlcoholFamily = await _AlcoholFamilyService.GetAlcoholFamilyByIdAsync(id);
-			if (AlcoholFamily == null)
+			try
 			{
-				return BadRequest("AlcoholFamily not found");
+				var alcoholFamiliesResponseDTO = await _AlcoholFamilyService.GetAlcoholFamilyByIdAsync(id);
+				return Ok(alcoholFamiliesResponseDTO);
 			}
-			return Ok(AlcoholFamily);
+
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<AlcoholFamily>> AddAlcoholFamily(AlcoholFamilyDTO AlcoholFamilyDTO)
+		public async Task<ActionResult<AlcoholFamilyResponseDTO>> AddAlcoholFamily(AlcoholFamilyRequestDTO AlcoholFamilyDTO)
 		{
-			var createdAlcoholFamily = await _AlcoholFamilyService.AddAlcoholFamilyAsync(AlcoholFamilyDTO);
+			try
+			{
+				var alcoholFamilyResponseDTO = await _AlcoholFamilyService.AddAlcoholFamilyAsync(AlcoholFamilyDTO);
+				return Ok(alcoholFamilyResponseDTO);
+			}
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 
-			return createdAlcoholFamily;
 		}
 
 		[HttpPut("{id}")]
-		public async Task<ActionResult<AlcoholFamily>> UpdateAlcoholFamily(Guid id, AlcoholFamilyDTO AlcoholFamilyDTO)
+		public async Task<ActionResult<AlcoholFamilyResponseDTO>> UpdateAlcoholFamily(Guid id, AlcoholFamilyRequestDTO alcoholFamilyRequestDTO)
 		{
-			var updatedAlcoholFamily = await _AlcoholFamilyService.UpdateAlcoholFamilyAsync(id, AlcoholFamilyDTO);
-
-			if (updatedAlcoholFamily == null)
+			try
 			{
-				return BadRequest("AlcoholFamily doesn't exists");
+				var alcoholFamilyResponseDTO = await _AlcoholFamilyService.UpdateAlcoholFamilyAsync(id, alcoholFamilyRequestDTO);
+				return Ok(alcoholFamilyResponseDTO);
 			}
-			return Ok(updatedAlcoholFamily);
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+
 		}
 
 		[HttpDelete("{id}")]
-		public async Task<ActionResult<AlcoholFamily>> DeleteAlcoholFamily(Guid id)
+		public async Task<ActionResult<AlcoholFamilyResponseDTO>> DeleteAlcoholFamily(Guid id)
 		{
-			var deletedAlcoholFamily = await _AlcoholFamilyService.DeleteAlcoholFamilyAsync(id);
-			if (deletedAlcoholFamily == null)
+			try
 			{
-				return BadRequest($"Unable to delete AlcoholFamily {id}");
+				var alcoholFamilyResponseDTO = await _AlcoholFamilyService.DeleteAlcoholFamilyAsync(id);
+				return Ok(alcoholFamilyResponseDTO);
 			}
-			return Ok(deletedAlcoholFamily);
+
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 	}
 }
