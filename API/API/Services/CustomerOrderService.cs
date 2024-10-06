@@ -77,13 +77,31 @@ namespace API.Services
 				.SingleOrDefaultAsync(co => co.OrderID == id);
 			if (customerOrder is null)
 			{
-				{
-					throw new InvalidOperationException($"Unable to get : customerOrder '{id}' doesn't exists");
-				}
+				throw new InvalidOperationException($"Unable to get : customerOrder '{id}' doesn't exists");
 			}
 
 			var customerOrderResponseDTO = _mapper.Map<CustomerOrderResponseDTO>(customerOrder);
 			return customerOrderResponseDTO;
+		}
+
+
+		public async Task<IEnumerable<CustomerOrderResponseDTO>> GetCustomerOrdersByCustomerIdAsync(Guid customerId)
+		{
+			var customer = await _context.Customers.FindAsync(customerId);
+			if (customer == null)
+			{
+				throw new InvalidOperationException($"Unable to get : customer '{customerId}' doesn't exists");
+			}
+
+			var customerOrders = await _context.CustomerOrders
+				.Where(co => co.CustomerId == customerId)
+				.Include(co => co.OrderDetails)
+				.ThenInclude(od => od.Item) // Inclut les items liés à chaque OrderDetail
+				.Include(co => co.Customer)
+				.ToListAsync();
+
+			var customerOrderResponseDTOs = _mapper.Map<IEnumerable<CustomerOrderResponseDTO>>(customerOrders);
+			return customerOrderResponseDTOs;
 		}
 
 		public async Task<CustomerOrderResponseDTO> UpdateCustomerOrderAsync(Guid id, CustomerOrderRequestDTO customerOrderRequestDTO)

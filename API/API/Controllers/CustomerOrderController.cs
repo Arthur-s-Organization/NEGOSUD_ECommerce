@@ -21,25 +21,39 @@ namespace API.Controllers
 		[HttpGet]
 		public async Task<ActionResult<IEnumerable<CustomerOrder>>> GetAllCustomerOrders()
 		{
-			var CustomerOrdersResponseDTO = await _CustomerOrderService.GetAllCustomerOrdersAsync();
-			return Ok(CustomerOrdersResponseDTO);
+			var customerOrdersResponseDTO = await _CustomerOrderService.GetAllCustomerOrdersAsync();
+			return Ok(customerOrdersResponseDTO);
 		}
 
 
 		[HttpGet("{id}")]
-		public async Task<ActionResult<CustomerOrder>> GetCustomerOrderById(Guid id)
+		public async Task<ActionResult<CustomerOrderResponseDTO>> GetCustomerOrderById(Guid id)
 		{
 			try
 			{
-				var CustomerOrdersResponseDTO = await _CustomerOrderService.GetCustomerOrderByIdAsync(id);
-				return Ok(CustomerOrdersResponseDTO);
+				var customerOrdersResponseDTO = await _CustomerOrderService.GetCustomerOrderByIdAsync(id);
+				return Ok(customerOrdersResponseDTO);
 			}
 			catch (InvalidOperationException ex)
 			{
 				return BadRequest(ex.Message);
 			}
-
 		}
+
+		[HttpGet("Customer/{customerId}")]
+		public async Task<ActionResult<IEnumerable<CustomerOrderResponseDTO>>> GetCustomerOrdersByCustomerId(Guid customerId)
+		{
+			try
+			{
+				var customerOrdersResponseDTOs = await _CustomerOrderService.GetCustomerOrdersByCustomerIdAsync(customerId);
+				return Ok(customerOrdersResponseDTOs);
+			}
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
+
 
 		[HttpPost]
 		public async Task<ActionResult<CustomerOrderResponseDTO>> AddCustomerOrder(CustomerOrderRequestDTO customerOrderRequestDTO)

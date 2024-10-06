@@ -75,7 +75,7 @@ namespace API.Services
 			return alcoholFamiliesResponseDTO;
 		}
 
-		public async Task<AlcoholFamilyResponseDTO> UpdateAlcoholFamilyAsync(Guid id, AlcoholFamilyRequestDTO alcoholFamilyDTO)
+		public async Task<AlcoholFamilyResponseDTO> UpdateAlcoholFamilyAsync(Guid id, AlcoholFamilyRequestDTO alcoholFamilyRequestDTO)
 		{
 			var alcoholFamily = await _context.AlcoholFamilies.FindAsync(id);
 			if (alcoholFamily == null)
@@ -83,13 +83,13 @@ namespace API.Services
 				throw new InvalidOperationException($"Unable to modify : the alcohol Family '{id}' doesn't exists");
 			}
 
-			var alcoholFamilyNameExist = await _context.AlcoholFamilies.SingleOrDefaultAsync(af => af.Name == alcoholFamilyDTO.Name && af.AlcoholFamilyId != id);
+			var alcoholFamilyNameExist = await _context.AlcoholFamilies.SingleOrDefaultAsync(af => af.Name == alcoholFamilyRequestDTO.Name && af.AlcoholFamilyId != id);
 			if (alcoholFamilyNameExist != null)
 			{
-				throw new InvalidOperationException($"Unable to modify : alcohol Family named '{alcoholFamilyDTO.Name}' already exsists");
+				throw new InvalidOperationException($"Unable to modify : alcohol Family named '{alcoholFamilyRequestDTO.Name}' already exsists");
 			}
 
-			_mapper.Map(alcoholFamilyDTO, alcoholFamily);
+			_mapper.Map(alcoholFamilyRequestDTO, alcoholFamily);
 			await _context.SaveChangesAsync();
 
 			var alcoholFamilyResponseDTO = _mapper.Map<AlcoholFamilyResponseDTO>(alcoholFamily);

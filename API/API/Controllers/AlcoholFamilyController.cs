@@ -44,11 +44,11 @@ namespace API.Controllers
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<AlcoholFamilyResponseDTO>> AddAlcoholFamily(AlcoholFamilyRequestDTO AlcoholFamilyDTO)
+		public async Task<ActionResult<AlcoholFamilyResponseDTO>> AddAlcoholFamily(AlcoholFamilyRequestDTO alcoholFamilyRequestDTO)
 		{
 			try
 			{
-				var alcoholFamilyResponseDTO = await _AlcoholFamilyService.AddAlcoholFamilyAsync(AlcoholFamilyDTO);
+				var alcoholFamilyResponseDTO = await _AlcoholFamilyService.AddAlcoholFamilyAsync(alcoholFamilyRequestDTO);
 				return Ok(alcoholFamilyResponseDTO);
 			}
 			catch (InvalidOperationException ex)

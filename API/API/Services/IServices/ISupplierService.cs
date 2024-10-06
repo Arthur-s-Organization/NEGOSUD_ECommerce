@@ -6,12 +6,12 @@ namespace API.Services.IServices
 {
     public interface ISupplierService
     {
-        public Task<SupplierResponseDTO> AddSupplierAsync(SupplierRequestDTO SupplierDTO);
+        public Task<SupplierResponseDTO> AddSupplierAsync(SupplierRequestDTO supplierRequestDTO);
         public Task<IEnumerable<SupplierResponseDTO>> GetAllSuppliersAsync();
         public Task<SupplierResponseDTO> GetSupplierByIdAsync(Guid id);
-        public Task<SupplierResponseDTO> UpdateSupplierAsync(Guid id, SupplierRequestDTO SupplierDTO);
+        public Task<SupplierResponseDTO> UpdateSupplierAsync(Guid id, SupplierRequestDTO supplierRequestDTO);
         public Task<SupplierResponseDTO> DeleteSupplierAsync(Guid id);
-        public Task<SupplierResponseDTO> AddAdressToSupplierAsync(Guid SupplierId, Guid AdressId);
+        public Task<SupplierResponseDTO> AddAdressToSupplierAsync(Guid supplierId, Guid adressId);
     }
 }
 

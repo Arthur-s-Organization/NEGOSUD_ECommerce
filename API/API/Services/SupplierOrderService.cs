@@ -77,6 +77,27 @@ namespace API.Services
 			return supplierOrderResponseDTO;
 		}
 
+		public async Task<IEnumerable<SupplierOrderResponseDTO>> GetSupplierOrdersBySupplierIdAsync(Guid supplierId)
+		{
+			var supplier = await _context.Suppliers.FindAsync(supplierId);
+			if (supplier == null)
+			{
+				throw new InvalidOperationException($"Unable to get : supplier '{supplierId}' doesn't exists");
+			}
+
+			var supplierOrders = await _context.SupplierOrders
+				.Where(so => so.SupplierId == supplierId)
+				.Include(so => so.OrderDetails)
+				.ThenInclude(od => od.Item) // Inclut les items liés à chaque OrderDetail
+				.Include(so => so.Supplier)
+				.ToListAsync();
+
+			var supplierOrderResponseDTOs = _mapper.Map<IEnumerable<SupplierOrderResponseDTO>>(supplierOrders);
+			return supplierOrderResponseDTOs;
+		}
+
+
+
 		public async Task<SupplierOrderResponseDTO> UpdateSupplierOrderAsync(Guid id, SupplierOrderRequestDTO SupplierOrderRequestDTO)
 		{
 			var supplierOrder = await _context.SupplierOrders.FindAsync(id);

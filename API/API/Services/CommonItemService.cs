@@ -84,7 +84,7 @@ namespace API.Services
 			return commonItemsResponseDTO;
 		}
 
-		public async Task<CommonItemResponseDTO> UpdateCommonItemAsync(Guid id, CommonItemRequestDTO CommonItemRequestDTO)
+		public async Task<CommonItemResponseDTO> UpdateCommonItemAsync(Guid id, CommonItemRequestDTO commonItemRequestDTO)
 		{
 			var commonItem = await _context.CommonItems.FindAsync(id);
 
@@ -93,7 +93,7 @@ namespace API.Services
 				throw new InvalidOperationException($"Unable to modify : commonItem '{id}' doesn't exists");
 			}
 
-			_mapper.Map(CommonItemRequestDTO, commonItem);
+			_mapper.Map(commonItemRequestDTO, commonItem);
 			await _context.SaveChangesAsync();
 
 			var commonItemResponseDTO = _mapper.Map<CommonItemResponseDTO>(commonItem);
