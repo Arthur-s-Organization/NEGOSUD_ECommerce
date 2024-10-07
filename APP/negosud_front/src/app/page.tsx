@@ -1,9 +1,9 @@
 import Hero from "@/components/Hero";
 import ProductCard from "@/components/ProductCard";
-import { fetchBestSellingItems } from "@/services/itemsService";
+import { fetchAllItems, fetchBestSellingItems } from "@/services/itemsService";
 
 export default async function Home() {
-  const allItems = (await fetchBestSellingItems()) ?? [];
+  const allItems = (await fetchAllItems()) ?? [];
   return (
     <>
       <Hero />

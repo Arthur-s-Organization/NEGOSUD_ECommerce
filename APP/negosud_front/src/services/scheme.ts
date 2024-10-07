@@ -29,7 +29,7 @@ export const zItem = z.object({
   capacity: z.number().optional(),
   expirationDate : z.string().optional(),
   supplier: zSupplier,
-  alcoholFamily : zAlcoholFamily.nullable(),
+  alcoholFamily : zAlcoholFamily.nullable().optional(),
 });
 export const zItemList = z.array(zItem);
 
