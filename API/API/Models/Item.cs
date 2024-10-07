@@ -19,5 +19,11 @@ namespace API.Models
 		public virtual Supplier Supplier { get; set; }
 
 		public virtual IEnumerable<OrderDetail> OrderDetails { get; set; } = new HashSet<OrderDetail>();
+		public string? AlcoholVolume { get; set; } = null;
+		public string? Year { get; set; } = null;
+		public float? Capacity { get; set; } = null;
+		public DateTime? ExpirationDate { get; set; } = null;
+		public Guid? AlcoholFamilyId { get; set; } = null;
+		public virtual AlcoholFamily AlcoholFamily { get; set; }
 	}
 }

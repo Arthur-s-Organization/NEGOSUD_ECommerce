@@ -31,8 +31,6 @@ builder.Services.AddScoped<ISupplierService, SupplierService>();
 builder.Services.AddScoped<IAddressService, AddressService>();
 builder.Services.AddScoped<IAlcoholFamilyService, AlcoholFamilyService>();
 builder.Services.AddScoped<IItemService, ItemService>();
-builder.Services.AddScoped<IAlcoholItemService, AlcoholItemService>();
-builder.Services.AddScoped<ICommonItemService, CommonItemService>();
 builder.Services.AddScoped<ICustomerOrderService, CustomerOrderService>();
 builder.Services.AddScoped<ISupplierOrderService, SupplierOrderService>();
 

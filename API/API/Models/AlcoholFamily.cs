@@ -4,6 +4,6 @@
 	{
 		public Guid AlcoholFamilyId { get; set; }
 		public string Name { get; set; }
-		public virtual IEnumerable<AlcoholItem> AlcoholItems { get; set; }
+		public virtual IEnumerable<Item> Items { get; set; }
 	}
 }

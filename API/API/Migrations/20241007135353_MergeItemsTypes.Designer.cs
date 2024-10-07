@@ -4,6 +4,7 @@ using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20241007135353_MergeItemsTypes")]
+    partial class MergeItemsTypes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -114,13 +117,14 @@ namespace API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AlcoholFamilyId")
+                    b.Property<Guid>("AlcoholFamilyId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AlcoholVolume")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float?>("Capacity")
+                    b.Property<float>("Capacity")
                         .HasColumnType("real");
 
                     b.Property<DateTime>("CreationDate")
@@ -130,7 +134,7 @@ namespace API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("ExpirationDate")
+                    b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<byte[]>("ItemImage")
@@ -161,6 +165,7 @@ namespace API.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Year")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ItemId");
@@ -276,7 +281,9 @@ namespace API.Migrations
                 {
                     b.HasOne("API.Models.AlcoholFamily", "AlcoholFamily")
                         .WithMany("Items")
-                        .HasForeignKey("AlcoholFamilyId");
+                        .HasForeignKey("AlcoholFamilyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("API.Models.Supplier", "Supplier")
                         .WithMany("Items")

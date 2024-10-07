@@ -11,8 +11,8 @@ namespace API.Data
 
 		public DbSet<Address> Addresses { get; set; }
 		public DbSet<AlcoholFamily> AlcoholFamilies { get; set; }
-		public DbSet<AlcoholItem> AlcoholItems { get; set; }
-		public DbSet<CommonItem> CommonItems { get; set; }
+		//public DbSet<AlcoholItem> AlcoholItems { get; set; }
+		//public DbSet<CommonItem> CommonItems { get; set; }
 		public DbSet<Customer> Customers { get; set; }
 		public DbSet<Item> Items { get; set; }
 		public DbSet<Order> Orders { get; set; }
@@ -27,9 +27,9 @@ namespace API.Data
 
 
 			// Gestion des relations d'héritage
-			modelBuilder.Entity<Item>().ToTable("Items");
-			modelBuilder.Entity<AlcoholItem>().ToTable("AlcoholItem");
-			modelBuilder.Entity<CommonItem>().ToTable("CommonItem");
+			//modelBuilder.Entity<Item>().ToTable("Items");
+			//modelBuilder.Entity<AlcoholItem>().ToTable("AlcoholItem");
+			//modelBuilder.Entity<CommonItem>().ToTable("CommonItem");
 
 			modelBuilder.Entity<Order>().ToTable("Order");
 			modelBuilder.Entity<SupplierOrder>().ToTable("SupplierOrder");
@@ -55,6 +55,11 @@ namespace API.Data
 				.HasForeignKey(co => co.CustomerId);
 
 			modelBuilder.Entity<Item>()
+				.HasOne(i => i.AlcoholFamily)
+				.WithMany(af => af.Items)
+				.HasForeignKey(i => i.AlcoholFamilyId);
+
+			modelBuilder.Entity<Item>()
 				.HasOne(i => i.Supplier)
 				.WithMany(s => s.Items)
 				.HasForeignKey(i => i.SupplierId);
@@ -63,11 +68,6 @@ namespace API.Data
 				.HasOne(so => so.Supplier)
 				.WithMany(s => s.SupplierOrders)
 				.HasForeignKey(so => so.SupplierId);
-
-			modelBuilder.Entity<AlcoholItem>()
-				.HasOne(ai => ai.AlcoholFamily)
-				.WithMany(af => af.AlcoholItems)
-				.HasForeignKey(ai => ai.AlcoholFamilyId);
 
 
 			// Gestion des relations Many-To-Many
