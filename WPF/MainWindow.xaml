@@ -1,0 +1,62 @@
+﻿<Window x:Class="WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Panneau de navigation -->
+        <StackPanel Grid.Column="0" Background="#F0F0F0">
+            <Button Name="btnItems" Content="Items" Click="btnItems_Click" Margin="5" />
+            <Button Name="btnSuppliers" Content="Suppliers" Click="btnSuppliers_Click" Margin="5" />
+            <Button Name="btnCustomers" Content="Customers" Click="btnCustomers_Click" Margin="5" />
+            <Button Name="btnAlcoholFamily" Content="Alcohol Family" Click="btnAlcohoolFamily_Click" Margin="5" />
+        </StackPanel>
+
+    
+        <!-- DataGrid -->
+        <DataGrid x:Name="DataGrid" Grid.Column="1" AutoGenerateColumns="False" Margin="10" CanUserAddRows="False">
+            <DataGrid.Columns>
+                <!-- Colonnes pour les Items -->
+                <DataGridTextColumn Header="Item Name" Binding="{Binding Name}" />
+                <DataGridTextColumn Header="Stock" Binding="{Binding Stock}" />
+                <DataGridTextColumn Header="Price" Binding="{Binding Price}" />
+                <DataGridTextColumn Header="Origin Country" Binding="{Binding OriginCountry}" />
+                <DataGridTextColumn Header="Supplier Item Name" Binding="{Binding Supplier.Name}" />
+                <DataGridTextColumn Header="Alcohol Family" Binding="{Binding AlcoholFamily.Name}" />
+
+                <!-- Colonnes pour les Suppliers -->
+                <DataGridTextColumn Header="Supplier Name" Binding="{Binding Name}" Visibility="Collapsed" />
+                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Visibility="Collapsed" />
+                <DataGridTextColumn Header="Address" Binding="{Binding Address.StreetAddress}" Visibility="Collapsed" />
+                <DataGridTextColumn Header="City" Binding="{Binding Address.City}" Visibility="Collapsed" />
+
+                <!-- Colonnes pour les Customers -->
+                <DataGridTextColumn Header="First Name" Binding="{Binding FirstName}" Visibility="Collapsed" />
+                <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" Visibility="Collapsed" />
+                <DataGridTextColumn Header="Email Address" Binding="{Binding EmailAddress}" Visibility="Collapsed" />
+                <DataGridTextColumn Header="Phone Number" Binding="{Binding PhoneNumber}" Visibility="Collapsed" />
+                
+                <!-- Colonne pour les familles -->
+                <DataGridTextColumn Header="Alcohol Family Name" Binding="{Binding Name}" Visibility="Collapsed"/>
+
+                <DataGridTemplateColumn Header="Actions">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="Supprimer" Click="DeleteButton_Click" Tag="{Binding}" Margin="5" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>
