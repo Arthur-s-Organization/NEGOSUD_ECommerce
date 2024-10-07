@@ -31,23 +31,28 @@ namespace API.Mapping
 			CreateMap<AlcoholFamily, AlcoholFamilyResponseDTO>();
 			CreateMap<AlcoholFamilyResponseDTO, AlcoholFamily>();
 
-
-			CreateMap<AlcoholItem, AlcoholItemRequestDTO>();
-			CreateMap<AlcoholItemRequestDTO, AlcoholItem>();
-			CreateMap<AlcoholItem, AlcoholItemResponseDTO>();
-			CreateMap<AlcoholItemResponseDTO, AlcoholItem>();
-			
-			CreateMap<CommonItem, CommonItemRequestDTO>();
-			CreateMap<CommonItemRequestDTO, CommonItem>();
-			CreateMap<CommonItem, CommonItemResponseDTO>();
-			CreateMap<CommonItemResponseDTO, CommonItem>();
+			CreateMap<Item, ItemRequestDTO>();
+			CreateMap<ItemRequestDTO, Item>();
+			CreateMap<Item, ItemResponseDTO>();
+			CreateMap<ItemResponseDTO, Item>();
 
 
-			CreateMap<AlcoholItem, ItemResponseDTO>();
-				//.IncludeBase<Item, ItemResponseDTO>();
+			//CreateMap<AlcoholItem, AlcoholItemRequestDTO>();
+			//CreateMap<AlcoholItemRequestDTO, AlcoholItem>();
+			//CreateMap<AlcoholItem, AlcoholItemResponseDTO>();
+			//CreateMap<AlcoholItemResponseDTO, AlcoholItem>();
 
-			CreateMap<CommonItem, ItemResponseDTO>();
-				//.IncludeBase<Item, ItemResponseDTO>();
+			//CreateMap<CommonItem, CommonItemRequestDTO>();
+			//CreateMap<CommonItemRequestDTO, CommonItem>();
+			//CreateMap<CommonItem, CommonItemResponseDTO>();
+			//CreateMap<CommonItemResponseDTO, CommonItem>();
+
+
+			//CreateMap<AlcoholItem, ItemResponseDTO>();
+			//	//.IncludeBase<Item, ItemResponseDTO>();
+
+			//CreateMap<CommonItem, ItemResponseDTO>();
+			//	//.IncludeBase<Item, ItemResponseDTO>();
 
 			CreateMap<CustomerOrder, CustomerOrderRequestDTO>();
 			CreateMap<CustomerOrderRequestDTO, CustomerOrder>();

@@ -12,8 +12,9 @@
 		public string OriginCountry { get; set; }
 		public DateTime CreationDate { get; set; }
 		public int QuantitySold { get; set; }
-		public virtual SupplierResponseDTO Supplier { get; set; }
 		public Guid SupplierId { get; set; }
+		public virtual SupplierResponseDTO Supplier { get; set; }
+		public Guid AlcoholFamilyId { get; set; }
 		public virtual AlcoholFamilyResponseDTO AlcoholFamily { get; set; }
 		public string AlcoholVolume { get; set; }
 		public string Year { get; set; }

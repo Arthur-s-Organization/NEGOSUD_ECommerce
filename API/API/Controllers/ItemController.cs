@@ -13,9 +13,23 @@ namespace API.Controllers
 	{
 		private readonly IItemService _ItemService;
 
+
 		public ItemController(IItemService ItemService)
 		{
 			_ItemService = ItemService;
+		}
+		[HttpDelete("{id}")]
+		public async Task<ActionResult<ItemResponseDTO>> DeleteItemAsync(Guid id)
+		{
+			try
+			{
+				var itemResponseDTO = await _ItemService.DeleteItemAsync(id);
+				return Ok(itemResponseDTO);
+			}
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		[HttpGet]
@@ -70,6 +84,39 @@ namespace API.Controllers
 				return BadRequest(ex.Message);
 			}
 		}
+
+		[HttpPut("{id}")]
+		public async Task<ActionResult<ItemResponseDTO>> UpdateItem(Guid id, ItemRequestDTO itemRequestDTO)
+		{
+			try
+			{
+				var itemResponseDTO = await _ItemService.UpdateItemAsync(id, itemRequestDTO);
+				return Ok(itemResponseDTO);
+			}
+
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
+
+		[HttpPost]
+		public async Task<ActionResult<ItemResponseDTO>> AddItem(ItemRequestDTO itemRequestDTO)
+		{
+			try
+			{
+				var itemResponseDTO = await _ItemService.AddItemAsync(itemRequestDTO);
+				return Ok(itemResponseDTO);
+			}
+
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+
+		}
+
+
 
 	}
 }
