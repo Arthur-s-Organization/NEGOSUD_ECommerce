@@ -5,6 +5,7 @@ using API.Models.DTOs.ResponseDTOs;
 using API.Services.IServices;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace API.Services
@@ -26,21 +27,42 @@ namespace API.Services
 
 		public async Task<IEnumerable<ItemResponseDTO>> GetAllItemsAsync()
 		{
-			var alcoholItems = await _context.AlcoholItems
-				.Include(i => i.Supplier)
-				.ToListAsync();
+			var items = await _context.Items
+			  .Include(i => i.Supplier) // Inclure Supplier pour tous les items
+			  .ToListAsync();
 
-			var commonItems = await _context.CommonItems
-				.Include(i => i.Supplier)
-				.ToListAsync();
+			// Filtrer les AlcoholItem pour inclure AlcoholFamily uniquement pour eux
+			var alcoholItems = items.OfType<AlcoholItem>()
+				.ToList();
 
-			var alcoholItemsResponseDTO = _mapper.Map<IEnumerable<AlcoholItemResponseDTO>>(alcoholItems);
-			var commonItemsResponseDTO = _mapper.Map<IEnumerable<CommonItemResponseDTO>>(commonItems);
+			// Charger AlcoholFamily uniquement pour les AlcoholItems
+			foreach (var alcoholItem in alcoholItems)
+			{
+				_context.Entry(alcoholItem).Reference(i => i.AlcoholFamily).Load();
+			}
 
-			var allItemsResponseDTO = alcoholItemsResponseDTO.Cast<ItemResponseDTO>()
-				.Concat(commonItemsResponseDTO.Cast<ItemResponseDTO>());
+			// Mapper vers ItemResponseDTO
+			var itemResponseDTO = _mapper.Map<IEnumerable<ItemResponseDTO>>(items);
 
-			return allItemsResponseDTO;
+			return itemResponseDTO;
+
+
+			//var alcoholItems = await _context.AlcoholItems
+			//	.Include(i => i.Supplier)
+			//	.Include(i => i.AlcoholFamily)
+			//	.ToListAsync();
+
+			//var commonItems = await _context.CommonItems
+			//	.Include(i => i.Supplier)
+			//	.ToListAsync();
+
+			//var alcoholItemsResponseDTO = _mapper.Map<IEnumerable<AlcoholItemResponseDTO>>(alcoholItems);
+			//var commonItemsResponseDTO = _mapper.Map<IEnumerable<CommonItemResponseDTO>>(commonItems);
+
+			//var allItemsResponseDTO = alcoholItemsResponseDTO.Cast<ItemResponseDTO>()
+			//	.Concat(commonItemsResponseDTO.Cast<ItemResponseDTO>());
+
+			//return allItemsResponseDTO;
 		}
 
 		public async Task<IEnumerable<ItemResponseDTO>> GetTopSellingItemsAsync(int topCount)
