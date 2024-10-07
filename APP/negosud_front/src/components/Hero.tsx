@@ -3,7 +3,7 @@ import HeroImage from "/public/hero-image.png";
 
 export default function Hero() {
   return (
-    <section className="w-full bg-primary px-6 pb-12 pt-32 md:px-10">
+    <section className="w-full bg-primary px-6 pb-20 pt-32 md:px-10">
       <div className="container mx-auto max-w-6xl">
         <h1 className="text-4xl md:text-6xl font-bold text-center mb-6 font-heading text-secondary">
           NEGOSUD
@@ -17,8 +17,6 @@ export default function Hero() {
           <Image
             src={HeroImage}
             alt="Paysage de vignoble aux feuilles dorées"
-            layout="fill"
-            objectFit="cover"
             className="rounded-lg"
           />
         </div>
