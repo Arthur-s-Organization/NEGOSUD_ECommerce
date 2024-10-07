@@ -86,7 +86,7 @@ namespace API.Controllers
 			}
 		}
 
-		[HttpPost("{CustomerId}/Adresses/{AdressId}")]
+		[HttpPost("{customerId}/Adresses/{adressId}")]
 		public async Task<ActionResult<CustomerResponseDTO>> AddAdressToCustomer(Guid customerId, Guid adressId)
 		{
 			try
