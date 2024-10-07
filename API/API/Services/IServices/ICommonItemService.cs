@@ -6,10 +6,10 @@ namespace API.Services.IServices
 {
     public interface ICommonItemService
     {
-        public Task<CommonItemResponseDTO> AddCommonItemAsync(CommonItemRequestDTO CommonItemRequestDTO);
+        public Task<CommonItemResponseDTO> AddCommonItemAsync(CommonItemRequestDTO commonItemRequestDTO);
         public Task<IEnumerable<CommonItemResponseDTO>> GetAllCommonItemsAsync();
         public Task<CommonItemResponseDTO> GetCommonItemByIdAsync(Guid id);
-        public Task<CommonItemResponseDTO> UpdateCommonItemAsync(Guid id, CommonItemRequestDTO CommonItemRequestDTO);
+        public Task<CommonItemResponseDTO> UpdateCommonItemAsync(Guid id, CommonItemRequestDTO commonItemRequestDTO);
         public Task<CommonItemResponseDTO> DeleteCommonItemAsync(Guid id);
         public Task<IEnumerable<CommonItemResponseDTO>> GetAllCommonItemsBySupplierAsync(Guid supplierId);
 

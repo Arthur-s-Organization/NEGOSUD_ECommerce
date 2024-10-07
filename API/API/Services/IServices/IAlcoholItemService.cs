@@ -9,7 +9,7 @@ namespace API.Services.IServices
         public Task<AlcoholItemResponseDTO> AddAlcoholItemAsync(AlcoholItemRequestDTO alcoholItemRequestDTO);
         public Task<IEnumerable<AlcoholItemResponseDTO>> GetAllAlcoholItemsAsync();
         public Task<AlcoholItemResponseDTO> GetAlcoholItemByIdAsync(Guid id);
-        public Task<AlcoholItemResponseDTO> UpdateAlcoholItemAsync(Guid id, AlcoholItemRequestDTO AlcoholItemDTO);
+        public Task<AlcoholItemResponseDTO> UpdateAlcoholItemAsync(Guid id, AlcoholItemRequestDTO alcoholItemRequestDTO);
         public Task<AlcoholItemResponseDTO> DeleteAlcoholItemAsync(Guid id);
         public Task<IEnumerable<AlcoholItemResponseDTO>> GetAllAlcoholItemsBySupplierAsync(Guid supplierId);
 

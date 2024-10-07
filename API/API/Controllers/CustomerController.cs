@@ -87,11 +87,11 @@ namespace API.Controllers
 		}
 
 		[HttpPost("{CustomerId}/Adresses/{AdressId}")]
-		public async Task<ActionResult<CustomerResponseDTO>> AddAdressToCustomer(Guid CustomerId, Guid AdressId)
+		public async Task<ActionResult<CustomerResponseDTO>> AddAdressToCustomer(Guid customerId, Guid adressId)
 		{
 			try
 			{
-				var customerResponseDTO = await _CustomerService.AddAdressToCustomerAsync(CustomerId, AdressId);
+				var customerResponseDTO = await _CustomerService.AddAdressToCustomerAsync(customerId, adressId);
 				return Ok(customerResponseDTO);
 
 			}

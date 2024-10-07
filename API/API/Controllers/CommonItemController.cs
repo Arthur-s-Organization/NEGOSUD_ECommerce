@@ -44,11 +44,11 @@ namespace API.Controllers
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<CommonItemResponseDTO>> AddCommonItem(CommonItemRequestDTO CommonItemDTO)
+		public async Task<ActionResult<CommonItemResponseDTO>> AddCommonItem(CommonItemRequestDTO commonItemRequestDTO)
 		{
 			try
 			{
-				var commonItemResponseDTO = await _CommonItemService.AddCommonItemAsync(CommonItemDTO);
+				var commonItemResponseDTO = await _CommonItemService.AddCommonItemAsync(commonItemRequestDTO);
 				return Ok(commonItemResponseDTO);
 			}
 			catch (InvalidOperationException ex)
@@ -58,11 +58,11 @@ namespace API.Controllers
 		}
 
 		[HttpPut("{id}")]
-		public async Task<ActionResult<CommonItemResponseDTO>> UpdateCommonItem(Guid id, CommonItemRequestDTO CommonItemDTO)
+		public async Task<ActionResult<CommonItemResponseDTO>> UpdateCommonItem(Guid id, CommonItemRequestDTO commonItemRequestDTO)
 		{
 			try
 			{
-				var commonItemResponseDTO = await _CommonItemService.UpdateCommonItemAsync(id, CommonItemDTO);
+				var commonItemResponseDTO = await _CommonItemService.UpdateCommonItemAsync(id, commonItemRequestDTO);
 				return Ok(commonItemResponseDTO);
 			}
 

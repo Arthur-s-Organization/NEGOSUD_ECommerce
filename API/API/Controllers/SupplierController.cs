@@ -43,11 +43,11 @@ namespace API.Controllers
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<SupplierResponseDTO>> AddSupplier(SupplierRequestDTO SupplierDTO)
+		public async Task<ActionResult<SupplierResponseDTO>> AddSupplier(SupplierRequestDTO supplierRequestDTO)
 		{
 			try
 			{
-				var supplierResponseDTO = await _SupplierService.AddSupplierAsync(SupplierDTO);
+				var supplierResponseDTO = await _SupplierService.AddSupplierAsync(supplierRequestDTO);
 
 				return Ok(supplierResponseDTO);
 			}

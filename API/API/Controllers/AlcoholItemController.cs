@@ -45,11 +45,11 @@ namespace API.Controllers
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<AlcoholItemResponseDTO>> AddAlcoholItem(AlcoholItemRequestDTO AlcoholItemDTO)
+		public async Task<ActionResult<AlcoholItemResponseDTO>> AddAlcoholItem(AlcoholItemRequestDTO alcoholItemRequestDTO)
 		{
 			try
 			{
-				var alcoholItemResponseDTO = await _AlcoholItemService.AddAlcoholItemAsync(AlcoholItemDTO);
+				var alcoholItemResponseDTO = await _AlcoholItemService.AddAlcoholItemAsync(alcoholItemRequestDTO);
 				return Ok(alcoholItemResponseDTO);
 			}
 
@@ -61,11 +61,11 @@ namespace API.Controllers
 		}
 
 		[HttpPut("{id}")]
-		public async Task<ActionResult<AlcoholItemResponseDTO>> UpdateAlcoholItem(Guid id, AlcoholItemRequestDTO AlcoholItemDTO)
+		public async Task<ActionResult<AlcoholItemResponseDTO>> UpdateAlcoholItem(Guid id, AlcoholItemRequestDTO alcoholItemRequestDTO)
 		{
 			try
 			{
-				var alcoholItemResponseDTO = await _AlcoholItemService.UpdateAlcoholItemAsync(id, AlcoholItemDTO);
+				var alcoholItemResponseDTO = await _AlcoholItemService.UpdateAlcoholItemAsync(id, alcoholItemRequestDTO);
 				return Ok(alcoholItemResponseDTO);
 			}
 

@@ -19,9 +19,9 @@ namespace API.Services
 			_context = context;
 			_mapper = mapper;
 		}
-		public async Task<AddressResponseDTO> AddAddressAsync(AddressRequestDTO addressDTO)
+		public async Task<AddressResponseDTO> AddAddressAsync(AddressRequestDTO addressRequestDTO)
 		{
-			var address = _mapper.Map<Address>(addressDTO);
+			var address = _mapper.Map<Address>(addressRequestDTO);
 			await _context.Addresses.AddAsync(address);
 			await _context.SaveChangesAsync();
 
@@ -67,7 +67,7 @@ namespace API.Services
 			return addressesResponseDTO;
 		}
 
-		public async Task<AddressResponseDTO> UpdateAddressAsync(Guid id, AddressRequestDTO AddressDTO)
+		public async Task<AddressResponseDTO> UpdateAddressAsync(Guid id, AddressRequestDTO addressRequestDTO)
 		{
 			var address = await _context.Addresses.FindAsync(id);
 			if (address == null)
@@ -75,7 +75,7 @@ namespace API.Services
 				throw new InvalidOperationException($"Unable tu Update : Address '{id}' not found");
 			}
 
-			_mapper.Map(AddressDTO, address);
+			_mapper.Map(addressRequestDTO, address);
 			await _context.SaveChangesAsync();
 
 			var addressResponseDTO = _mapper.Map<AddressResponseDTO>(address);

@@ -42,11 +42,12 @@ namespace API.Mapping
 			CreateMap<CommonItem, CommonItemResponseDTO>();
 			CreateMap<CommonItemResponseDTO, CommonItem>();
 
+
 			CreateMap<AlcoholItem, ItemResponseDTO>();
-			//.Include<AlcoholItem, AlcoholItemResponseDTO>();
+				//.IncludeBase<Item, ItemResponseDTO>();
 
 			CreateMap<CommonItem, ItemResponseDTO>();
-			//	.Include<CommonItem, CommonItemResponseDTO>();
+				//.IncludeBase<Item, ItemResponseDTO>();
 
 			CreateMap<CustomerOrder, CustomerOrderRequestDTO>();
 			CreateMap<CustomerOrderRequestDTO, CustomerOrder>();

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using API.Models.DTOs.RequestDTOs;
 using API.Services.IServices;
 using API.Models.DTOs.ResponseDTOs;
+using API.Services;
 
 namespace API.Controllers
 {
@@ -41,12 +42,27 @@ namespace API.Controllers
 			}
 		}
 
-		[HttpPost]
-		public async Task<ActionResult<SupplierOrderResponseDTO>> AddSupplierOrder(SupplierOrderRequestDTO SupplierOrderDTO)
+
+		[HttpGet("Supplier/{supplierId}")]
+		public async Task<ActionResult<IEnumerable<SupplierOrderResponseDTO>>> GetSupplierOrdersBySupplierId(Guid supplierId)
 		{
 			try
 			{
-				var supplierOrderReponseDTO = await _SupplierOrderService.AddSupplierOrderAsync(SupplierOrderDTO);
+				var supplierOrdersResponseDTOs = await _SupplierOrderService.GetSupplierOrdersBySupplierIdAsync(supplierId);
+				return Ok(supplierOrdersResponseDTOs);
+			}
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
+
+		[HttpPost]
+		public async Task<ActionResult<SupplierOrderResponseDTO>> AddSupplierOrder(SupplierOrderRequestDTO supplierOrderRequestDTO)
+		{
+			try
+			{
+				var supplierOrderReponseDTO = await _SupplierOrderService.AddSupplierOrderAsync(supplierOrderRequestDTO);
 				return Ok(supplierOrderReponseDTO);
 
 			}
@@ -58,11 +74,11 @@ namespace API.Controllers
 		}
 
 		[HttpPut("{id}")]
-		public async Task<ActionResult<SupplierOrderResponseDTO>> UpdateSupplierOrder(Guid id, SupplierOrderRequestDTO SupplierOrderDTO)
+		public async Task<ActionResult<SupplierOrderResponseDTO>> UpdateSupplierOrder(Guid id, SupplierOrderRequestDTO supplierOrderRequestDTO)
 		{
 			try
 			{
-				var supplierOrderResponseDTO = await _SupplierOrderService.UpdateSupplierOrderAsync(id, SupplierOrderDTO);
+				var supplierOrderResponseDTO = await _SupplierOrderService.UpdateSupplierOrderAsync(id, supplierOrderRequestDTO);
 				return Ok(supplierOrderResponseDTO);
 			}
 
