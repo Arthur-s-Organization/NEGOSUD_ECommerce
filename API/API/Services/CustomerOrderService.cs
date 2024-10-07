@@ -28,6 +28,7 @@ namespace API.Services
 			}
 
 			var customerOrder = _mapper.Map<CustomerOrder>(customerOrderRequestDTO);
+			customerOrder.OrderDate = DateTime.Now;
 			await _context.CustomerOrders.AddAsync(customerOrder);
 			await _context.SaveChangesAsync();
 
@@ -128,7 +129,6 @@ namespace API.Services
 					{
 						var newSupplierOrder = new SupplierOrder
 						{
-							OrderDate = DateTime.Now,
 							Status = "0",
 							SupplierId = item.SupplierId
 						};
@@ -162,6 +162,8 @@ namespace API.Services
 					{
 						throw new InvalidOperationException($"Unable to update : There is not enough stock to ship the order");
 					}
+					// on incrémente la quantitySold de l'item
+					item.QuantitySold += orderDetail.Quantity;
 				}
 
 				foreach (var orderDetail in customerOrder.OrderDetails)

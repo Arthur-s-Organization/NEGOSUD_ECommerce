@@ -102,15 +102,19 @@ namespace API.Controllers
 			}
 		}
 
-		[HttpPost("{supplierOrderId}/Items/{itemId}/ItemQuantity{itemQuantity}")]
+		[HttpPost("{supplierOrderId}/Items/{itemId}/ItemQuantity/{itemQuantity}")]
 		public async Task<ActionResult<OrderDetail>> AddItemToSuppliererOrder(Guid supplierOrderId, Guid itemId, int itemQuantity)
 		{
-			var orderDetail = await _SupplierOrderService.AddItemToSupplierOrderAsync(supplierOrderId, itemId, itemQuantity);
-			if (orderDetail == null)
+			try
 			{
-				return BadRequest($"Order {supplierOrderId} already contains item {itemId}");
+				var orderDetail = await _SupplierOrderService.AddItemToSupplierOrderAsync(supplierOrderId, itemId, itemQuantity);
+				return Ok(orderDetail);
+
 			}
-			return Ok(orderDetail);
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 	}
 }

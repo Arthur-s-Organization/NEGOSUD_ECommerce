@@ -98,7 +98,7 @@ namespace API.Controllers
 			}
 		}
 
-		[HttpPost("{customerOrderId}/Items/{itemId}/ItemQuantity{itemQuantity}")]
+		[HttpPost("{customerOrderId}/Items/{itemId}/ItemQuantity/{itemQuantity}")]
 		public async Task<ActionResult<OrderDetail>> AddItemToCustomerOrder(Guid customerOrderId, Guid itemId, int itemQuantity)
 		{
 			try
