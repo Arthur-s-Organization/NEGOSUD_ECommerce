@@ -76,7 +76,7 @@ export const NavItems = () => (
       </Link>
     </li>
     <li>
-      <Link href="#" className="hover:text-secondary transition-colors">
+      <Link href="/contact" className="hover:text-secondary transition-colors">
         Contact
       </Link>
     </li>

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import AboutImage from "/public/about.jpg";
 
-export default function Home() {
+export default function About() {
   return (
     <div className="max-w-5xl mx-auto py-12 flex flex-col gap-4 px-6">
       <h1 className="font-heading text-2xl font-bold text-primary">
