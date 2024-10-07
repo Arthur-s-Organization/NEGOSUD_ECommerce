@@ -28,20 +28,18 @@ namespace API.Services
 		public async Task<IEnumerable<ItemResponseDTO>> GetAllItemsAsync()
 		{
 			var items = await _context.Items
-			  .Include(i => i.Supplier) // Inclure Supplier pour tous les items
+			  .Include(i => i.Supplier) 
 			  .ToListAsync();
 
 			// Filtrer les AlcoholItem pour inclure AlcoholFamily uniquement pour eux
 			var alcoholItems = items.OfType<AlcoholItem>()
 				.ToList();
 
-			// Charger AlcoholFamily uniquement pour les AlcoholItems
 			foreach (var alcoholItem in alcoholItems)
 			{
 				_context.Entry(alcoholItem).Reference(i => i.AlcoholFamily).Load();
 			}
 
-			// Mapper vers ItemResponseDTO
 			var itemResponseDTO = _mapper.Map<IEnumerable<ItemResponseDTO>>(items);
 
 			return itemResponseDTO;
@@ -73,6 +71,14 @@ namespace API.Services
 			.Take(topCount)
 			.ToListAsync();
 
+			var alcoholItems = items.OfType<AlcoholItem>()
+				.ToList();
+
+			foreach (var alcoholItem in alcoholItems)
+			{
+				_context.Entry(alcoholItem).Reference(i => i.AlcoholFamily).Load();
+			}
+
 			var ItemResponseDTO = _mapper.Map<IEnumerable<ItemResponseDTO>>(items);
 			return ItemResponseDTO;
 
@@ -85,6 +91,14 @@ namespace API.Services
 				.OrderByDescending(i => i.CreationDate)
 			.Take(topCount)
 			.ToListAsync();
+
+			var alcoholItems = items.OfType<AlcoholItem>()
+				.ToList();
+
+			foreach (var alcoholItem in alcoholItems)
+			{
+				_context.Entry(alcoholItem).Reference(i => i.AlcoholFamily).Load();
+			}
 
 			var ItemResponseDTO = _mapper.Map<IEnumerable<ItemResponseDTO>>(items);
 			return ItemResponseDTO;
