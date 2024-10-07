@@ -8,53 +8,58 @@ import { Button } from "./ui/button";
 
 export default function Header() {
   return (
-    <header className="bg-primary text-white fixed w-full shadow-lg z-10">
-      <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center space-x-8">
-          <Image
-            src={horizontalLogo}
-            alt="NegoSud logo"
-            className="h-14 w-auto"
-          />
-          <nav className="hidden lg:flex">
-            <ul className="flex space-x-6 text-xl">
-              <NavItems />
-            </ul>
-          </nav>
-        </div>
-        <div className="flex items-center space-x-4">
-          <div className="relative hidden lg:flex">
-            <SearchBar />
+    <>
+      <header className="bg-primary text-white fixed w-full shadow-lg z-10">
+        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center space-x-8">
+            <Link href="/">
+              <Image
+                src={horizontalLogo}
+                alt="NegoSud logo"
+                className="h-14 w-auto"
+              />
+            </Link>
+            <nav className="hidden lg:flex">
+              <ul className="flex space-x-6 text-xl">
+                <NavItems />
+              </ul>
+            </nav>
           </div>
-          <Link href="/">
-            <ShoppingCartIcon
-              className="text-white hover:text-secondary"
-              size={24}
-            />
-          </Link>
-          <Link href="/">
-            <UserIcon className="text-white hover:text-secondary" size={24} />
-          </Link>
-          <Dialog>
-            <DialogTrigger className="flex lg:hidden pl-0" asChild>
-              <Button className="hover:text-secondary">
-                <MenuIcon className="text-white" size={24} />
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="bg-primary text-white">
-              <nav className="mb-6">
-                <ul className="space-y-4">
-                  <NavItems />
-                </ul>
-              </nav>
-              <div className="relative">
-                <SearchBar />
-              </div>
-            </DialogContent>
-          </Dialog>
+          <div className="flex items-center space-x-4">
+            <div className="relative hidden lg:flex">
+              <SearchBar />
+            </div>
+            <Link href="/">
+              <ShoppingCartIcon
+                className="text-white hover:text-secondary"
+                size={24}
+              />
+            </Link>
+            <Link href="/">
+              <UserIcon className="text-white hover:text-secondary" size={24} />
+            </Link>
+            <Dialog>
+              <DialogTrigger className="flex lg:hidden pl-0" asChild>
+                <Button className="hover:text-secondary">
+                  <MenuIcon className="text-white" size={24} />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="bg-primary text-white">
+                <nav className="mb-6">
+                  <ul className="space-y-4">
+                    <NavItems />
+                  </ul>
+                </nav>
+                <div className="relative">
+                  <SearchBar />
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+      <div className="h-20 w-full bg-primary" />
+    </>
   );
 }
 
@@ -66,7 +71,7 @@ export const NavItems = () => (
       </Link>
     </li>
     <li>
-      <Link href="#" className="hover:text-secondary transition-colors">
+      <Link href="/about" className="hover:text-secondary transition-colors">
         A propos
       </Link>
     </li>
