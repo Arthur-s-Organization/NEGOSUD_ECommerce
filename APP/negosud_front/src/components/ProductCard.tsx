@@ -8,8 +8,9 @@ import {
 } from "./ui/card";
 import { Button } from "./ui/button";
 import { ShoppingCart } from "lucide-react";
+import { Item } from "@/services/scheme";
 
-export default function ProductCard({ product }: any) {
+export default function ProductCard({ product }: { product: Item }) {
   return (
     <Card className="border border-primary w-fit">
       <CardHeader className="text-center">
@@ -17,8 +18,8 @@ export default function ProductCard({ product }: any) {
       </CardHeader>
       <CardContent>
         <Image
-          src={product.image}
-          alt={product.name}
+          src={"/image-placeholder.png"}
+          alt={"product image"}
           width={207}
           height={300}
         />
@@ -27,10 +28,12 @@ export default function ProductCard({ product }: any) {
         <p className="font-bold text-lg">{product.price} €</p>
         <div className="flex items-end">
           <div>
-            <p>
-              <span className="font-bold text-primary">Produit par : </span>
-              {product.supplier.name}
-            </p>
+            {product.supplier && (
+              <p>
+                <span className="font-bold text-primary">Produit par : </span>
+                {product.supplier.name}
+              </p>
+            )}
             {product.alcoholFamily && (
               <p>
                 <span className="font-bold text-primary">Catégorie : </span>
