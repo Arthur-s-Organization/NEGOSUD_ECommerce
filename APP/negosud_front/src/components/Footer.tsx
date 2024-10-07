@@ -33,10 +33,12 @@ export default function Footer() {
               Découvrez NegoSud
             </h2>
             <p className="text-sm text-balance">
-              Embarquez pour un voyage à travers les plus beaux vignobles du
-              monde avec NegoSud. Notre sélection soigneusement choisie vous
-              apporte l'essence d'une vinification exceptionnelle dans votre
-              verre.
+              Découvrez une sélection de vins d'exception dans notre espace
+              dédié, dirigé par un œnologue passionné. Grâce à nos partenariats
+              avec des domaines renommés tels que Tariquet, Pellehaut, Joy,
+              Vignoble Fontan et Uby, nous vous offrons la possibilité de
+              déguster et d'acheter des crus de plusieurs régions. Un lieu idéal
+              pour les amateurs de vin et les visiteurs en quête d'authenticité.
             </p>
           </div>
           <div>

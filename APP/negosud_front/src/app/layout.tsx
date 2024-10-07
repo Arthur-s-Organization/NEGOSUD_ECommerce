@@ -27,7 +27,7 @@ export default function RootLayout({
         <meta charSet="UTF-8" />
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body className="font-sans">
+      <body className="font-sans bg-primary/5">
         <Header />
         {children}
         <Footer />
