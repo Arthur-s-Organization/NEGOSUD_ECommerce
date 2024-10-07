@@ -79,11 +79,10 @@ namespace API.Services
 				.Include(ai => ai.Supplier)
 				.AsQueryable();
 
-
-			//if (filters.AlcoholFamilyId.HasValue)
-			//{
-			//	query = query.Where(ai => ai.AlcoholFamilyId == filters.AlcoholFamilyId.Value);
-			//}
+			if (filters.AlcoholFamilyId.HasValue)
+			{
+				query = query.OfType<AlcoholItem>().Include(a => a.AlcoholFamily).Where(ai => ai.AlcoholFamilyId == filters.AlcoholFamilyId.Value);
+			}
 
 			if (filters.SupplierId.HasValue)
 			{

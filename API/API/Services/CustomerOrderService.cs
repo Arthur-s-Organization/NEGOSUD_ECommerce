@@ -117,7 +117,7 @@ namespace API.Services
 				throw new InvalidOperationException($"Unable to update : customerOrder '{id}' doesn't exists");
 			}
 
-			// Cas ou la commande client passe en statit "payée" (donc validée)
+			// Cas ou la commande client passe en statut "payée" (donc validée)
 			if (customerOrderRequestDTO.Status == "1")
 			{
 				foreach (var orderDetail in customerOrder.OrderDetails)
