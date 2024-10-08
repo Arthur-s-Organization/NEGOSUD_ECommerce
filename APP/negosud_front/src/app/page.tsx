@@ -1,18 +1,14 @@
 import Hero from "@/components/Hero";
 import ProductCard from "@/components/ProductCard";
-const product = {
-  name: "Nom du produit",
-  price: "17,99",
-  image: "/image.png",
-  supplier: {
-    name: "nom de la maison",
-  },
-  alcoholFamily: {
-    name: "rouge",
-  },
-  originCountry: "France",
-};
-export default function Home() {
+import {
+  fetchAllItems,
+  fetchBestSellingItems,
+  fetchRecentItems,
+} from "@/services/itemsService";
+
+export default async function Home() {
+  const bestSelling = (await fetchBestSellingItems()) ?? [];
+  const recentItem = (await fetchRecentItems()) ?? [];
   return (
     <>
       <Hero />
@@ -22,19 +18,17 @@ export default function Home() {
             Les meilleures ventes :
           </h2>
           <div className="flex gap-x-2 items-center">
-            <ProductCard product={product} />
-            <ProductCard product={product} />
-            <ProductCard product={product} />
-            <ProductCard product={product} />
+            {bestSelling.map((item) => (
+              <ProductCard key={item.itemId} product={item} />
+            ))}
           </div>
         </div>
         <div className="flex flex-col gap-4">
           <h2 className="font-heading font-bold text-2xl">Nouveautés :</h2>
           <div className="flex gap-x-2 items-center">
-            <ProductCard product={product} />
-            <ProductCard product={product} />
-            <ProductCard product={product} />
-            <ProductCard product={product} />
+            {recentItem.map((item) => (
+              <ProductCard key={item.itemId} product={item} />
+            ))}
           </div>
         </div>
       </div>
