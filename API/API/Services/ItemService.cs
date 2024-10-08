@@ -70,6 +70,7 @@ namespace API.Services
 		{
 			var items = await _context.Items
 				.Include(i => i.Supplier)
+				.Include(i => i.AlcoholFamily)
 				.OrderByDescending(i => i.QuantitySold)
 			.Take(topCount)
 			.ToListAsync();
@@ -82,6 +83,7 @@ namespace API.Services
 		{
 			var items = await _context.Items
 				.Include(i => i.Supplier)
+				.Include(i => i.AlcoholFamily)
 				.OrderByDescending(i => i.CreationDate)
 			.Take(topCount)
 			.ToListAsync();
@@ -218,6 +220,8 @@ namespace API.Services
 			{
 				throw new InvalidOperationException($"Unable to add : a alcoholItem named '{itemRequestDTO.Name}' already exsists");
 			}
+
+
 
 
 			var item = _mapper.Map<Item>(itemRequestDTO);
