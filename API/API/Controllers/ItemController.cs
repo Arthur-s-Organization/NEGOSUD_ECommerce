@@ -100,12 +100,12 @@ namespace API.Controllers
 			}
 		}
 
-		[HttpPost]
-		public async Task<ActionResult<ItemResponseDTO>> AddItem(ItemRequestDTO itemRequestDTO, IFormFile imageFile)
+		[HttpPost()]
+		public async Task<ActionResult<ItemResponseDTO>> AddItem(ItemRequestDTO itemRequestDTO)
 		{
 			try
 			{
-				var itemResponseDTO = await _ItemService.AddItemAsync(itemRequestDTO, imageFile);
+				var itemResponseDTO = await _ItemService.AddItemAsync(itemRequestDTO);
 				return Ok(itemResponseDTO);
 			}
 

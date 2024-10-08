@@ -13,7 +13,7 @@
 		public float? Capacity { get; set; }
 		public DateTime? ExpirationDate { get; set; }
 		public Guid? AlcoholFamilyId { get; set; }
-		public byte[] ItemImage { get; set; }
+		public IFormFile ImageFile { get; set; }
 
 	}
 }

@@ -14,11 +14,12 @@ namespace API.Models
 		public string OriginCountry { get; set; }
 		public DateTime CreationDate { get; set; }
 		public int QuantitySold { get; set; }
-		public byte[]? ItemImage { get; set; }
 		public Guid SupplierId { get; set; }
 		public virtual Supplier Supplier { get; set; }
+		public byte[]? ItemImage { get; set; }
 
 		public virtual IEnumerable<OrderDetail> OrderDetails { get; set; } = new HashSet<OrderDetail>();
+
 		public string? AlcoholVolume { get; set; } = null;
 		public string? Year { get; set; } = null;
 		public float? Capacity { get; set; } = null;

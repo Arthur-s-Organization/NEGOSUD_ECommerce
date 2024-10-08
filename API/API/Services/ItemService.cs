@@ -197,7 +197,7 @@ namespace API.Services
 
 
 
-		public async Task<ItemResponseDTO> AddItemAsync(ItemRequestDTO itemRequestDTO, IFormFile imageFile)
+		public async Task<ItemResponseDTO> AddItemAsync(ItemRequestDTO itemRequestDTO)
 		{
 			var alcoholFamily = _context.AlcoholFamilies.SingleOrDefault(ai => ai.AlcoholFamilyId == itemRequestDTO.AlcoholFamilyId);
 
@@ -225,10 +225,10 @@ namespace API.Services
 			item.CreationDate = DateTime.Now;
 
 
-			if (imageFile != null && imageFile.Length > 0)
+			if (itemRequestDTO.ImageFile != null && itemRequestDTO.ImageFile.Length > 0)
 			{
 				using var memoryStream = new MemoryStream();
-				await imageFile.CopyToAsync(memoryStream);
+				await itemRequestDTO.ImageFile.CopyToAsync(memoryStream);
 				item.ItemImage = memoryStream.ToArray(); 
 			}
 
