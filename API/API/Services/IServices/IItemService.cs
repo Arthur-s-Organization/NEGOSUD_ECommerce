@@ -13,6 +13,8 @@ namespace API.Services.IServices
 		public Task<IEnumerable<ItemResponseDTO>> GetRecentlyAddedItemsAsync(int topCount);
 		public Task<IEnumerable<ItemResponseDTO>> GetFilteredItemsAsync(ItemFilterRequestDTO filters);
 		public Task<ItemResponseDTO> UpdateItemAsync(Guid id, ItemRequestDTO itemRequestDTO);
-		public Task<ItemResponseDTO> AddItemAsync(ItemRequestDTO itemRequestDTO);
+		public Task<ItemResponseDTO> AddItemAsync(ItemRequestDTO itemRequestDTO, IFormFile imageFile);
+		public Task<IEnumerable<ItemResponseDTO>> GetItemsByNameAsync(string name);
+
 	}
 }

@@ -41,7 +41,7 @@ namespace API.Controllers
 		}
 
 
-		[HttpGet("Supplier{supplierId}")]
+		[HttpGet("Supplier/{supplierId}")]
 		public async Task<ActionResult<IEnumerable<ItemResponseDTO>>> GetAllItemsBySuppliers(Guid supplierId)
 		{
 			try
@@ -101,11 +101,11 @@ namespace API.Controllers
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<ItemResponseDTO>> AddItem(ItemRequestDTO itemRequestDTO)
+		public async Task<ActionResult<ItemResponseDTO>> AddItem(ItemRequestDTO itemRequestDTO, IFormFile imageFile)
 		{
 			try
 			{
-				var itemResponseDTO = await _ItemService.AddItemAsync(itemRequestDTO);
+				var itemResponseDTO = await _ItemService.AddItemAsync(itemRequestDTO, imageFile);
 				return Ok(itemResponseDTO);
 			}
 
@@ -114,6 +114,14 @@ namespace API.Controllers
 				return BadRequest(ex.Message);
 			}
 
+		}
+
+		[HttpGet("SupplierName/{name}")]
+		public async Task<ActionResult<IEnumerable<ItemResponseDTO>>> GetItemsByName(string name)
+		{
+			var ItemResponseDTO = await _ItemService.GetItemsByNameAsync(name);
+
+			return Ok(ItemResponseDTO);
 		}
 
 

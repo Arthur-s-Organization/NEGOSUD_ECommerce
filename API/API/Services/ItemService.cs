@@ -8,6 +8,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace API.Services
 {
@@ -61,9 +62,6 @@ namespace API.Services
 			//var itemResponseDTO = _mapper.Map<IEnumerable<ItemResponseDTO>>(items);
 
 			//return itemResponseDTO;
-
-
-
 		}
 
 		public async Task<IEnumerable<ItemResponseDTO>> GetTopSellingItemsAsync(int topCount)
@@ -197,7 +195,9 @@ namespace API.Services
 			return itemResponseDTO;
 		}
 
-		public async Task<ItemResponseDTO> AddItemAsync(ItemRequestDTO itemRequestDTO)
+
+
+		public async Task<ItemResponseDTO> AddItemAsync(ItemRequestDTO itemRequestDTO, IFormFile imageFile)
 		{
 			var alcoholFamily = _context.AlcoholFamilies.SingleOrDefault(ai => ai.AlcoholFamilyId == itemRequestDTO.AlcoholFamilyId);
 
@@ -223,6 +223,16 @@ namespace API.Services
 			var item = _mapper.Map<Item>(itemRequestDTO);
 			item.Slug = SlugHelper.GenerateSlug(item.Name);
 			item.CreationDate = DateTime.Now;
+
+
+			if (imageFile != null && imageFile.Length > 0)
+			{
+				using var memoryStream = new MemoryStream();
+				await imageFile.CopyToAsync(memoryStream);
+				item.ItemImage = memoryStream.ToArray(); 
+			}
+
+
 			await _context.Items.AddAsync(item);
 			await _context.SaveChangesAsync();
 
@@ -230,5 +240,14 @@ namespace API.Services
 
 			return alcoholItemResponseDTO;
 		}
+
+		public async Task<IEnumerable<ItemResponseDTO>> GetItemsByNameAsync(string name)
+		{
+			var items = await _context.Items.Where(i => i.Name.Contains(name)).ToListAsync();
+
+			var ItemsResponseDTO = _mapper.Map<IEnumerable<ItemResponseDTO>>(items);
+			return ItemsResponseDTO;
+		}
+
 	}
 }
