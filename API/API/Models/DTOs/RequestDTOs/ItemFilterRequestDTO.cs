@@ -9,6 +9,7 @@
 		public Guid? AlcoholFamilyId { get; set; }
 		public string? Category { get; set; }
 		public string? Year { get; set; }
+		public string? OriginCountry { get; set; }
 
 	}
 }

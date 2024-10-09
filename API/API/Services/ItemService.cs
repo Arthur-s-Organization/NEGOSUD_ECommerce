@@ -106,6 +106,7 @@ namespace API.Services
 			}
 			var query = _context.Items
 				.Include(i => i.Supplier)
+				.Include(i=> i.AlcoholFamily)
 				.AsQueryable();
 
 			if (!string.IsNullOrWhiteSpace(filters.Name))
@@ -138,6 +139,10 @@ namespace API.Services
 				query = query.Where(i => i.Year == filters.Year);
 			}
 
+			if (!string.IsNullOrWhiteSpace(filters.OriginCountry))
+			{
+				query = query.Where(i => i.OriginCountry == filters.OriginCountry);
+			}
 
 			if (!string.IsNullOrWhiteSpace(filters.Category))
 			{
