@@ -10,6 +10,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+
 namespace API.Services
 {
 	public class ItemService : IItemService
@@ -17,10 +20,14 @@ namespace API.Services
 		private readonly DataContext _context;
 		private readonly IMapper _mapper;
 
-		public ItemService(DataContext context, IMapper mapper)
+		private readonly IWebHostEnvironment _webHostEnvironment;
+
+		public ItemService(DataContext context, IMapper mapper, IWebHostEnvironment webHostEnvironment)
 		{
 			_context = context;
 			_mapper = mapper;
+
+			_webHostEnvironment = webHostEnvironment;
 		}
 		public async Task<ItemResponseDTO> DeleteItemAsync(Guid id)
 		{
@@ -227,9 +234,19 @@ namespace API.Services
 
 			if (itemRequestDTO.ImageFile != null && itemRequestDTO.ImageFile.Length > 0)
 			{
-				using var memoryStream = new MemoryStream();
-				await itemRequestDTO.ImageFile.CopyToAsync(memoryStream);
-				item.ItemImage = memoryStream.ToArray(); 
+				//using var memoryStream = new MemoryStream();
+				//await itemRequestDTO.ImageFile.CopyToAsync(memoryStream);
+				//item.ItemImage = memoryStream.ToArray(); 
+
+				var folderPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Images");
+				var fileName = Guid.NewGuid().ToString() + Path.GetExtension(itemRequestDTO.ImageFile.FileName);
+				var filePath = Path.Combine(folderPath, fileName);
+
+				using (var stream = new FileStream(filePath, FileMode.Create))
+				{
+					await itemRequestDTO.ImageFile.CopyToAsync(stream);
+				}
+				item.ItemImagePath = fileName;
 			}
 
 

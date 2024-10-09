@@ -18,7 +18,8 @@
 		public string? Year { get; set; }
 		public float? Capacity { get; set; }
 		public DateTime? ExpirationDate { get; set; }
-		public string ItemImage { get; set; }
+
+		public string ItemImagePath { get; set; }
 
 	}
 }

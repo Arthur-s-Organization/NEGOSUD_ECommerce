@@ -12,5 +12,6 @@
 		public string PhoneNumber { get; set; }
 		public virtual IEnumerable<CustomerOrder>? CustomerOrders { get; set; } = new HashSet<CustomerOrder>();
 		public virtual Address? Address { get; set; }
+		public Guid? AddressId { get; set; }
 	}
 }

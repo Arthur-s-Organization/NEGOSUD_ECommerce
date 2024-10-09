@@ -33,8 +33,7 @@ namespace API.Mapping
 
 			CreateMap<Item, ItemRequestDTO>();
 			CreateMap<ItemRequestDTO, Item>();
-			CreateMap<Item, ItemResponseDTO>()
-				.ForMember(dest => dest.ItemImage, opt => opt.MapFrom(src => src.ItemImage != null ? Convert.ToBase64String(src.ItemImage) : null));
+			CreateMap<Item, ItemResponseDTO>();
 			CreateMap<ItemResponseDTO, Item>();
 
 

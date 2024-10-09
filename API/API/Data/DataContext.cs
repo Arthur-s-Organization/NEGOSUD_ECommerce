@@ -37,16 +37,26 @@ namespace API.Data
 
 
 			// Gestion des relations One-To-One
-			modelBuilder.Entity<Customer>()
-				.HasOne(c => c.Address)
-				.WithOne(a => a.Customer)
-				.HasForeignKey<Address>(a => a.CustomerId);
+			//modelBuilder.Entity<Customer>()
+			//	.HasOne(c => c.Address)
+			//	.WithOne(a => a.Customer)
+			//	.HasForeignKey<Address>(a => a.CustomerId);
 
-			modelBuilder.Entity<Supplier>()
-				.HasOne(s => s.Address)
-				.WithOne(a => a.Supplier)
-				.HasForeignKey<Address>(a => a.SupplierId);
 
+			//modelBuilder.Entity<Supplier>()
+			//	.HasOne(s => s.Address)
+			//	.WithOne(a => a.Supplier)
+			//	.HasForeignKey<Address>(a => a.SupplierId);
+
+			modelBuilder.Entity<Address>()
+				.HasOne(a => a.Customer)
+				.WithOne(c => c.Address)
+				.HasForeignKey<Customer>(c => c.AddressId);
+
+			modelBuilder.Entity<Address>()
+				.HasOne(a => a.Supplier)
+				.WithOne(s => s.Address)
+				.HasForeignKey<Supplier>(s => s.AddressId);
 
 			// Gestion des relations One-To-Many
 			modelBuilder.Entity<CustomerOrder>()
