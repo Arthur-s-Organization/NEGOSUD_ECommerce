@@ -105,8 +105,13 @@ namespace API.Services
 				throw new InvalidOperationException($"Unable to get : Max Price is inferior to Min Price");
 			}
 			var query = _context.Items
-				.Include(ai => ai.Supplier)
+				.Include(i => i.Supplier)
 				.AsQueryable();
+
+			if (!string.IsNullOrWhiteSpace(filters.Name))
+			{
+				query = query.Where(i => i.Name.Contains(filters.Name));
+			}
 
 			if (filters.AlcoholFamilyId.HasValue)
 			{
@@ -115,17 +120,28 @@ namespace API.Services
 
 			if (filters.SupplierId.HasValue)
 			{
-				query = query.Where(ai => ai.SupplierId == filters.SupplierId.Value);
+				query = query.Where(i => i.SupplierId == filters.SupplierId.Value);
 			}
 
 			if (filters.MinPrice.HasValue)
 			{
-				query = query.Where(ai => ai.Price >= filters.MinPrice.Value);
+				query = query.Where(i => i.Price >= filters.MinPrice.Value);
 			}
 
 			if (filters.MaxPrice.HasValue)
 			{
-				query = query.Where(ai => ai.Price <= filters.MaxPrice.Value);
+				query = query.Where(i => i.Price <= filters.MaxPrice.Value);
+			}
+
+			if (!string.IsNullOrWhiteSpace(filters.Year))
+			{
+				query = query.Where(i => i.Year == filters.Year);
+			}
+
+
+			if (!string.IsNullOrWhiteSpace(filters.Category))
+			{
+				query = query.Where(i => i.Category == filters.Category);
 			}
 
 			var filteredItems = await query.ToListAsync();
