@@ -27,9 +27,9 @@ export default function RootLayout({
         <meta charSet="UTF-8" />
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body className="font-sans bg-primary/5">
+      <body className="font-sans bg-primary/5 min-h-screen flex flex-col">
         <Header />
-        {children}
+        <div className="flex flex-1 flex-col">{children}</div>
         <Footer />
       </body>
     </html>

@@ -28,6 +28,7 @@ namespace API.Services
 			}
 
 			var supplierOrder = _mapper.Map<SupplierOrder>(supplierOrderRequestDTO);
+			supplierOrder.OrderDate = DateTime.Now;
 			await _context.SupplierOrders.AddAsync(supplierOrder);
 			await _context.SaveChangesAsync();
 
@@ -153,6 +154,13 @@ namespace API.Services
 			if (existingOrderDetail != null)
 			{
 				throw new InvalidOperationException($"Unable to add : this orderDetail already exists");
+			}
+
+			var itemOwnToSupplier = await _context.Items
+				.SingleOrDefaultAsync(i => i.ItemId == itemId && i.SupplierId == supplierOrder.SupplierId);
+			if (itemOwnToSupplier == null)
+			{
+				throw new InvalidOperationException($"Unable to add : item {itemId} doesn't belong to the supplier {supplierOrder.SupplierId}.");
 			}
 
 			var orderDetail = new OrderDetail
