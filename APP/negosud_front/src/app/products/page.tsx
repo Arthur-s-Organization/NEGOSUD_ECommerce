@@ -28,7 +28,7 @@ export default function Products() {
       </h1>
       {items && (
         <div className="flex gap-10">
-          <div className="w-fit min-h-full bg-primary px-6">
+          <div className="w-fit h-fit py-6 bg-primary px-6">
             <FilterForm onFilter={fetchItems} />
           </div>
           <div className="flex flex-wrap gap-2">
