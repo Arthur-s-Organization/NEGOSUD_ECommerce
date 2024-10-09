@@ -175,7 +175,7 @@ export const FilterForm = ({
               htmlFor="AlcoholFamily"
               className="block text-sm font-medium text-white mb-1"
             >
-              Maison
+              Famille
             </label>
             <select
               id="AlcoholFamily"

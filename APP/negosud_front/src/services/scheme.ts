@@ -16,7 +16,8 @@ export const zSupplierList = z.array(zSupplier);
 
 export const zItem = z.object({
   itemId: z.string(),
-  name: z.string(),  
+  name: z.string(),
+  category: z.string(),
   slug: z.string().optional().nullable(),
   stock: z.number(),
   description: z.string().optional().nullable(),
