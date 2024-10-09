@@ -14,7 +14,7 @@ import Link from "next/link";
 export default function ProductCard({ product }: { product: Item }) {
   return (
     <Link href="/">
-      <Card className="border border-primary w-fit hover:shadow-2xl">
+      <Card className="border border-primary w-[20rem] hover:shadow-2xl items-center flex flex-col">
         <CardHeader className="text-center">
           <CardTitle>{product.name}</CardTitle>
         </CardHeader>
@@ -26,9 +26,9 @@ export default function ProductCard({ product }: { product: Item }) {
             height={300}
           />
         </CardContent>
-        <CardFooter className="flex flex-col items-start gap-3">
+        <CardFooter className="flex flex-col items-start gap-3 w-full px-10">
           <p className="font-bold text-lg">{product.price} €</p>
-          <div className="flex items-end">
+          <div className="flex items-end  w-full justify-between">
             <div>
               {product.supplier && (
                 <p>
@@ -36,10 +36,12 @@ export default function ProductCard({ product }: { product: Item }) {
                   {product.supplier.name}
                 </p>
               )}
-              {product.alcoholFamily && (
+              {product.category && (
                 <p>
                   <span className="font-bold text-primary">Catégorie : </span>
-                  {product.alcoholFamily.name}
+                  {product.category === "alcohol"
+                    ? product.alcoholFamily?.name
+                    : "Accessoire"}
                 </p>
               )}
               <p>

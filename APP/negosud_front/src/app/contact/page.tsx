@@ -32,7 +32,7 @@ export default function Contact() {
     window.location.href = mailtoLink;
   };
   return (
-    <div className="max-w-xl mx-auto py-12 flex flex-col gap-4 px-6">
+    <div className="max-w-2xl w-full mx-auto py-12 flex flex-col gap-4 px-6">
       <h1 className="text-2xl font-bold mb-4 font-heading">Contactez-nous</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
@@ -48,7 +48,7 @@ export default function Contact() {
             value={formData.firstName}
             onChange={handleChange}
             required
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-primary"
           />
         </div>
 
@@ -65,7 +65,7 @@ export default function Contact() {
             value={formData.lastName}
             onChange={handleChange}
             required
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-primary"
           />
         </div>
 
@@ -82,7 +82,7 @@ export default function Contact() {
             value={formData.email}
             onChange={handleChange}
             required
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-primary"
           />
         </div>
 
@@ -99,7 +99,7 @@ export default function Contact() {
             onChange={handleChange}
             required
             rows={4}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-primary"
           />
         </div>
 

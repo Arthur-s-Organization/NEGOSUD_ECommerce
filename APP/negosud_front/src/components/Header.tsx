@@ -66,7 +66,7 @@ export default function Header() {
 export const NavItems = () => (
   <>
     <li>
-      <Link href="#" className="hover:text-secondary transition-colors">
+      <Link href="/products" className="hover:text-secondary transition-colors">
         Produits
       </Link>
     </li>

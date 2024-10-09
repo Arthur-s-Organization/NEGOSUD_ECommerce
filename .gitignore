@@ -310,5 +310,6 @@ next-env.d.ts
 
 # custom
 API/API/appsettings.json
+API/API/Images
 
 # End of https://www.toptal.com/developers/gitignore/api/nextjs,aspnetcore
