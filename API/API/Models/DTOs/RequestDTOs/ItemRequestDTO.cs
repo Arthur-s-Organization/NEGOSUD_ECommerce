@@ -8,6 +8,7 @@
         public float Price { get; set; }
         public string OriginCountry { get; set; }
         public Guid SupplierId { get; set; }
+		public string Category { get; set; }
 		public string? AlcoholVolume { get; set; }
 		public string? Year { get; set; }
         public float? Capacity { get; set; }

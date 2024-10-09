@@ -16,6 +16,7 @@ namespace API.Models
 		public int QuantitySold { get; set; }
 		public Guid SupplierId { get; set; }
 		public virtual Supplier Supplier { get; set; }
+		public string  Category { get; set; }
 
 		
 		public virtual IEnumerable<OrderDetail> OrderDetails { get; set; } = new HashSet<OrderDetail>();
