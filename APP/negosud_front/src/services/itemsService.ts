@@ -17,7 +17,7 @@ export const fetchAllItems = async () => {
 
 export const fetchBestSellingItems = async () => {
   try {
-    const response = await fetch("http://localhost:5165/api/Item/topselling/4");
+    const response = await fetch("http://localhost:5165/api/Item/topselling/10");
     if (!response.ok) {
       throw new Error("Erreur lors de la récupération des produits les plus vendus");
     }
@@ -32,7 +32,7 @@ export const fetchBestSellingItems = async () => {
 
 export const fetchRecentItems = async () => {
   try {
-    const response = await fetch("http://localhost:5165/api/Item/recent/4");
+    const response = await fetch("http://localhost:5165/api/Item/recent/10");
     if (!response.ok) {
       throw new Error("Erreur lors de la récupération des produits récents");
     }
