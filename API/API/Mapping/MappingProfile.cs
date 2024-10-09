@@ -37,23 +37,6 @@ namespace API.Mapping
 			CreateMap<ItemResponseDTO, Item>();
 
 
-			//CreateMap<AlcoholItem, AlcoholItemRequestDTO>();
-			//CreateMap<AlcoholItemRequestDTO, AlcoholItem>();
-			//CreateMap<AlcoholItem, AlcoholItemResponseDTO>();
-			//CreateMap<AlcoholItemResponseDTO, AlcoholItem>();
-
-			//CreateMap<CommonItem, CommonItemRequestDTO>();
-			//CreateMap<CommonItemRequestDTO, CommonItem>();
-			//CreateMap<CommonItem, CommonItemResponseDTO>();
-			//CreateMap<CommonItemResponseDTO, CommonItem>();
-
-
-			//CreateMap<AlcoholItem, ItemResponseDTO>();
-			//	//.IncludeBase<Item, ItemResponseDTO>();
-
-			//CreateMap<CommonItem, ItemResponseDTO>();
-			//	//.IncludeBase<Item, ItemResponseDTO>();
-
 			CreateMap<CustomerOrder, CustomerOrderRequestDTO>();
 			CreateMap<CustomerOrderRequestDTO, CustomerOrder>();
 			CreateMap<CustomerOrder, CustomerOrderResponseDTO>();

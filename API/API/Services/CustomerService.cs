@@ -67,7 +67,9 @@ namespace API.Services
 		public async Task<CustomerResponseDTO> UpdateCustomerAsync(Guid id, CustomerRequestDTO customerRequestDTO)
 		{
 
-			var customer = await _context.Customers.FindAsync(id);
+			var customer = await _context.Customers
+				.Include(c => c.Address)
+				.SingleOrDefaultAsync(c => c.CustomerId == id);
 			if (customer == null)
 			{
 				throw new InvalidOperationException($"Unable to modify : customer '{id}' doesn't exists");
@@ -109,12 +111,12 @@ namespace API.Services
 
 			if (adress.Supplier != null)
 			{
-				throw new InvalidOperationException($"Unable to add adress :  adress '{adressId}' already own to a supplier");
+				throw new InvalidOperationException($"Unable to add adress :  adress '{adressId}' already belongs to a supplier");
 			}
 
 			if (adress.Customer != null)
 			{
-				throw new InvalidOperationException($"Unable to add adress :  adress '{adressId}' already own to an other customer");
+				throw new InvalidOperationException($"Unable to add adress :  adress '{adressId}' already belongs to an other customer");
 			}
 
 			customer.Address = adress;

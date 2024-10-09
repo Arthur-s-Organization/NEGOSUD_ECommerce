@@ -8,6 +8,10 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace API.Services
 {
@@ -16,10 +20,14 @@ namespace API.Services
 		private readonly DataContext _context;
 		private readonly IMapper _mapper;
 
-		public ItemService(DataContext context, IMapper mapper)
+		private readonly IWebHostEnvironment _webHostEnvironment;
+
+		public ItemService(DataContext context, IMapper mapper, IWebHostEnvironment webHostEnvironment)
 		{
 			_context = context;
 			_mapper = mapper;
+
+			_webHostEnvironment = webHostEnvironment;
 		}
 		public async Task<ItemResponseDTO> DeleteItemAsync(Guid id)
 		{
@@ -61,9 +69,6 @@ namespace API.Services
 			//var itemResponseDTO = _mapper.Map<IEnumerable<ItemResponseDTO>>(items);
 
 			//return itemResponseDTO;
-
-
-
 		}
 
 		public async Task<IEnumerable<ItemResponseDTO>> GetTopSellingItemsAsync(int topCount)
@@ -199,6 +204,8 @@ namespace API.Services
 			return itemResponseDTO;
 		}
 
+
+
 		public async Task<ItemResponseDTO> AddItemAsync(ItemRequestDTO itemRequestDTO)
 		{
 			var alcoholFamily = _context.AlcoholFamilies.SingleOrDefault(ai => ai.AlcoholFamilyId == itemRequestDTO.AlcoholFamilyId);
@@ -227,6 +234,26 @@ namespace API.Services
 			var item = _mapper.Map<Item>(itemRequestDTO);
 			item.Slug = SlugHelper.GenerateSlug(item.Name);
 			item.CreationDate = DateTime.Now;
+
+
+			if (itemRequestDTO.ImageFile != null && itemRequestDTO.ImageFile.Length > 0)
+			{
+				//using var memoryStream = new MemoryStream();
+				//await itemRequestDTO.ImageFile.CopyToAsync(memoryStream);
+				//item.ItemImage = memoryStream.ToArray(); 
+
+				var folderPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Images");
+				var fileName = Guid.NewGuid().ToString() + Path.GetExtension(itemRequestDTO.ImageFile.FileName);
+				var filePath = Path.Combine(folderPath, fileName);
+
+				using (var stream = new FileStream(filePath, FileMode.Create))
+				{
+					await itemRequestDTO.ImageFile.CopyToAsync(stream);
+				}
+				item.ItemImagePath = fileName;
+			}
+
+
 			await _context.Items.AddAsync(item);
 			await _context.SaveChangesAsync();
 
@@ -234,5 +261,14 @@ namespace API.Services
 
 			return alcoholItemResponseDTO;
 		}
+
+		public async Task<IEnumerable<ItemResponseDTO>> GetItemsByNameAsync(string name)
+		{
+			var items = await _context.Items.Where(i => i.Name.Contains(name)).ToListAsync();
+
+			var ItemsResponseDTO = _mapper.Map<IEnumerable<ItemResponseDTO>>(items);
+			return ItemsResponseDTO;
+		}
+
 	}
 }

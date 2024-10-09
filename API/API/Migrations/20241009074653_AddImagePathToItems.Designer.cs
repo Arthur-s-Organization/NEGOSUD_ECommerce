@@ -4,6 +4,7 @@ using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20241009074653_AddImagePathToItems")]
+    partial class AddImagePathToItems
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,6 +35,9 @@ namespace API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("PostalCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -40,7 +46,18 @@ namespace API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("SupplierId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("AddressId");
+
+                    b.HasIndex("CustomerId")
+                        .IsUnique()
+                        .HasFilter("[CustomerId] IS NOT NULL");
+
+                    b.HasIndex("SupplierId")
+                        .IsUnique()
+                        .HasFilter("[SupplierId] IS NOT NULL");
 
                     b.ToTable("Addresses");
                 });
@@ -64,9 +81,6 @@ namespace API.Migrations
                 {
                     b.Property<Guid>("CustomerId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("AddressId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DateOfBirth")
@@ -93,10 +107,6 @@ namespace API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CustomerId");
-
-                    b.HasIndex("AddressId")
-                        .IsUnique()
-                        .HasFilter("[AddressId] IS NOT NULL");
 
                     b.ToTable("Customers");
                 });
@@ -209,15 +219,9 @@ namespace API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AddressId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -228,10 +232,6 @@ namespace API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("SupplierId");
-
-                    b.HasIndex("AddressId")
-                        .IsUnique()
-                        .HasFilter("[AddressId] IS NOT NULL");
 
                     b.ToTable("Suppliers");
                 });
@@ -260,13 +260,19 @@ namespace API.Migrations
                     b.ToTable("SupplierOrder", (string)null);
                 });
 
-            modelBuilder.Entity("API.Models.Customer", b =>
+            modelBuilder.Entity("API.Models.Address", b =>
                 {
-                    b.HasOne("API.Models.Address", "Address")
-                        .WithOne("Customer")
-                        .HasForeignKey("API.Models.Customer", "AddressId");
+                    b.HasOne("API.Models.Customer", "Customer")
+                        .WithOne("Address")
+                        .HasForeignKey("API.Models.Address", "CustomerId");
 
-                    b.Navigation("Address");
+                    b.HasOne("API.Models.Supplier", "Supplier")
+                        .WithOne("Address")
+                        .HasForeignKey("API.Models.Address", "SupplierId");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Supplier");
                 });
 
             modelBuilder.Entity("API.Models.Item", b =>
@@ -305,15 +311,6 @@ namespace API.Migrations
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("API.Models.Supplier", b =>
-                {
-                    b.HasOne("API.Models.Address", "Address")
-                        .WithOne("Supplier")
-                        .HasForeignKey("API.Models.Supplier", "AddressId");
-
-                    b.Navigation("Address");
-                });
-
             modelBuilder.Entity("API.Models.CustomerOrder", b =>
                 {
                     b.HasOne("API.Models.Customer", "Customer")
@@ -348,13 +345,6 @@ namespace API.Migrations
                     b.Navigation("Supplier");
                 });
 
-            modelBuilder.Entity("API.Models.Address", b =>
-                {
-                    b.Navigation("Customer");
-
-                    b.Navigation("Supplier");
-                });
-
             modelBuilder.Entity("API.Models.AlcoholFamily", b =>
                 {
                     b.Navigation("Items");
@@ -362,6 +352,8 @@ namespace API.Migrations
 
             modelBuilder.Entity("API.Models.Customer", b =>
                 {
+                    b.Navigation("Address");
+
                     b.Navigation("CustomerOrders");
                 });
 
@@ -377,6 +369,9 @@ namespace API.Migrations
 
             modelBuilder.Entity("API.Models.Supplier", b =>
                 {
+                    b.Navigation("Address")
+                        .IsRequired();
+
                     b.Navigation("Items");
 
                     b.Navigation("SupplierOrders");
