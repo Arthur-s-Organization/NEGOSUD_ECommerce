@@ -72,152 +72,154 @@ export const FilterForm = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label
-          htmlFor="Category"
-          className="block text-sm font-medium text-white mb-1"
-        >
-          Catégorie
-        </label>
-        <select
-          id="Category"
-          value={category}
-          onChange={(e) => changeCategory(e.target.value)}
-          className="w-full pl-1 py-2 rounded-sm text-sm"
-        >
-          <option value="">Toutes les catégories</option>
-          <option value="alcohol">Alcool</option>
-          <option value="common">Accessoires</option>
-        </select>
+    <form onSubmit={handleSubmit} className="space-y-4 flex flex-col gap-6">
+      <div className="flex flex-col gap-4">
+        <div>
+          <label
+            htmlFor="Category"
+            className="block text-sm font-medium text-white mb-1"
+          >
+            Catégorie
+          </label>
+          <select
+            id="Category"
+            value={category}
+            onChange={(e) => changeCategory(e.target.value)}
+            className="w-full pl-1 py-2 rounded-sm text-sm"
+          >
+            <option value="">Toutes les catégories</option>
+            <option value="alcohol">Alcool</option>
+            <option value="common">Accessoires</option>
+          </select>
+        </div>
+
+        <div>
+          <label
+            htmlFor="MinPrice"
+            className="block text-sm font-medium text-white mb-1"
+          >
+            Prix minimum
+          </label>
+          <input
+            type="number"
+            id="MinPrice"
+            name="MinPrice"
+            value={filters.MinPrice}
+            onChange={handleChange}
+            className="w-full pl-1 py-2 rounded-sm text-sm"
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="MaxPrice"
+            className="block text-sm font-medium text-white mb-1"
+          >
+            Prix maximum
+          </label>
+          <input
+            type="number"
+            id="MaxPrice"
+            name="MaxPrice"
+            value={filters.MaxPrice}
+            onChange={handleChange}
+            className="w-full pl-1 py-2 rounded-sm text-sm"
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="Supplier"
+            className="block text-sm font-medium text-white mb-1"
+          >
+            Maison
+          </label>
+          <select
+            id="Supplier"
+            name="Supplier"
+            value={filters.SupplierId}
+            onClick={loadSuppliers}
+            onChange={(e) =>
+              setFilters({ ...filters, SupplierId: e.target.value })
+            }
+            className="w-full pl-1 py-2 rounded-sm text-sm"
+          >
+            <option value="">Toutes les maisons</option>
+            {suppliers?.map((supplier) => (
+              <option key={supplier.supplierId} value={supplier.supplierId}>
+                {supplier.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label
+            htmlFor="OriginCountry"
+            className="block text-sm font-medium text-white mb-1"
+          >
+            Pays
+          </label>
+          <input
+            type="text"
+            id="OriginCountry"
+            name="OriginCountry"
+            value={filters.OriginCountry}
+            onChange={handleChange}
+            className="w-full pl-1 py-2 rounded-sm text-sm"
+          />
+        </div>
+
+        {category !== "common" && (
+          <>
+            <div>
+              <label
+                htmlFor="AlcoholFamily"
+                className="block text-sm font-medium text-white mb-1"
+              >
+                Famille
+              </label>
+              <select
+                id="AlcoholFamily"
+                name="AlcoholFamily"
+                value={filters.AlcoholFamilyId}
+                onClick={loadAlcoholFamily}
+                onChange={(e) =>
+                  setFilters({ ...filters, AlcoholFamilyId: e.target.value })
+                }
+                className="w-full pl-1 py-2 rounded-sm text-sm"
+              >
+                <option value="">Toutes les familles</option>
+                {alcoholFamilies?.map((alcoholFamily) => (
+                  <option
+                    key={alcoholFamily.alcoholFamilyId}
+                    value={alcoholFamily.alcoholFamilyId}
+                  >
+                    {alcoholFamily.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label
+                htmlFor="Year"
+                className="block text-sm font-medium text-white mb-1"
+              >
+                Année
+              </label>
+              <input
+                type="number"
+                id="Year"
+                name="Year"
+                value={filters.Year}
+                onChange={handleChange}
+                className="w-full pl-1 py-2 rounded-sm text-sm"
+              />
+            </div>
+          </>
+        )}
       </div>
 
-      <div>
-        <label
-          htmlFor="MinPrice"
-          className="block text-sm font-medium text-white mb-1"
-        >
-          Prix minimum
-        </label>
-        <input
-          type="number"
-          id="MinPrice"
-          name="MinPrice"
-          value={filters.MinPrice}
-          onChange={handleChange}
-          className="w-full pl-1 py-2 rounded-sm text-sm"
-        />
-      </div>
-
-      <div>
-        <label
-          htmlFor="MaxPrice"
-          className="block text-sm font-medium text-white mb-1"
-        >
-          Prix maximum
-        </label>
-        <input
-          type="number"
-          id="MaxPrice"
-          name="MaxPrice"
-          value={filters.MaxPrice}
-          onChange={handleChange}
-          className="w-full pl-1 py-2 rounded-sm text-sm"
-        />
-      </div>
-
-      <div>
-        <label
-          htmlFor="Supplier"
-          className="block text-sm font-medium text-white mb-1"
-        >
-          Maison
-        </label>
-        <select
-          id="Supplier"
-          name="Supplier"
-          value={filters.SupplierId}
-          onClick={loadSuppliers}
-          onChange={(e) =>
-            setFilters({ ...filters, SupplierId: e.target.value })
-          }
-          className="w-full pl-1 py-2 rounded-sm text-sm"
-        >
-          <option value="">Toutes les maisons</option>
-          {suppliers?.map((supplier) => (
-            <option key={supplier.supplierId} value={supplier.supplierId}>
-              {supplier.name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div>
-        <label
-          htmlFor="OriginCountry"
-          className="block text-sm font-medium text-white mb-1"
-        >
-          Pays
-        </label>
-        <input
-          type="text"
-          id="OriginCountry"
-          name="OriginCountry"
-          value={filters.OriginCountry}
-          onChange={handleChange}
-          className="w-full pl-1 py-2 rounded-sm text-sm"
-        />
-      </div>
-
-      {category !== "common" && (
-        <>
-          <div>
-            <label
-              htmlFor="AlcoholFamily"
-              className="block text-sm font-medium text-white mb-1"
-            >
-              Famille
-            </label>
-            <select
-              id="AlcoholFamily"
-              name="AlcoholFamily"
-              value={filters.AlcoholFamilyId}
-              onClick={loadAlcoholFamily}
-              onChange={(e) =>
-                setFilters({ ...filters, AlcoholFamilyId: e.target.value })
-              }
-              className="w-full pl-1 py-2 rounded-sm text-sm"
-            >
-              <option value="">Toutes les familles</option>
-              {alcoholFamilies?.map((alcoholFamily) => (
-                <option
-                  key={alcoholFamily.alcoholFamilyId}
-                  value={alcoholFamily.alcoholFamilyId}
-                >
-                  {alcoholFamily.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label
-              htmlFor="Year"
-              className="block text-sm font-medium text-white mb-1"
-            >
-              Année
-            </label>
-            <input
-              type="number"
-              id="Year"
-              name="Year"
-              value={filters.Year}
-              onChange={handleChange}
-              className="w-full pl-1 py-2 rounded-sm text-sm"
-            />
-          </div>
-        </>
-      )}
-
-      <Button type="submit" variant="secondary">
+      <Button type="submit" variant="secondary" className="text-lg">
         Appliquer les filtres
       </Button>
     </form>

@@ -13,7 +13,7 @@ import Link from "next/link";
 
 export default function ProductCard({ product }: { product: Item }) {
   return (
-    <Link href="/">
+    <Link href={`/products/${product.slug}`}>
       <Card className="border border-primary w-[20rem] hover:shadow-2xl items-center flex flex-col">
         <CardHeader className="text-center">
           <CardTitle>{product.name}</CardTitle>
