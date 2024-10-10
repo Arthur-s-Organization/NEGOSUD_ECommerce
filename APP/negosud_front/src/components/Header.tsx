@@ -32,7 +32,7 @@ export default function Header() {
             <div className="relative hidden lg:flex">
               <SearchBar />
             </div>
-            <Link href="/">
+            <Link href="/cart">
               <ShoppingCartIcon
                 className="text-white hover:text-secondary"
                 size={24}
