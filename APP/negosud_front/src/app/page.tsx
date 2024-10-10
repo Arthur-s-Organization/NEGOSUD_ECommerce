@@ -27,8 +27,8 @@ export default async function Home() {
             <Carousel className="w-full">
               <CarouselContent>
                 {bestSellings.map((item) => (
-                  <CarouselItem className="basis-1/3">
-                    <ProductCard key={item.itemId} product={item} />
+                  <CarouselItem className="basis-1/3" key={item.itemId}>
+                    <ProductCard product={item} />
                   </CarouselItem>
                 ))}
               </CarouselContent>
@@ -43,8 +43,8 @@ export default async function Home() {
             <Carousel className="w-full">
               <CarouselContent>
                 {recentItems.map((item) => (
-                  <CarouselItem className="basis-1/3">
-                    <ProductCard key={item.itemId} product={item} />
+                  <CarouselItem className="basis-1/3" key={item.itemId}>
+                    <ProductCard product={item} />
                   </CarouselItem>
                 ))}
               </CarouselContent>

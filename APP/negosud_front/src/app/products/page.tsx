@@ -23,12 +23,15 @@ export default function Products() {
 
   return (
     <div className="py-12 px-6 ">
-      <h1 className="text-3xl font-bold mb-2 font-heading text-primary">
-        Produits
+      <h1 className="text-3xl font-bold mb-10 font-heading text-primary text-center">
+        Découvrez notre sélection
       </h1>
+      {/* <p className="text-center max-w-3xl mx-auto mb-10">
+     TODO : Add the text
+      </p> */}
       {items && (
         <div className="flex gap-10">
-          <div className="w-fit h-fit py-6 bg-primary px-6">
+          <div className="w-1/2 h-fit py-6 bg-primary px-6 rounded-sm">
             <FilterForm onFilter={fetchItems} />
           </div>
           <div className="flex flex-wrap gap-2">
