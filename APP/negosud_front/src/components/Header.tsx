@@ -93,7 +93,7 @@ export const SearchBar = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery) {
-      router.push(`/products?search=${encodeURIComponent(searchQuery)}`); // Redirige avec la requête de recherche
+      router.push(`/products?search=${encodeURIComponent(searchQuery)}`);
     }
   };
   return (

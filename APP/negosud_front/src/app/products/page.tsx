@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 
 export default function Products() {
   const [items, setItems] = useState<Item[] | null>();
-  const searchParams = useSearchParams(); // Utiliser useSearchParams
+  const searchParams = useSearchParams();
 
   const fetchItems = async (filters: Filters | { name: string }) => {
     const filteredItems = await fetchFilteredItems(filters);
