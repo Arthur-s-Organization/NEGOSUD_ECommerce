@@ -11,6 +11,5 @@ namespace API.Services.IServices
         public Task<CustomerResponseDTO> GetCustomerByIdAsync(Guid id);
         public Task<CustomerResponseDTO> UpdateCustomerAsync(Guid id, CustomerRequestDTO customerRequestDTO);
         public Task<CustomerResponseDTO> DeleteCustomerAsync(Guid id);
-        public Task<CustomerResponseDTO> AddAdressToCustomerAsync(Guid CustomerId, Guid AdressId);
     }
 }

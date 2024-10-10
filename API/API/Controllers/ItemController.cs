@@ -18,6 +18,7 @@ namespace API.Controllers
 		{
 			_ItemService = ItemService;
 		}
+
 		[HttpDelete("{id}")]
 		public async Task<ActionResult<ItemResponseDTO>> DeleteItemAsync(Guid id)
 		{
@@ -114,14 +115,6 @@ namespace API.Controllers
 				return BadRequest(ex.Message);
 			}
 
-		}
-
-		[HttpGet("ItemName/{name}")]
-		public async Task<ActionResult<IEnumerable<ItemResponseDTO>>> GetItemsByName(string name)
-		{
-			var ItemResponseDTO = await _ItemService.GetItemsByNameAsync(name);
-
-			return Ok(ItemResponseDTO);
 		}
 
 		[HttpGet("{slug}")]

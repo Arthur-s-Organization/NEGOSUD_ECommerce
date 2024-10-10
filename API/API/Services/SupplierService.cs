@@ -20,6 +20,28 @@ namespace API.Services
 		}
 		public async Task<SupplierResponseDTO> AddSupplierAsync(SupplierRequestDTO supplierRequestDTO)
 		{
+			var adress = await _context.Addresses
+				.Include(a => a.Supplier)
+				.Include(a => a.Customer)
+				.SingleOrDefaultAsync(a => a.AddressId == supplierRequestDTO.AddressId);
+
+			
+
+			if (adress == null)
+			{
+				throw new InvalidOperationException($"Unable to add adress : adress '{supplierRequestDTO.AddressId}' doesn't exists");
+			}
+
+			if (adress.Supplier != null)
+			{
+				throw new InvalidOperationException($"Unable to add adress :  adress '{supplierRequestDTO.AddressId}' already own to an other supplier");
+			}
+
+			if (adress.Customer != null)
+			{
+				throw new InvalidOperationException($"Unable to add adress :  adress '{supplierRequestDTO.AddressId}' already own to a customer");
+			}
+
 			var supplierNameExist = await _context.Suppliers.SingleOrDefaultAsync(s => s.Name == supplierRequestDTO.Name);
 			if (supplierNameExist != null)
 			{
@@ -94,51 +116,5 @@ namespace API.Services
 
 			return supplierResponseDTO;
 		}
-
-		public async Task<SupplierResponseDTO> AddAdressToSupplierAsync(Guid supplierId, Guid adressId)
-		{
-			var supplier = await _context.Suppliers
-				.Include(s => s.Address)
-				.SingleOrDefaultAsync(s => s.SupplierId == supplierId);
-
-			var adress = await _context.Addresses
-				.Include(a => a.Supplier)
-				.Include(a => a.Customer)
-				.SingleOrDefaultAsync(a => a.AddressId == adressId);
-
-			if (supplier == null)
-			{
-				throw new InvalidOperationException($"Unable to add adress : supplier '{supplierId}' doesn't exists");
-			}
-
-			if (adress == null)
-			{
-				throw new InvalidOperationException($"Unable to add adress : adress '{adressId}' doesn't exists");
-			}
-
-			if (supplier.Address != null)
-			{
-				throw new InvalidOperationException($"Unable to add adress : supplier '{supplierId}' already has an adress");
-			}
-
-			if (adress.Supplier != null)
-			{
-				throw new InvalidOperationException($"Unable to add adress :  adress '{adressId}' already own to an other supplier");
-			}
-
-			if (adress.Customer != null)
-			{
-				throw new InvalidOperationException($"Unable to add adress :  adress '{adressId}' already own to a customer");
-			}
-
-
-			supplier.Address = adress;
-			await _context.SaveChangesAsync();
-
-			var supplierResponseDTO = _mapper.Map<SupplierResponseDTO>(supplier);
-
-			return supplierResponseDTO;
-		}
-
 	}
 }
