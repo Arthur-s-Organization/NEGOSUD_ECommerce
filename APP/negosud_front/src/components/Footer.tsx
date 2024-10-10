@@ -43,19 +43,6 @@ export default function Footer() {
           </div>
           <div>
             <h2 className="text-3xl font-bold mb-4 text-secondary font-heading">
-              Catégories
-            </h2>
-            <ul className="grid grid-cols-2 gap-2">
-              <li>Vin blanc</li>
-              <li>Vin rouge</li>
-              <li>Vin rouge</li>
-              <li>Vin rouge</li>
-              <li>Vin rouge</li>
-              <li>Vin rouge</li>
-            </ul>
-          </div>
-          <div>
-            <h2 className="text-3xl font-bold mb-4 text-secondary font-heading">
               Nous contacter
             </h2>
             <div className="flex space-x-4">
