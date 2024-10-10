@@ -87,21 +87,5 @@ namespace API.Controllers
 				return BadRequest(ex.Message);
 			}
 		}
-
-
-		[HttpPost("{supplierId}/Adresses/{adressId}")]
-		public async Task<ActionResult<SupplierResponseDTO>> AddAdressToSupplier(Guid supplierId, Guid adressId)
-		{
-			try
-			{
-				var supplierResponseDTO = await _SupplierService.AddAdressToSupplierAsync(supplierId, adressId);
-				return Ok(supplierResponseDTO);
-			}
-
-			catch (InvalidOperationException ex)
-			{
-				return BadRequest(ex.Message);
-			}
-		}
 	}
 }

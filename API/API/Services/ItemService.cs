@@ -53,22 +53,6 @@ namespace API.Services
 
 			var ItemsResponseDTO = _mapper.Map<IEnumerable<ItemResponseDTO>>(items);
 			return ItemsResponseDTO;
-			//var items = await _context.Items
-			//  .Include(i => i.Supplier) 
-			//  .ToListAsync();
-
-			//// Filtrer les AlcoholItem pour inclure AlcoholFamily uniquement pour eux
-			//var alcoholItems = items.OfType<AlcoholItem>()
-			//	.ToList();
-
-			//foreach (var alcoholItem in alcoholItems)
-			//{
-			//	_context.Entry(alcoholItem).Reference(i => i.AlcoholFamily).Load();
-			//}
-
-			//var itemResponseDTO = _mapper.Map<IEnumerable<ItemResponseDTO>>(items);
-
-			//return itemResponseDTO;
 		}
 
 		public async Task<IEnumerable<ItemResponseDTO>> GetTopSellingItemsAsync(int topCount)
@@ -259,10 +243,6 @@ namespace API.Services
 
 			if (itemRequestDTO.ImageFile != null && itemRequestDTO.ImageFile.Length > 0)
 			{
-				//using var memoryStream = new MemoryStream();
-				//await itemRequestDTO.ImageFile.CopyToAsync(memoryStream);
-				//item.ItemImage = memoryStream.ToArray(); 
-
 				var folderPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Images");
 				var fileName = Guid.NewGuid().ToString() + Path.GetExtension(itemRequestDTO.ImageFile.FileName);
 				var filePath = Path.Combine(folderPath, fileName);
@@ -281,14 +261,6 @@ namespace API.Services
 			var alcoholItemResponseDTO = _mapper.Map<ItemResponseDTO>(item);
 
 			return alcoholItemResponseDTO;
-		}
-
-		public async Task<IEnumerable<ItemResponseDTO>> GetItemsByNameAsync(string name)
-		{
-			var items = await _context.Items.Where(i => i.Name.Contains(name)).ToListAsync();
-
-			var ItemsResponseDTO = _mapper.Map<IEnumerable<ItemResponseDTO>>(items);
-			return ItemsResponseDTO;
 		}
 
 	}

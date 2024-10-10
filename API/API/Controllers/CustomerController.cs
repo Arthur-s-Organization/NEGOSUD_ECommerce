@@ -85,20 +85,5 @@ namespace API.Controllers
 				return BadRequest(ex.Message);
 			}
 		}
-
-		[HttpPost("{customerId}/Adresses/{adressId}")]
-		public async Task<ActionResult<CustomerResponseDTO>> AddAdressToCustomer(Guid customerId, Guid adressId)
-		{
-			try
-			{
-				var customerResponseDTO = await _CustomerService.AddAdressToCustomerAsync(customerId, adressId);
-				return Ok(customerResponseDTO);
-
-			}
-			catch (InvalidOperationException ex)
-			{
-				return BadRequest(ex.Message);
-			}
-		}
 	}
 }

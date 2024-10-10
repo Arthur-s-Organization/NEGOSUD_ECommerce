@@ -11,7 +11,6 @@ namespace API.Services.IServices
         public Task<SupplierResponseDTO> GetSupplierByIdAsync(Guid id);
         public Task<SupplierResponseDTO> UpdateSupplierAsync(Guid id, SupplierRequestDTO supplierRequestDTO);
         public Task<SupplierResponseDTO> DeleteSupplierAsync(Guid id);
-        public Task<SupplierResponseDTO> AddAdressToSupplierAsync(Guid supplierId, Guid adressId);
     }
 }
 

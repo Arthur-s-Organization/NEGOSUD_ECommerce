@@ -14,7 +14,6 @@ namespace API.Services.IServices
 		public Task<IEnumerable<ItemResponseDTO>> GetFilteredItemsAsync(ItemFilterRequestDTO filters);
 		public Task<ItemResponseDTO> UpdateItemAsync(Guid id, ItemRequestDTO itemRequestDTO);
 		public Task<ItemResponseDTO> AddItemAsync(ItemRequestDTO itemRequestDTO);
-		public Task<IEnumerable<ItemResponseDTO>> GetItemsByNameAsync(string name);
 
 	}
 }
