@@ -4,7 +4,6 @@ import ProductCard from "@/components/ProductCard";
 import { fetchAllItems, fetchFilteredItems } from "@/services/itemsService";
 import { Item } from "@/services/scheme";
 import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 export default function Products() {

@@ -1,5 +1,5 @@
 import { Filters } from '@/components/FilterForm';
-import { zAlcoholFamilyList, zItem, zItemList, zSupplierList } from './scheme'; 
+import { zItem, zItemList} from './scheme'; 
 export const fetchAllItems = async () => {
   try {
     const response = await fetch("http://localhost:5165/api/Item");
@@ -78,33 +78,3 @@ export const fetchFilteredItems = async (filters : Filters | {name : string}) =>
     return null;
   }
 }
-
-export const fetchSuppliers = async () => {
-  try {
-    const response = await fetch("http://localhost:5165/api/Supplier");
-    if (!response.ok) {
-      throw new Error("Erreur lors de la récupération des fournisseurs");
-    }
-    const data = await response.json();
-    const parsedData = zSupplierList.parse(data);
-    return parsedData;
-  } catch (error) {
-    console.error("Erreur:", error);
-    return null;
-  }
-};
-
-export const fetchAlcoholFamilies = async () => {
-  try {
-    const response = await fetch("http://localhost:5165/api/AlcoholFamily");
-    if (!response.ok) {
-      throw new Error("Erreur lors de la récupération des familles");
-    }
-    const data = await response.json();
-    const parsedData = zAlcoholFamilyList.parse(data);
-    return parsedData;
-  } catch (error) {
-    console.error("Erreur:", error);
-    return null;
-  }
-};
