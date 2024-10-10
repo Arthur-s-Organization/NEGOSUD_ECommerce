@@ -16,6 +16,7 @@ namespace WPF
         private List<SupplierResponseDTO> suppliers;
         private List<CustomerResponseDTO> customers;
         private List<AlcoholFamilyResponseDTO> alcoholFamily;
+        private List<AddressResponseDTO> addresses;
 
         public MainWindow()
         {
@@ -31,7 +32,8 @@ namespace WPF
                 var suppliersTask = LoadSuppliersAsync();
                 var customersTask = LoadCustomersAsync();
                 var alcoholTask = LoadAlcoholFamily();
-                await Task.WhenAll(itemsTask, suppliersTask, customersTask, alcoholTask);
+                var addressesTask = LoadAddress();
+                await Task.WhenAll(itemsTask, suppliersTask, customersTask, alcoholTask, addressesTask);
             }
             catch (Exception e)
             {
@@ -44,7 +46,6 @@ namespace WPF
             try
             {
                 items = await client.GetFromJsonAsync<List<ItemResponseDTO>>("https://localhost:7246/api/Item");
-                DataGrid.ItemsSource = items; // Afficher les items par défaut
             }
             catch (HttpRequestException e)
             {
@@ -88,6 +89,18 @@ namespace WPF
             }
         }
 
+        private async Task LoadAddress()
+        {
+            try
+            {
+                addresses = await client.GetFromJsonAsync<List<AddressResponseDTO>>("https://localhost:7246/api/Adress");
+            }
+            catch (HttpRequestException e)
+            {
+                MessageBox.Show($"Erreur lors de la récupération des adresses : {e.Message}");
+            }
+        }
+
         private void btnItems_Click(object sender, RoutedEventArgs e)
         {
             DataGrid.ItemsSource = items;
@@ -110,6 +123,19 @@ namespace WPF
         {
             DataGrid.ItemsSource = alcoholFamily;
             SetColumnsVisibility(false, "Alcohol Family");
+        }
+
+        private void btnAddress_Click(object sender, RoutedEventArgs e)
+        {
+            DataGrid.ItemsSource = addresses;
+            SetColumnsVisibility(false, "Addresses");
+        }
+
+        private void btnRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            LoadDataAsync();
+            DataGrid.ItemsSource = items;
+            SetColumnsVisibility(true, "Items");
         }
 
             private void SetColumnsVisibility(bool showItems, string type)
@@ -138,6 +164,11 @@ namespace WPF
                         "Alcohol Family Name" or "Actions" => Visibility.Visible,
                         _ => Visibility.Collapsed,
                     },
+                    "Addresses" => column.Header.ToString() switch
+                    {
+                        "Street Address" or "Address City" or "Postal Code" or "Actions" => Visibility.Visible,
+                        _ => Visibility.Collapsed,
+                    },
                     _ => Visibility.Collapsed,
                 };
             }
@@ -156,7 +187,8 @@ namespace WPF
             { "ItemResponseDTO", "Item" },
             { "SupplierResponseDTO", "Supplier" },
             { "CustomerResponseDTO", "Customer" },
-            {"AlcoholFamilyResponseDTO", "AlcoholFamily" }
+            {"AlcoholFamilyResponseDTO", "AlcoholFamily" },
+            {"AddressResponseDTO", "Adress" }
         };
 
                 MessageBoxResult result = MessageBox.Show("Êtes-vous sûr de vouloir supprimer cet élément ?",
@@ -166,7 +198,6 @@ namespace WPF
                 {
                     try
                     {
-                        MessageBox.Show(itemType);
                         // Déterminer l'ID selon le type d'élément
                         string id = itemType switch
                         {
@@ -174,6 +205,7 @@ namespace WPF
                             "SupplierResponseDTO" => selectedItem.SupplierId.ToString(),  // Utiliser SupplierId pour les Suppliers
                             "CustomerResponseDTO" => selectedItem.CustomerId.ToString(),  // Utiliser CustomerId pour les Customers
                             "AlcoholFamilyResponseDTO" => selectedItem.AlcoholFamilyId.ToString(), //Utiliser AlcoholFamilyId pour les AlcoholFamily
+                            "AddressResponseDTO" => selectedItem.AddressId.ToString(), //Utiliser AddressId pour les Adresses
                             _ => throw new InvalidOperationException("Type d'élément non géré.")
                         };
 
@@ -208,6 +240,156 @@ namespace WPF
             }
         }
 
+        private void EditButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button)
+            {
+                var selectedItem = (dynamic)button.Tag; // Récupérer l'élément sélectionné
+                string itemType = selectedItem.GetType().Name; // Obtenir le type de l'élément
 
+                // Utiliser une méthode pour gérer l'édition en fonction du type d'élément
+                OpenEditWindowForType(selectedItem, itemType);
+            }
+        }
+
+        private void OpenEditWindowForType(dynamic selectedItem, string itemType)
+        {
+            // Mapper les types d'éléments à leur fenêtre d'édition correspondante
+            switch (itemType)
+            {
+                case "ItemResponseDTO":
+                    // Convertir ItemResponseDTO en ItemRequestDTO pour la modification
+                    
+
+                    // Ouvrir la fenêtre d'édition pour les items
+                    ItemEditWindow itemEditWindow = new ItemEditWindow(selectedItem);
+                    if (itemEditWindow.ShowDialog() == true)
+                    {
+                        MessageBox.Show("Item modifié avec succès.");
+                        LoadDataAsync(); // Recharger les données
+                    }
+                    break;
+
+                case "SupplierResponseDTO":
+                    // Ouvrir la fenêtre d'édition pour les fournisseurs
+                    SupplierEditWindow supplierEditWindow = new SupplierEditWindow(selectedItem);
+                    if (supplierEditWindow.ShowDialog() == true)
+                    {
+                        MessageBox.Show("Fournisseur modifié avec succès.");
+                        LoadDataAsync();
+                    }
+                    break;
+
+                case "CustomerResponseDTO":
+                    // Ouvrir la fenêtre d'édition pour les clients
+                    CustomerEditWindow customerEditWindow = new CustomerEditWindow(selectedItem);
+                    if (customerEditWindow.ShowDialog() == true)
+                    {
+                        MessageBox.Show("Client modifié avec succès.");
+                        LoadDataAsync();
+                    }
+                    break;
+
+                case "AlcoholFamilyResponseDTO":
+                    // Ouvrir la fenêtre d'édition pour les familles d'alcool
+                    AlcoholFamilyEditWindow alcoholFamilyEditWindow = new AlcoholFamilyEditWindow(selectedItem);
+                    if (alcoholFamilyEditWindow.ShowDialog() == true)
+                    {
+                        MessageBox.Show("Famille d'alcool modifiée avec succès.");
+                        LoadDataAsync();
+                    }
+                    break;
+
+                case "AddressResponseDTO":
+                    // Ouvrir la fenêtre d'édition pour les Adresses
+                    AddressEditWindow addressEditWindow = new AddressEditWindow(selectedItem);
+                    if (addressEditWindow.ShowDialog() == true)
+                    {
+                        MessageBox.Show("Adresse modifié avec succès.");
+                        LoadDataAsync();
+                    }
+                    break;
+
+                default:
+                    MessageBox.Show("Le type d'élément sélectionné n'est pas pris en charge pour l'édition.");
+                    break;
+            }
+        }
+
+        private void btnAdd_Click(object sender, RoutedEventArgs e)
+        {
+            string currentCategory = GetCurrentCategory();
+
+            switch (currentCategory)
+            {
+                case "Items":
+                    // Ouvrir la fenêtre d'ajout pour les items
+                    ItemAddWindow itemAddWindow = new ItemAddWindow();
+                    if (itemAddWindow.ShowDialog() == true)
+                    {
+                        MessageBox.Show("Item ajouté avec succès.");
+                        LoadDataAsync(); // Recharger les données
+                    }
+                    break;
+
+                case "Suppliers":
+                    // Ouvrir la fenêtre d'ajout pour les fournisseurs
+                    SupplierAddWindow supplierAddWindow = new SupplierAddWindow();
+                    if (supplierAddWindow.ShowDialog() == true)
+                    {
+                        MessageBox.Show("Fournisseur ajouté avec succès.");
+                        LoadDataAsync();
+                    }
+                    break;
+
+                case "Customers":
+                    // Ouvrir la fenêtre d'ajout pour les clients
+                    CustomerAddWindow customerAddWindow = new CustomerAddWindow();
+                    if (customerAddWindow.ShowDialog() == true)
+                    {
+                        MessageBox.Show("Client ajouté avec succès.");
+                        LoadDataAsync();
+                    }
+                    break;
+
+                case "Alcohol Family":
+                    // Ouvrir la fenêtre d'ajout pour les familles d'alcool
+                    AlcoholFamilyAddWindow alcoholFamilyAddWindow = new AlcoholFamilyAddWindow();
+                    if (alcoholFamilyAddWindow.ShowDialog() == true)
+                    {
+                        MessageBox.Show("Famille d'alcool ajoutée avec succès.");
+                        LoadDataAsync();
+                    }
+                    break;
+                case "Addresses":
+                    //Ouvrir la fenêtre d'ajout pour les adresses
+                    AddressAddWindow addressAddWindow = new AddressAddWindow();
+                    if (addressAddWindow.ShowDialog() == true)
+                    {
+                        MessageBox.Show("Adresse ajoutée avec succès.");
+                        LoadDataAsync();
+                    }
+                    break;
+                default:
+                    MessageBox.Show("Veuillez sélectionner une catégorie valide.");
+                    break;
+            }
+        }
+
+        // Méthode pour déterminer la catégorie actuelle
+        private string GetCurrentCategory()
+        {
+            if (DataGrid.ItemsSource == items)
+                return "Items";
+            else if (DataGrid.ItemsSource == suppliers)
+                return "Suppliers";
+            else if (DataGrid.ItemsSource == customers)
+                return "Customers";
+            else if (DataGrid.ItemsSource == alcoholFamily)
+                return "Alcohol Family";
+            else if (DataGrid.ItemsSource == addresses)
+                return "Addresses";
+            return string.Empty;
+        }
     }
 }
