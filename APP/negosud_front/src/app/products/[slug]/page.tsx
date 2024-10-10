@@ -1,10 +1,34 @@
+"use client";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { fetchAllItems } from "@/services/itemsService";
+import { fetchItemBySlug } from "@/services/itemsService";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Item } from "@/services/scheme";
 
-export default async function Deltails() {
-  const products = (await fetchAllItems()) || [];
-  const item = products[0];
+export default function Deltails() {
+  const { slug } = useParams();
+  const [item, setItem] = useState<Item | null>();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    const getItemBySlug = async () => {
+      try {
+        const fetchedItem = await fetchItemBySlug(slug.toString());
+        setItem(fetchedItem);
+      } catch (err) {
+        setError("Erreur lors du chargement de l'élément");
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (slug) {
+      getItemBySlug();
+    }
+  }, [slug]);
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+  if (!item) return <div>Aucun produit trouvé.</div>;
   return (
     <div className="px-10 py-8">
       <div className="flex gap-8 items-start">
@@ -43,7 +67,11 @@ export default async function Deltails() {
                     label: "Pays d'origine",
                     value: item.originCountry,
                   },
-                  { label: "Catégorie", value: item.category },
+                  {
+                    label: "Catégorie",
+                    value:
+                      item.category === "alcohol" ? "Alcool" : "Accessoire",
+                  },
                   { label: "Maison", value: item.supplier.name },
                   { label: "Famille", value: item.alcoholFamily?.name },
                   { label: "Volume (°)", value: item.alcoholVolume },
@@ -73,12 +101,7 @@ export default async function Deltails() {
                 </h3>
               </div>
               <p className="text-sm text-gray-600 mb-2">
-                {/* {item.supplier.description} */}
-                NégoSud est une entreprise passionnée par l'univers viticole,
-                spécialisée dans la vente de vins fins et raffinés. Nous
-                sélectionnons avec soin des crus d'exception provenant de
-                terroirs renommés, afin d'offrir à nos clients une expérience
-                gustative unique. Notre équipe est dévouée à partager notre
+                {item.supplier.description}
               </p>
             </div>
           </div>
