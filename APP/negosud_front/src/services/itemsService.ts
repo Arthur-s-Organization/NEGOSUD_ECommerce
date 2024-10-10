@@ -60,7 +60,7 @@ export const fetchRecentItems = async () => {
   }
 };
 
-export const fetchFilteredItems = async (filters : Filters) => {
+export const fetchFilteredItems = async (filters : Filters | {name : string}) => {
   try {
     const cleanedFilters = Object.fromEntries(
       Object.entries(filters).filter(([_, value]) => value !== undefined && value !== "")
