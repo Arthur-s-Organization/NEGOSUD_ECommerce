@@ -1,3 +1,4 @@
+"use client";
 import { MenuIcon, SearchIcon, ShoppingCartIcon, UserIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
@@ -5,6 +6,8 @@ import horizontalLogo from "/public/LogoHorizontal.svg";
 import Link from "next/link";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { Button } from "./ui/button";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
   return (
@@ -83,16 +86,29 @@ export const NavItems = () => (
   </>
 );
 
-export const SearchBar = () => (
-  <>
-    <Input
-      type="search"
-      placeholder="Rechercher des vins ..."
-      className="pl-10 pr-4 py-2 w-64 rounded-full bg-white text-black"
-    />
-    <SearchIcon
-      className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-      size={20}
-    />
-  </>
-);
+export const SearchBar = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery) {
+      router.push(`/products?search=${encodeURIComponent(searchQuery)}`); // Redirige avec la requête de recherche
+    }
+  };
+  return (
+    <form onSubmit={handleSubmit}>
+      <Input
+        type="search"
+        placeholder="Rechercher des vins ..."
+        className="pl-10 pr-4 py-2 w-64 rounded-full bg-white text-black"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
+      <SearchIcon
+        className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+        size={20}
+      />
+    </form>
+  );
+};
