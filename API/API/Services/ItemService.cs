@@ -157,15 +157,15 @@ namespace API.Services
 
 		}
 
-		public async Task<ItemResponseDTO> GetItemByIdAsync(Guid id)
+		public async Task<ItemResponseDTO> GetItemBySlugAsync(string slug)
 		{
 			var item = await _context.Items
 				.Include(i => i.AlcoholFamily)
 				.Include(i => i.Supplier)
-				.SingleOrDefaultAsync(ai => ai.ItemId == id);
+				.SingleOrDefaultAsync(ai => ai.Slug == slug);
 			if (item is null)
 			{
-				throw new InvalidOperationException($"Unable to get : Item '{id}' doesn't exists");
+				throw new InvalidOperationException($"Unable to get : Item '{slug}' doesn't exists");
 			}
 
 			var itemResponseDTO = _mapper.Map<ItemResponseDTO>(item);

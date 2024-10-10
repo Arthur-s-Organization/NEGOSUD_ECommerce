@@ -13,6 +13,7 @@
 		public string Category { get; set; }
 		public DateTime CreationDate { get; set; }
 		public int QuantitySold { get; set; }
+		public bool IsActive { get; set; }
 		public virtual SupplierResponseDTO Supplier { get; set; }
 		public virtual AlcoholFamilyResponseDTO AlcoholFamily { get; set; }
 		public string? AlcoholVolume { get; set; }
