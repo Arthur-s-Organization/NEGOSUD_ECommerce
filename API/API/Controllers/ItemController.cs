@@ -124,10 +124,10 @@ namespace API.Controllers
 			return Ok(ItemResponseDTO);
 		}
 
-		[HttpGet("{id}")]
-		public async Task<ActionResult<IEnumerable<ItemResponseDTO>>> GetItemsByName(Guid id)
+		[HttpGet("{slug}")]
+		public async Task<ActionResult<IEnumerable<ItemResponseDTO>>> GetItemsBySlug(string slug)
 		{
-			var ItemResponseDTO = await _ItemService.GetItemByIdAsync(id);
+			var ItemResponseDTO = await _ItemService.GetItemBySlugAsync(slug);
 
 			return Ok(ItemResponseDTO);
 		}
