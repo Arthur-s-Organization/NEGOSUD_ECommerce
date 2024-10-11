@@ -12,7 +12,7 @@ namespace API.Services.IServices
         public Task<CustomerOrderResponseDTO> UpdateCustomerOrderAsync(Guid id, CustomerOrderRequestDTO customerOrderRequestDTO);
         public Task<CustomerOrderResponseDTO> DeleteCustomerOrderAsync(Guid id);
         public Task<OrderDetail> AddItemToCustomerOrderAsync(Guid customerOrderId, Guid itemId, int itemQuantity);
-        public Task<IEnumerable<CustomerOrderResponseDTO>> GetCustomerOrdersByCustomerIdAsync(Guid customerId);
+        public Task<IEnumerable<CustomerOrderResponseDTO>> GetCustomerOrdersByCustomerIdAsync(string customerId);
 
 	}
 }

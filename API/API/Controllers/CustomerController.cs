@@ -28,7 +28,7 @@ namespace API.Controllers
 
 
 		[HttpGet("{id}")]
-		public async Task<ActionResult<CustomerResponseDTO>> GetCustomerById(Guid id)
+		public async Task<ActionResult<CustomerResponseDTO>> GetCustomerById(string id)
 		{
 			try
 			{
@@ -56,7 +56,7 @@ namespace API.Controllers
 		}
 
 		[HttpPut("{id}")]
-		public async Task<ActionResult<CustomerResponseDTO>> UpdateCustomer(Guid id, CustomerRequestDTO customerRequestDTO)
+		public async Task<ActionResult<CustomerResponseDTO>> UpdateCustomer(string id, CustomerRequestDTO customerRequestDTO)
 		{
 			try
 			{
@@ -72,7 +72,7 @@ namespace API.Controllers
 
 
 		[HttpDelete("{id}")]
-		public async Task<ActionResult<CustomerResponseDTO>> DeleteCustomer(Guid id)
+		public async Task<ActionResult<CustomerResponseDTO>> DeleteCustomer(string id)
 		{
 			try
 			{
