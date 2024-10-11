@@ -13,11 +13,13 @@ namespace API.Controllers
 	{
 		private readonly UserManager<Customer> _userManager;
 		private readonly SignInManager<Customer> _signInManager;
+		private readonly ITokenService _tokenService;
 
-		public AuthController(UserManager<Customer> userManager, SignInManager<Customer> signInManager)
+		public AuthController(UserManager<Customer> userManager, SignInManager<Customer> signInManager, ITokenService tokenService)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
+			_tokenService = tokenService;
 		}
 
 		[HttpPost("register")]
@@ -54,33 +56,49 @@ namespace API.Controllers
 				return BadRequest(result.Errors);
 			}
 
-			// Optionnel : Connexion automatique après l'enregistrement
-			await _signInManager.SignInAsync(customer, isPersistent: false);
+			else //if (result.Succeeded)
+			{
+				var token = _tokenService.GenerateJwtToken(customer);
+				return Ok(new { Token = token });
+			}
 
-			return Ok("User registered successfully");
+	
+
+
 		}
 
 
-		///////////////////////////
 		[HttpPost("login")]
 		public async Task<IActionResult> Login([FromBody] LoginModel model)
 		{
+			var customer = await _userManager.FindByEmailAsync(model.Username);
+
+			if (customer == null)
+			{
+				return Unauthorized("Invalid login attempt.");
+			}
+
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
 			var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, isPersistent: false, lockoutOnFailure: false);
 
+
 			if (!result.Succeeded)
 				return Unauthorized("Invalid login attempt.");
 
-			return Ok("Logged in successfully!");
+			else//if (result.Succeeded) 
+			{
+				var token = _tokenService.GenerateJwtToken(customer);
+				return Ok(new { Token = token });
+			}
 		}
 
-		[HttpPost("logout")]
-		public async Task<IActionResult> Logout()
-		{
-			await _signInManager.SignOutAsync();
-			return Ok("Logged out successfully!");
-		}
+		//[HttpPost("logout")]
+		//public async Task<IActionResult> Logout()
+		//{
+		//	await _signInManager.SignOutAsync();
+		//	return Ok("Logged out successfully!");
+		//}
 	}
 }
