@@ -42,7 +42,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddIdentity<Customer, IdentityRole>()
 	.AddEntityFrameworkStores<DataContext>()
 	.AddDefaultTokenProviders();
-	
+
 
 
 
@@ -57,16 +57,18 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 	options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
 });
 
+
 // Ajout de la mise en cache des sessions
-builder.Services.AddDistributedMemoryCache(); // Nécessaire pour stocker les sessions en mémoire
+builder.Services.AddDistributedMemoryCache(); // NÃ©cessaire pour stocker les sessions en mÃ©moire
 
 // Configuration des options de session
 builder.Services.AddSession(options =>
 {
-	options.IdleTimeout = TimeSpan.FromMinutes(30); // Durée d'inactivité avant expiration
+	options.IdleTimeout = TimeSpan.FromMinutes(30); // DurÃ©e d'inactivitÃ© avant expiration
 	options.Cookie.HttpOnly = true; // La session est accessible uniquement par le serveur
-	options.Cookie.IsEssential = true; // Rendre le cookie essentiel pour les fonctionnalités de l'application
+	options.Cookie.IsEssential = true; // Rendre le cookie essentiel pour les fonctionnalitÃ©s de l'application
 });
+
 
 //Gestion des CORS
 builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
@@ -90,6 +92,7 @@ builder.Services.AddScoped<ISupplierOrderService, SupplierOrderService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ISessionService, SessionService>();
 
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -110,7 +113,9 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
+
 app.UseSession(); // Activer la gestion des sessions
+
 
 app.UseAuthentication();
 app.UseAuthorization();
