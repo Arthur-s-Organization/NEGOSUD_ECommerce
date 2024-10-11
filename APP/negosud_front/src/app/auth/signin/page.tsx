@@ -6,14 +6,14 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 
 export default function SignInPage() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await signIn("credentials", {
       redirect: false,
-      email,
+      username,
       password,
     });
   };
@@ -30,8 +30,8 @@ export default function SignInPage() {
           </label>
           <input
             type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             required
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-primary"
           />

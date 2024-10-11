@@ -121,12 +121,12 @@ export default function Cart() {
 
   //     fetchCartItems();
   //   }, [session]);
-
-  //   if (!session) {
-  //     // Rediriger vers la page de connexion si non authentifié
-  //     window.location.href = "/auth/signin";
-  //     return null; // Pour ne pas afficher le reste du composant
-  //   }
+  const session = null;
+  if (!session) {
+    // Rediriger vers la page de connexion si non authentifié
+    window.location.href = "/auth/signin";
+    return null; // Pour ne pas afficher le reste du composant
+  }
 
   useEffect(() => {
     const loadItems = async () => {

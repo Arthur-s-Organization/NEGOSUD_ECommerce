@@ -8,26 +8,27 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        email: { label: 'Email', type: 'text' },
+        username: { label: 'Username', type: 'text' },
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        const res = await fetch('https://your-api.net/api/auth/login', {
+        const res = await fetch('http://localhost:5165/api/Auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            email: credentials?.email,
+            username: credentials?.username,
             password: credentials?.password,
           }),
         });
         
+        console.log(res.json());
+        setTimeout(()=> null, 30000)
         const user = await res.json();
 
         if (res.ok && user) {
           return user; // Renvoie les infos utilisateur à NextAuth.js si succès
         }
 
-        return null; // Échec de l'authentification
       },
     }),
   ],
