@@ -1,7 +1,7 @@
 // app/cart/page.tsx
 "use client";
 import { useRouter } from "next/navigation";
-import Cart from "./Cart";
+import Cart from "../../components/Cart";
 import { useEffect } from "react";
 
 const CartPage = () => {

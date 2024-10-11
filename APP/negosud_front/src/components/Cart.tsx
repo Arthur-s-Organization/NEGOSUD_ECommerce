@@ -1,12 +1,7 @@
 import { useEffect, useState } from "react";
-import { Item } from "@/services/scheme";
+import type { Cart, CartItem } from "@/services/scheme";
 import CartItemCard from "@/components/CartItem";
 import { updateCart } from "@/services/cartService";
-
-export type CartItem = {
-  item: Item;
-  quantity: number;
-};
 
 const initialCart: CartItem[] = [
   {
@@ -68,7 +63,7 @@ const initialCart: CartItem[] = [
 ];
 
 export default function Cart() {
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cart, setCart] = useState<Cart>([]);
 
   const updateCartItemQuantity = async (
     itemId: string,
