@@ -8,6 +8,7 @@ import {
 } from "./ui/card";
 import { Input } from "./ui/input";
 import { useState } from "react";
+import { CartItem } from "@/services/scheme";
 
 export default function CartItemCard({
   cartItem,
