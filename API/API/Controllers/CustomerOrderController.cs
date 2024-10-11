@@ -41,7 +41,7 @@ namespace API.Controllers
 		}
 
 		[HttpGet("Customer/{customerId}")]
-		public async Task<ActionResult<IEnumerable<CustomerOrderResponseDTO>>> GetCustomerOrdersByCustomerId(Guid customerId)
+		public async Task<ActionResult<IEnumerable<CustomerOrderResponseDTO>>> GetCustomerOrdersByCustomerId(string customerId)
 		{
 			try
 			{

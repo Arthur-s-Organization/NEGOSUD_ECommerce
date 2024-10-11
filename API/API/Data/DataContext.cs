@@ -1,9 +1,11 @@
 ﻿using API.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Data
 {
-	public class DataContext : DbContext
+	public class DataContext : IdentityDbContext<IdentityUser>
 	{
 		public DataContext(DbContextOptions<DataContext> options) : base(options)
 		{
@@ -11,8 +13,6 @@ namespace API.Data
 
 		public DbSet<Address> Addresses { get; set; }
 		public DbSet<AlcoholFamily> AlcoholFamilies { get; set; }
-		//public DbSet<AlcoholItem> AlcoholItems { get; set; }
-		//public DbSet<CommonItem> CommonItems { get; set; }
 		public DbSet<Customer> Customers { get; set; }
 		public DbSet<Item> Items { get; set; }
 		public DbSet<Order> Orders { get; set; }
@@ -26,27 +26,11 @@ namespace API.Data
 			base.OnModelCreating(modelBuilder);
 
 
-			// Gestion des relations d'héritage
-			//modelBuilder.Entity<Item>().ToTable("Items");
-			//modelBuilder.Entity<AlcoholItem>().ToTable("AlcoholItem");
-			//modelBuilder.Entity<CommonItem>().ToTable("CommonItem");
-
 			modelBuilder.Entity<Order>().ToTable("Order");
 			modelBuilder.Entity<SupplierOrder>().ToTable("SupplierOrder");
 			modelBuilder.Entity<CustomerOrder>().ToTable("CustomerOrder");
 
 
-			// Gestion des relations One-To-One
-			//modelBuilder.Entity<Customer>()
-			//	.HasOne(c => c.Address)
-			//	.WithOne(a => a.Customer)
-			//	.HasForeignKey<Address>(a => a.CustomerId);
-
-
-			//modelBuilder.Entity<Supplier>()
-			//	.HasOne(s => s.Address)
-			//	.WithOne(a => a.Supplier)
-			//	.HasForeignKey<Address>(a => a.SupplierId);
 
 			modelBuilder.Entity<Address>()
 				.HasOne(a => a.Customer)

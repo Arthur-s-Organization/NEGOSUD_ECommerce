@@ -2,7 +2,7 @@
 {
 	public class CustomerOrder : Order
 	{
-		public Guid CustomerId { get; set; }
+		public string CustomerId { get; set; }
 
 		public virtual Customer Customer { get; set; }
 	}

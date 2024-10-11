@@ -20,7 +20,7 @@ namespace API.Services
 		}
 		public async Task<CustomerOrderResponseDTO> AddCustomerOrderAsync(CustomerOrderRequestDTO customerOrderRequestDTO)
 		{
-			var customer = _context.Customers.SingleOrDefault(c => c.CustomerId == customerOrderRequestDTO.CustomerId);
+			var customer = _context.Customers.SingleOrDefault(c => c.Id == customerOrderRequestDTO.CustomerId);
 
 			if (customer == null)
 			{
@@ -86,7 +86,7 @@ namespace API.Services
 		}
 
 
-		public async Task<IEnumerable<CustomerOrderResponseDTO>> GetCustomerOrdersByCustomerIdAsync(Guid customerId)
+		public async Task<IEnumerable<CustomerOrderResponseDTO>> GetCustomerOrdersByCustomerIdAsync(string customerId)
 		{
 			var customer = await _context.Customers.FindAsync(customerId);
 			if (customer == null)

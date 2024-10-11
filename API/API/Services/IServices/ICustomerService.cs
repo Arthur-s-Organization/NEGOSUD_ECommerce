@@ -8,8 +8,8 @@ namespace API.Services.IServices
     {
         public Task<CustomerResponseDTO> AddCustomerAsync(CustomerRequestDTO customerRequestDTO);
         public Task<IEnumerable<CustomerResponseDTO>> GetAllCustomersAsync();
-        public Task<CustomerResponseDTO> GetCustomerByIdAsync(Guid id);
-        public Task<CustomerResponseDTO> UpdateCustomerAsync(Guid id, CustomerRequestDTO customerRequestDTO);
-        public Task<CustomerResponseDTO> DeleteCustomerAsync(Guid id);
+        public Task<CustomerResponseDTO> GetCustomerByIdAsync(string id);
+        public Task<CustomerResponseDTO> UpdateCustomerAsync(string id, CustomerRequestDTO customerRequestDTO);
+        public Task<CustomerResponseDTO> DeleteCustomerAsync(string id);
     }
 }

@@ -1,13 +1,32 @@
 using API.Data;
+using API.Models;
 using API.Services;
 using API.Services.IServices;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddAuthorization();
+
+//builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+//	.AddEntityFrameworkStores<DataContext>();
+
+
 // Add services to the container.
 
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddIdentity<Customer, IdentityRole>()
+	.AddEntityFrameworkStores<DataContext>()
+	.AddDefaultTokenProviders();
+
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+	options.SignIn.RequireConfirmedEmail = false;
+});
+
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
@@ -41,6 +60,8 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+//app.MapIdentityApi<Customer>();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -52,6 +73,7 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseCors("MyPolicy");

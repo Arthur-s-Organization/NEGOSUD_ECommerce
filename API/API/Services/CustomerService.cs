@@ -51,9 +51,9 @@ namespace API.Services
 			return customerResponseDTO;
 		}
 
-		public async Task<CustomerResponseDTO> DeleteCustomerAsync(Guid id)
+		public async Task<CustomerResponseDTO> DeleteCustomerAsync(string id)
 		{
-			var customer = await _context.Customers.SingleOrDefaultAsync(c => c.CustomerId == id);
+			var customer = await _context.Customers.SingleOrDefaultAsync(c => c.Id == id);
 			if (customer is null)
 			{
 				throw new InvalidOperationException($"Unable to delete : customer '{id}' doesn't exists");
@@ -74,9 +74,9 @@ namespace API.Services
 			return custmersResponseDTO;
 		}
 
-		public async Task<CustomerResponseDTO> GetCustomerByIdAsync(Guid id)
+		public async Task<CustomerResponseDTO> GetCustomerByIdAsync(string id)
 		{
-			var customer = await _context.Customers.Include(c => c.Address).SingleOrDefaultAsync(c => c.CustomerId == id);
+			var customer = await _context.Customers.Include(c => c.Address).SingleOrDefaultAsync(c => c.Id == id);
 			if (customer is null)
 
 			{
@@ -86,12 +86,12 @@ namespace API.Services
 			return customerResponseDTO;
 		}
 
-		public async Task<CustomerResponseDTO> UpdateCustomerAsync(Guid id, CustomerRequestDTO customerRequestDTO)
+		public async Task<CustomerResponseDTO> UpdateCustomerAsync(string id, CustomerRequestDTO customerRequestDTO)
 		{
 
 			var customer = await _context.Customers
 				.Include(c => c.Address)
-				.SingleOrDefaultAsync(c => c.CustomerId == id);
+				.SingleOrDefaultAsync(c => c.Id == id);
 			if (customer == null)
 			{
 				throw new InvalidOperationException($"Unable to modify : customer '{id}' doesn't exists");
