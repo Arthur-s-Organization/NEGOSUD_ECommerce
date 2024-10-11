@@ -23,7 +23,8 @@ namespace API.Controllers
 		public IActionResult AddToCart([FromBody] AddToCartRequest request)
 		{
 			// Récupérer l'ID de l'utilisateur authentifié
-			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			//var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			var userId = User.FindFirstValue("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
 			var cart = _sessionService.GetCart(userId);
 
 			cart.AddItem(request.ItemId, request.Quantity);
