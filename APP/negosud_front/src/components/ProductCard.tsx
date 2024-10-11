@@ -11,12 +11,13 @@ import { Button } from "./ui/button";
 import { ShoppingCart } from "lucide-react";
 import { Item } from "@/services/scheme";
 import Link from "next/link";
-import { addToCart } from "@/services/cartService";
+import { addToCart, getCart } from "@/services/cartService";
 
 export default function ProductCard({ product }: { product: Item }) {
   const handleAddToCart = async (itemId: string, e: React.FormEvent) => {
     e.preventDefault();
     await addToCart(itemId, 1); // Ajoute 1 unité du produit
+    await getCart();
   };
   return (
     <Link href={`/products/${product.slug}`}>
