@@ -6,11 +6,6 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { Button } from "./ui/button";
-import { ShoppingCart } from "lucide-react";
-import { Item } from "@/services/scheme";
-import Link from "next/link";
-import type { CartItem } from "@/app/cart/Cart";
 import { Input } from "./ui/input";
 import { useState } from "react";
 
