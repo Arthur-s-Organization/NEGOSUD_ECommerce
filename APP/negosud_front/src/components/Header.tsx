@@ -38,7 +38,7 @@ export default function Header() {
                 size={24}
               />
             </Link>
-            <Link href="/">
+            <Link href="/account">
               <UserIcon className="text-white hover:text-secondary" size={24} />
             </Link>
             <Dialog>
