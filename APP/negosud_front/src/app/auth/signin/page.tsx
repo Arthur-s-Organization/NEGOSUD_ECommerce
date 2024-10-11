@@ -2,20 +2,26 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { signIn } from "next-auth/react";
+import { login } from "@/services/authService";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function SignInPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await signIn("credentials", {
-      redirect: false,
-      username,
-      password,
-    });
+
+    try {
+      await login(username, password);
+      // Redirection après connexion réussie
+      router.push("/"); // Redirigez vers la page d'accueil ou une autre page
+    } catch (error) {
+      setError("Erreur de connexion. Vérifiez vos identifiants.");
+    }
   };
 
   return (
