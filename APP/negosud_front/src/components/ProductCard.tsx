@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import {
   Card,
@@ -10,8 +11,13 @@ import { Button } from "./ui/button";
 import { ShoppingCart } from "lucide-react";
 import { Item } from "@/services/scheme";
 import Link from "next/link";
+import { addToCart } from "@/services/cartService";
 
 export default function ProductCard({ product }: { product: Item }) {
+  const handleAddToCart = async (itemId: string, e: React.FormEvent) => {
+    e.preventDefault();
+    await addToCart(itemId, 1); // Ajoute 1 unité du produit
+  };
   return (
     <Link href={`/products/${product.slug}`}>
       <Card className="border border-primary w-[20rem] hover:shadow-2xl items-center flex flex-col">
@@ -51,7 +57,11 @@ export default function ProductCard({ product }: { product: Item }) {
                 {product.originCountry}
               </p>
             </div>
-            <Button variant="outline" className="text-primary ">
+            <Button
+              variant="outline"
+              className="text-primary "
+              onClick={(e) => handleAddToCart(product.itemId, e)}
+            >
               <ShoppingCart />
             </Button>
           </div>
