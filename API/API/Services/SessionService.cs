@@ -7,22 +7,24 @@ namespace API.Services
 	public class SessionService : ISessionService
 	{
 
-		private const string CartSessionKey = "Cart"; // Clé pour identifier le panier dans la session
+		// Dictionnaire pour stocker les paniers en mémoire
+		private static readonly Dictionary<string, Cart> _userCarts = new();
 
-		public Cart GetCart(ISession session)
+		public Cart GetCart(string userId)
 		{
-			var cartJson = session.GetString(CartSessionKey); // Récupère le panier sous forme de JSON
-			if (string.IsNullOrEmpty(cartJson))
+			// Récupérer le panier de l'utilisateur ou en créer un nouveau
+			if (!_userCarts.TryGetValue(userId, out var cart))
 			{
-				return new Cart(); // Si aucun panier, on renvoie un panier vide
+				cart = new Cart();
+				_userCarts[userId] = cart;
 			}
-			return JsonConvert.DeserializeObject<Cart>(cartJson); // Désérialise le JSON en objet Cart
+			return cart;
 		}
 
-		public void SaveCart(ISession session, Cart cart)
+		public void SaveCart(string userId, Cart cart)
 		{
-			var cartJson = JsonConvert.SerializeObject(cart); // Sérialise l'objet Cart en JSON
-			session.SetString(CartSessionKey, cartJson); // Sauvegarde le panier dans la session
+			// Sauvegarder le panier dans le dictionnaire
+			_userCarts[userId] = cart;
 		}
 	}
 }

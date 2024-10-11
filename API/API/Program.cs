@@ -57,6 +57,17 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 	options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
 });
 
+// Ajout de la mise en cache des sessions
+builder.Services.AddDistributedMemoryCache(); // Nécessaire pour stocker les sessions en mémoire
+
+// Configuration des options de session
+builder.Services.AddSession(options =>
+{
+	options.IdleTimeout = TimeSpan.FromMinutes(30); // Durée d'inactivité avant expiration
+	options.Cookie.HttpOnly = true; // La session est accessible uniquement par le serveur
+	options.Cookie.IsEssential = true; // Rendre le cookie essentiel pour les fonctionnalités de l'application
+});
+
 //Gestion des CORS
 builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
 {
@@ -77,6 +88,7 @@ builder.Services.AddScoped<IItemService, ItemService>();
 builder.Services.AddScoped<ICustomerOrderService, CustomerOrderService>();
 builder.Services.AddScoped<ISupplierOrderService, SupplierOrderService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<ISessionService, SessionService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -97,6 +109,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
+
+app.UseSession(); // Activer la gestion des sessions
 
 app.UseAuthentication();
 app.UseAuthorization();
