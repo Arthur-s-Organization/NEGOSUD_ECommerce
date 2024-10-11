@@ -73,9 +73,9 @@ builder.Services.AddSession(options =>
 //Gestion des CORS
 builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
 {
-	builder.WithOrigins("*")
-		   .AllowAnyMethod()
-		   .AllowAnyHeader();
+    builder.WithOrigins("http://localhost:3000", "https://localhost:7246")
+           .AllowAnyMethod()
+           .AllowAnyHeader();
 }));
 //
 
