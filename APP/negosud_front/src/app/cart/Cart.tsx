@@ -1,16 +1,101 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { fetchAllItems } from "@/services/itemsService";
 import { Item } from "@/services/scheme";
+import CartItemCard from "@/components/CartItem";
 
-type CartItem = {
+const initialCart: CartItem[] = [
+  {
+    item: {
+      itemId: "6c2589a8-2583-480a-8549-08dce865845c",
+      name: "Vin1",
+      slug: "vin1",
+      stock: 10,
+      description: "Un vin",
+      price: 12,
+      originCountry: "France",
+      category: "alcohol",
+      quantitySold: 0,
+      supplier: {
+        supplierId: "f9808411-e7f2-4234-c2df-08dce86496c7",
+        name: "Maison1",
+        description: "string",
+        phoneNumber: "string",
+      },
+      alcoholFamily: {
+        alcoholFamilyId: "ebed4c4c-5c2c-438a-1535-08dce8644585",
+        name: "Vin",
+      },
+      alcoholVolume: "13",
+      year: "2000",
+      capacity: 33,
+      expirationDate: null,
+    },
+    quantity: 2,
+  },
+  {
+    item: {
+      itemId: "df4718d6-cc14-41ed-854a-08dce865845c",
+      name: "Vin2",
+      slug: "vin2",
+      stock: 12,
+      description: "Un vin",
+      price: 12,
+      originCountry: "Espagne",
+      category: "alcohol",
+      quantitySold: 0,
+      supplier: {
+        supplierId: "f9808411-e7f2-4234-c2df-08dce86496c7",
+        name: "Maison1",
+        description: "string",
+        phoneNumber: "string",
+      },
+      alcoholFamily: {
+        alcoholFamilyId: "ebed4c4c-5c2c-438a-1535-08dce8644585",
+        name: "Vin",
+      },
+      alcoholVolume: "13",
+      year: "1999",
+      capacity: 75,
+      expirationDate: null,
+    },
+    quantity: 4,
+  },
+];
+
+export type CartItem = {
   item: Item;
-  // quantity: number;
+  quantity: number;
 };
 export default function Cart() {
   //   const { data: session, status } = useSession();
-  //   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [cartItems, setCartItems] = useState<Item[] | null>();
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const updateCartItemQuantity = async (
+    itemId: string,
+    newQuantity: number
+  ) => {
+    setCartItems((prevCart) =>
+      prevCart.map((cartItem) =>
+        cartItem.item.itemId === itemId
+          ? { ...cartItem, quantity: newQuantity }
+          : cartItem
+      )
+    );
+    // try {
+    //   const response = await fetch(`/api/cart/${itemId}`, {
+    //     method: "PUT",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({ quantity: newQuantity }),
+    //   });
+
+    //   if (!response.ok) {
+    //     console.error("Erreur lors de la mise à jour de la quantité");
+    //   }
+    // } catch (error) {
+    //   console.error("Erreur lors de la mise à jour du panier : ", error);
+    // }
+  };
 
   //   const [loading, setLoading] = useState(true);
 
@@ -45,23 +130,24 @@ export default function Cart() {
 
   useEffect(() => {
     const loadItems = async () => {
-      const initialItems = await fetchAllItems();
-      setCartItems(initialItems);
+      setCartItems(initialCart);
     };
     loadItems();
-  }, [cartItems]);
+  }, []);
   return (
     <div>
       {cartItems?.length === 0 ? (
         <p>Votre panier est vide.</p>
       ) : (
-        <ul>
-          {cartItems?.map((item) => (
-            <li key={item.itemId}>
-              {item.name} - x ${item.price.toFixed(2)}
-            </li>
+        <div className="flex flex-col gap-6">
+          {cartItems?.map((cartItem) => (
+            <CartItemCard
+              key={cartItem.item.itemId}
+              cartItem={cartItem}
+              updateCartItemQuantity={updateCartItemQuantity}
+            />
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );
