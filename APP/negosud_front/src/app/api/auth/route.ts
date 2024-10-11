@@ -8,7 +8,7 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        username: { label: 'Username', type: 'text' },
+        email: { label: 'Email', type: 'text' },
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
@@ -16,7 +16,7 @@ export const authOptions: NextAuthOptions = {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            username: credentials?.username,
+            email: credentials?.email,
             password: credentials?.password,
           }),
         });
@@ -36,16 +36,21 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, user }) {
+      // Si l'utilisateur est connecté, ajoute l'accessToken au JWT
       if (user) {
-        token.accessToken = user.token; // Stocke le token JWT dans le cookie
+        token.accessToken = (user as any).token; // Cast explicite de user.token
       }
       return token;
     },
     async session({ session, token }) {
-      session.accessToken = token.accessToken; // Passe le token à la session
+      // Vérifie si token.accessToken est une chaîne avant de l'assigner
+      if (typeof token.accessToken === 'string') {
+        session.accessToken = token.accessToken;
+      }
       return session;
     },
-  },
+  }
+,  
   secret: process.env.NEXTAUTH_SECRET, // Assurez-vous de définir un secret pour sécuriser les sessions
 };
 
