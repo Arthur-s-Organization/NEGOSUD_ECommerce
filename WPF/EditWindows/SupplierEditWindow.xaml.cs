@@ -28,6 +28,7 @@ namespace WPF
                 Description.Text = supplier.Description;
                 PhoneNumber.Text = supplier.PhoneNumber;
                 AddressComboBox.SelectedValue = supplier.Address.AddressId;
+                ActiveCheckBox.IsChecked = supplier.IsActive;
                 supplierId = supplier.SupplierId;
             }
         }
@@ -50,13 +51,15 @@ namespace WPF
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            try { 
+            try
+            {
                 Supplier = new SupplierRequestDTO
                 {
                     Name = Name.Text,
                     Description = Description.Text,
                     PhoneNumber = PhoneNumber.Text,
-                    AddressId = (Guid) AddressComboBox.SelectedValue
+                    IsActive = (bool)ActiveCheckBox.IsChecked,
+                    AddressId = (Guid)AddressComboBox.SelectedValue
                 };
                 // Convertir l'objet en JSON
                 string jsonItem = JsonSerializer.Serialize(Supplier);
@@ -72,6 +75,7 @@ namespace WPF
                     {
                         MessageBox.Show("Supplier updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                         DialogResult = true;
+                        Close();
                     }
                     else
                     {
@@ -84,9 +88,6 @@ namespace WPF
             {
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
-            // Fermer la fenêtre
-            Close();
         }
     }
 }

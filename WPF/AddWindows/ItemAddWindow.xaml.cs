@@ -87,7 +87,7 @@ namespace WPF
                 }
 
                 DateTime? expirationDate = null;
-                if (DateTime.TryParse(ExpirationDate.Text, out DateTime parsedExpirationDate))
+                if (DateTime.TryParse(ExpirationDatePicker.Text, out DateTime parsedExpirationDate))
                 {
                     expirationDate = parsedExpirationDate;
                 }
@@ -101,6 +101,8 @@ namespace WPF
                 multipartContent.Add(new StringContent(((Guid)SupplierComboBox.SelectedValue).ToString()), "SupplierId");
                 multipartContent.Add(new StringContent(AlcoholVolume.Text), "AlcoholVolume");
                 multipartContent.Add(new StringContent(Year.Text), "Year");
+                bool isActive = ActiveCheckBox.IsChecked ?? false;
+                multipartContent.Add(new StringContent(isActive.ToString()), "IsActive");
 
                 if (capacity.HasValue)
                 {
@@ -117,7 +119,7 @@ namespace WPF
                     multipartContent.Add(new StringContent(((Guid)AlcoholFamilyComboBox.SelectedValue).ToString()), "AlcoholFamilyId");
                 }
 
-                multipartContent.Add(new StringContent((string)(CategoryComboBox.SelectedItem as ComboBoxItem)?.Content), "Category");
+                multipartContent.Add(new StringContent((CategoryComboBox.SelectedItem as ComboBoxItem)?.Tag.ToString()), "Category");
 
                 // Ajouter l'image si elle existe
                 if (!string.IsNullOrEmpty(selectedImagePath))
@@ -134,7 +136,7 @@ namespace WPF
                 // Vérifier si la requête a réussi
                 if (response.IsSuccessStatusCode)
                 {
-                    MessageBox.Show("Item updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Item added successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                     DialogResult = true;
                 }
                 else

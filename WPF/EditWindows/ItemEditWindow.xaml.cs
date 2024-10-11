@@ -41,10 +41,17 @@ namespace WPF
                 Capacity.Text = item.Capacity.ToString();
                 ExpirationDatePicker.Text = item.ExpirationDate.ToString();
                 AlcoholFamilyComboBox.SelectedValue = item.AlcoholFamily.AlcoholFamilyId;
-                CategoryComboBox.SelectedItem = item.Category; // Nouveau champ catégorie
+                ActiveCheckBox.IsChecked = item.IsActive;
+                foreach (var i in CategoryComboBox.Items)
+                {
+                    if (i is ComboBoxItem comboBoxItem && comboBoxItem.Tag.ToString() == item.Category)
+                    {
+                        CategoryComboBox.SelectedItem = comboBoxItem;
+                        break; 
+                    }
+                }
                 itemId = item.ItemId;
-                selectedImagePath = $"../API/API/Images/{item.ItemImagePath}";
-                SelectedImagePath.Text = selectedImagePath; 
+             
             }
         }
 
@@ -120,6 +127,8 @@ namespace WPF
                 multipartContent.Add(new StringContent(((Guid)SupplierComboBox.SelectedValue).ToString()), "SupplierId");
                 multipartContent.Add(new StringContent(AlcoholVolume.Text), "AlcoholVolume");
                 multipartContent.Add(new StringContent(Year.Text), "Year");
+                bool isActive = ActiveCheckBox.IsChecked ?? false; 
+                multipartContent.Add(new StringContent(isActive.ToString()), "IsActive"); 
 
                 if (capacity.HasValue)
                 {
@@ -136,7 +145,7 @@ namespace WPF
                     multipartContent.Add(new StringContent(((Guid)AlcoholFamilyComboBox.SelectedValue).ToString()), "AlcoholFamilyId");
                 }
 
-                multipartContent.Add(new StringContent((string)(CategoryComboBox.SelectedItem as ComboBoxItem)?.Content), "Category");
+                multipartContent.Add(new StringContent((CategoryComboBox.SelectedItem as ComboBoxItem)?.Tag.ToString()), "Category");
 
                 // Ajouter l'image si elle existe
                 if (!string.IsNullOrEmpty(selectedImagePath))

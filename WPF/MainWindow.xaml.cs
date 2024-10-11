@@ -146,12 +146,12 @@ namespace WPF
                 {
                     "Items" => column.Header.ToString() switch
                     {
-                        "Item Name" or "Stock" or "Price" or "Origin Country" or "Supplier Item Name" or "Alcohol Family" or "Actions" => Visibility.Visible,
+                        "Item Name" or "Stock" or "Price" or "Origin Country" or "Supplier Item Name" or "Alcohol Family" or "Active" or "Actions" => Visibility.Visible,
                         _ => Visibility.Collapsed,
                     },
                     "Suppliers" => column.Header.ToString() switch
                     {
-                        "Supplier Name" or "Description" or "Phone Number" or "Address" or "City" or "Actions" => Visibility.Visible,
+                        "Supplier Name" or "Description" or "Phone Number" or "Address" or "City" or "Actions" or "Active" => Visibility.Visible,
                         _ => Visibility.Collapsed,
                     },
                     "Customers" => column.Header.ToString() switch

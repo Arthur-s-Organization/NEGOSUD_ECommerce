@@ -11,6 +11,7 @@ namespace WPF.Class
         public string OriginCountry { get; set; }
         public Guid SupplierId { get; set; }
         public string Category { get; set; }
+        public bool IsActive { get; set; }
         public string? AlcoholVolume { get; set; }
         public string? Year { get; set; }
         public float? Capacity { get; set; }
