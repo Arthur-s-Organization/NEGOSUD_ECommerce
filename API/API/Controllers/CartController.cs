@@ -1,7 +1,10 @@
-﻿using API.Models.DTOs.RequestDTOs;
+﻿using API.Models;
+using API.Models.DTOs.RequestDTOs;
 using API.Services.IServices;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace API.Controllers
 {
@@ -9,7 +12,7 @@ namespace API.Controllers
 	[ApiController]
 	public class CartController : ControllerBase
 	{
-		private readonly ISessionService _sessionService; // Service pour gérer les sessions
+		private readonly ISessionService _sessionService;
 
 		public CartController(ISessionService sessionService)
 		{
@@ -19,25 +22,31 @@ namespace API.Controllers
 		[HttpPost("add")]
 		public IActionResult AddToCart([FromBody] AddToCartRequest request)
 		{
-			var cart = _sessionService.GetCart(HttpContext.Session);
+			// Récupérer l'ID de l'utilisateur authentifié
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			var cart = _sessionService.GetCart(userId);
+
 			cart.AddItem(request.ItemId, request.Quantity);
-			_sessionService.SaveCart(HttpContext.Session, cart);
+			_sessionService.SaveCart(userId, cart);
 			return Ok(cart);
 		}
 
 		[HttpDelete("remove")]
 		public IActionResult RemoveFromCart([FromBody] RemoveFromCartRequest request)
 		{
-			var cart = _sessionService.GetCart(HttpContext.Session);
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			var cart = _sessionService.GetCart(userId);
+
 			cart.RemoveItem(request.ItemId);
-			_sessionService.SaveCart(HttpContext.Session, cart);
+			_sessionService.SaveCart(userId, cart);
 			return Ok(cart);
 		}
 
 		[HttpGet]
 		public IActionResult GetCart()
 		{
-			var cart = _sessionService.GetCart(HttpContext.Session);
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			var cart = _sessionService.GetCart(userId);
 			return Ok(cart);
 		}
 

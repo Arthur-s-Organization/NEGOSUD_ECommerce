@@ -4,7 +4,7 @@ namespace API.Services.IServices
 {
 	public interface ISessionService
 	{
-		Cart GetCart(ISession session);
-		void SaveCart(ISession session, Cart cart);
+		Cart GetCart(string userId);
+		void SaveCart(string userId, Cart cart);
 	}
 }

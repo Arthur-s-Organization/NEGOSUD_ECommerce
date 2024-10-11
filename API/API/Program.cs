@@ -58,18 +58,16 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 });
 
 
-
 // Ajout de la mise en cache des sessions
-builder.Services.AddDistributedMemoryCache(); // Nécessaire pour stocker les sessions en mémoire
+builder.Services.AddDistributedMemoryCache(); // NÃ©cessaire pour stocker les sessions en mÃ©moire
 
 // Configuration des options de session
 builder.Services.AddSession(options =>
 {
-	options.IdleTimeout = TimeSpan.FromMinutes(30); // Durée d'inactivité avant expiration
+	options.IdleTimeout = TimeSpan.FromMinutes(30); // DurÃ©e d'inactivitÃ© avant expiration
 	options.Cookie.HttpOnly = true; // La session est accessible uniquement par le serveur
-	options.Cookie.IsEssential = true; // Rendre le cookie essentiel pour les fonctionnalités de l'application
+	options.Cookie.IsEssential = true; // Rendre le cookie essentiel pour les fonctionnalitÃ©s de l'application
 });
-
 
 
 //Gestion des CORS
