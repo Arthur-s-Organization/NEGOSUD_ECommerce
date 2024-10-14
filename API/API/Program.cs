@@ -27,7 +27,7 @@ builder.Services.AddAuthentication(options =>
 			ValidateLifetime = true,
 			ValidateIssuerSigningKey = true,
 			ValidIssuer = builder.Configuration["Jwt:Issuer"],
-			ValidAudience = builder.Configuration["Jwt:Issuer"],
+			ValidAudience = builder.Configuration["Jwt:Audience"],
 			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
 		};
 	});
@@ -73,9 +73,9 @@ builder.Services.AddSession(options =>
 //Gestion des CORS
 builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
 {
-    builder.WithOrigins("http://localhost:3000", "https://localhost:7246")
-           .AllowAnyMethod()
-           .AllowAnyHeader();
+	builder.AllowAnyOrigin()  // Permet toutes les origines (domaines)
+					.AllowAnyMethod()  // Permet toutes les méthodes HTTP (GET, POST, etc.)
+					.AllowAnyHeader(); // Permet tous les en-têtes
 }));
 //
 
@@ -110,6 +110,7 @@ if (app.Environment.IsDevelopment())
 	app.UseSwagger();
 	app.UseSwaggerUI();
 }
+app.UseRouting();
 
 app.UseHttpsRedirection();
 
@@ -121,8 +122,8 @@ app.UseSession(); // Activer la gestion des sessions
 
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.UseCors("MyPolicy");
+
 
 app.MapControllers();
 

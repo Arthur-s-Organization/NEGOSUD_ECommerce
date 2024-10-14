@@ -5,12 +5,12 @@ import axios from 'axios';
 const API_URL = 'http://localhost:5165/api/Cart'; // Assurez-vous que cela correspond à votre endpoint
 
 export const addToCart = async (itemId: string, quantity: number) => {
-  const response = await axios.post(`${API_URL}/add`, {
+  const response = await axios.post(`http://localhost:5165/api/Cart/add`, {
     itemId,
     quantity,
   }, {
     headers: {
-      'Authorization': `Bearer ${localStorage.getItem("token")}`, 
+      'Authorization': `Bearer ${localStorage.getItem("token")}`,  'Content-Type': 'application/json', "accept" : "*/*"
     }})
   console.log("add : ", response.data)
   return response.data; 
