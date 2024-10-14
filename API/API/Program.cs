@@ -79,6 +79,8 @@ builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
 }));
 //
 
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 
