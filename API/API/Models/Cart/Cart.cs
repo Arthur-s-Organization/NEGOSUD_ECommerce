@@ -1,4 +1,6 @@
-﻿namespace API.Models.Cart
+﻿using Azure.Core;
+
+namespace API.Models.Cart
 {
 	public class Cart
 	{
@@ -20,6 +22,16 @@
 		public void RemoveItem(Guid itemId)
 		{
 			Items.RemoveAll(i => i.Item.ItemId == itemId);
+		}
+
+		public void UpdateItem(Item item, int quantity)
+		{
+			var existingItem = Items.Find(i => i.Item.ItemId == item.ItemId);
+			if (existingItem != null)
+			{
+				existingItem.Quantity = quantity;
+			}
+
 		}
 	}
 }

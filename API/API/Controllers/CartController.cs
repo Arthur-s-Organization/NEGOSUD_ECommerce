@@ -74,5 +74,29 @@ namespace API.Controllers
 			return Ok(cart);
 		}
 
+		[HttpPut("update")]
+		public IActionResult UpdateCart([FromBody] AddToCartRequest request)
+		{
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+
+			if (string.IsNullOrEmpty(userId))
+			{
+				return Unauthorized("User is not authenticated.");
+			}
+			var cart = _sessionService.GetCart(userId);
+
+			var item = _itemService.GetItemById(request.ItemId);
+			if (item == null)
+			{
+				return NotFound("Item not found.");
+			}
+
+
+			cart.UpdateItem(item, request.Quantity);
+			_sessionService.SaveCart(userId, cart);
+			return Ok(cart);
+		}
+
 	}
 }
