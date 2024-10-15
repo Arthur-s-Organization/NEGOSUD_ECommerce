@@ -89,8 +89,8 @@ namespace API.Controllers
 
 			else//if (result.Succeeded) 
 			{
-				var token = _tokenService.GenerateJwtToken(customer);
-				return Ok(new { Token = token });
+				var token = _tokenService.AssignToken(_tokenService.GenerateJwtToken(customer));
+				return Ok(new { Token = token , UserId = customer.Id });
 			}
 		}
 

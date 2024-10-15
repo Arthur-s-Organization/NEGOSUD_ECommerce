@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Button } from "./ui/button";
-import { fetchAlcoholFamilies, fetchSuppliers } from "@/services/itemsService";
 import { AlcoholFamily, Supplier } from "@/services/scheme";
+import { fetchSuppliers } from "@/services/supplierService";
+import { fetchAlcoholFamilies } from "@/services/alcoholFamilyService";
 
 export type Filters = {
   Category: string;

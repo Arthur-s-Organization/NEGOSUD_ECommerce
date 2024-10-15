@@ -34,6 +34,14 @@ export const zItem = z.object({
 });
 export const zItemList = z.array(zItem);
 
+export const zCartItem = z.object({
+  item : zItem,
+  quantity : z.number()
+});
+export const zCart = z.array(zCartItem);
+export type CartItem = z.infer<typeof zCartItem>;
+export type Cart = z.infer<typeof zCart>;
+
 export type Supplier = z.infer<typeof zSupplier>;
 export type SupplierList = z.infer<typeof zSupplierList>;
 export type Item = z.infer<typeof zItem>;

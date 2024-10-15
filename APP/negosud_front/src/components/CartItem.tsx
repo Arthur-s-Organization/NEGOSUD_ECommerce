@@ -6,13 +6,9 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { Button } from "./ui/button";
-import { ShoppingCart } from "lucide-react";
-import { Item } from "@/services/scheme";
-import Link from "next/link";
-import type { CartItem } from "@/app/cart/Cart";
 import { Input } from "./ui/input";
 import { useState } from "react";
+import { CartItem } from "@/services/scheme";
 
 export default function CartItemCard({
   cartItem,
@@ -22,14 +18,14 @@ export default function CartItemCard({
   updateCartItemQuantity: (itemId: string, quantity: number) => void;
 }) {
   const [quantity, setQuantity] = useState(cartItem.quantity);
+  const boxes = Math.floor(cartItem.quantity / 6);
+  const bottles = cartItem.quantity % 6;
 
   const handleQuantityChange = (value: string) => {
     const newQuantity = Number(value);
     setQuantity(newQuantity);
     updateCartItemQuantity(cartItem.item.itemId, newQuantity);
   };
-  const boxes = Math.floor(cartItem.quantity / 6);
-  const bottles = cartItem.quantity % 6;
 
   return (
     <Card className="border border-primary w-fit items-center flex">

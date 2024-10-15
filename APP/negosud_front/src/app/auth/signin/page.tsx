@@ -2,20 +2,27 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { signIn } from "next-auth/react";
+import { login } from "@/services/authService";
+import { AlertCircleIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function SignInPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await signIn("credentials", {
-      redirect: false,
-      username,
-      password,
-    });
+
+    try {
+      await login(username, password);
+      // Redirection après connexion réussie
+      router.push("/"); // Redirigez vers la page d'accueil ou une autre page
+    } catch (error) {
+      setError("Erreur de connexion. Vérifiez vos identifiants.");
+    }
   };
 
   return (
@@ -26,7 +33,7 @@ export default function SignInPage() {
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Nom d'utilisateur
+            Email
           </label>
           <input
             type="text"
@@ -50,6 +57,12 @@ export default function SignInPage() {
         </div>
         <Button type="submit">Connexion</Button>
       </form>
+      {error && (
+        <div className="rounded-md border-red-700 border-2 flex gap-2 w-fit p-2 bg-primary/20 text-primary self-center">
+          <AlertCircleIcon />
+          <p>{error}</p>
+        </div>
+      )}
     </div>
   );
 }

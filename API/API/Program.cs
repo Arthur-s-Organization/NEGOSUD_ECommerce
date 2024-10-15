@@ -27,7 +27,7 @@ builder.Services.AddAuthentication(options =>
 			ValidateLifetime = true,
 			ValidateIssuerSigningKey = true,
 			ValidIssuer = builder.Configuration["Jwt:Issuer"],
-			ValidAudience = builder.Configuration["Jwt:Issuer"],
+			ValidAudience = builder.Configuration["Jwt:Audience"],
 			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
 		};
 	});
@@ -71,12 +71,16 @@ builder.Services.AddSession(options =>
 
 
 //Gestion des CORS
-builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+builder.Services.AddCors(options =>
 {
-	builder.WithOrigins("*")
-		   .AllowAnyMethod()
-		   .AllowAnyHeader();
-}));
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins("http://localhost:3000", "http://localhost:3002", "http://client:3000", "http://10.5.1.12:3000", "http://egotestv10.duhamel-logisitque.fr")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+}); ;
 //
 
 builder.Services.AddHttpContextAccessor();
@@ -110,6 +114,7 @@ if (app.Environment.IsDevelopment())
 	app.UseSwagger();
 	app.UseSwaggerUI();
 }
+app.UseRouting();
 
 app.UseHttpsRedirection();
 
@@ -121,8 +126,8 @@ app.UseSession(); // Activer la gestion des sessions
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseCors();
 
-app.UseCors("MyPolicy");
 
 app.MapControllers();
 
