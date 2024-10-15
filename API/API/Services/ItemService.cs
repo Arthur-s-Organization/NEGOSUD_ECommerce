@@ -263,5 +263,15 @@ namespace API.Services
 			return alcoholItemResponseDTO;
 		}
 
+		public Item GetItemById(Guid id)
+		{
+			var item = _context.Items.SingleOrDefault(i => i.ItemId == id);
+			if (item == null)
+			{
+				throw new InvalidOperationException($"Unable to get : a item '{id}' doesn't exsists");
+			}
+			return item;
+		}
+
 	}
 }

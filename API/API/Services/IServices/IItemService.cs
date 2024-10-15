@@ -1,4 +1,5 @@
-﻿using API.Models.DTOs.RequestDTOs;
+﻿using API.Models;
+using API.Models.DTOs.RequestDTOs;
 using API.Models.DTOs.ResponseDTOs;
 
 namespace API.Services.IServices
@@ -14,6 +15,8 @@ namespace API.Services.IServices
 		public Task<IEnumerable<ItemResponseDTO>> GetFilteredItemsAsync(ItemFilterRequestDTO filters);
 		public Task<ItemResponseDTO> UpdateItemAsync(Guid id, ItemRequestDTO itemRequestDTO);
 		public Task<ItemResponseDTO> AddItemAsync(ItemRequestDTO itemRequestDTO);
+
+		public Item GetItemById(Guid id);
 
 	}
 }

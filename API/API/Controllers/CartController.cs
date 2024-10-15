@@ -1,5 +1,6 @@
 ﻿using API.Models;
 using API.Models.DTOs.RequestDTOs;
+using API.Services;
 using API.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -16,10 +17,12 @@ namespace API.Controllers
 	public class CartController : ControllerBase
 	{
 		private readonly ISessionService _sessionService;
+		private readonly IItemService _itemService;
 
-		public CartController(ISessionService sessionService)
+		public CartController(ISessionService sessionService, IItemService itemService)
 		{
 			_sessionService = sessionService;
+			_itemService = itemService;
 		}
 
 		[HttpPost("add")]
@@ -35,7 +38,13 @@ namespace API.Controllers
 			}
 			var cart = _sessionService.GetCart(userId);
 
-			cart.AddItem(request.ItemId, request.Quantity);
+			var item = _itemService.GetItemById(request.ItemId);
+			if (item == null)
+			{
+				return NotFound("Item not found.");
+			}
+
+			cart.AddItem(item, request.Quantity);
 			_sessionService.SaveCart(userId, cart);
 			return Ok(cart);
 		}
