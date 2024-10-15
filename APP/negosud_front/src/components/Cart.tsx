@@ -4,9 +4,17 @@ import CartItemCard from "@/components/CartItem";
 import { getCart, removeFromCart, updateCart } from "@/services/cartService";
 import { Button } from "./ui/button";
 import Link from "next/link";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "./ui/card";
 
 export default function Cart() {
   const [cart, setCart] = useState<Cart>([]);
+  const [totalPrice, setTotalPrice] = useState<Number>(0);
 
   const updateCartItemQuantity = async (
     itemId: string,
@@ -42,6 +50,19 @@ export default function Cart() {
     loadItems();
   }, []);
 
+  useEffect(() => {
+    if (cart.length > 0) {
+      setTotalPrice(
+        cart.reduce((total, cartItem) => {
+          console.log(
+            `Item: ${cartItem.item.price}, Quantity: ${cartItem.quantity}`
+          );
+          return total + cartItem.item.price * cartItem.quantity;
+        }, 0)
+      );
+    }
+  }, [cart]);
+
   return (
     <div>
       {cart.length === 0 ? (
@@ -52,14 +73,29 @@ export default function Cart() {
           </Button>
         </div>
       ) : (
-        <div className="flex flex-col gap-6">
-          {cart.map((cartItem: CartItem) => (
-            <CartItemCard
-              key={cartItem.item.itemId}
-              cartItem={cartItem}
-              updateCartItemQuantity={updateCartItemQuantity}
-            />
-          ))}
+        <div className="flex justify-between">
+          <div className="flex flex-col gap-6 max-w-3xl">
+            {cart.map((cartItem: CartItem) => (
+              <CartItemCard
+                key={cartItem.item.itemId}
+                cartItem={cartItem}
+                updateCartItemQuantity={updateCartItemQuantity}
+              />
+            ))}
+          </div>
+          <Card className="text-center h-full">
+            <CardHeader>
+              <CardTitle className="text-xl ">Paiement</CardTitle>
+            </CardHeader>
+            <CardContent className="text-lg text-primary">
+              Total : {totalPrice.toString()} €
+            </CardContent>
+            <CardFooter>
+              <Button>
+                <Link href="/cart/payment/success">Procéder au paiement</Link>
+              </Button>
+            </CardFooter>
+          </Card>
         </div>
       )}
     </div>
