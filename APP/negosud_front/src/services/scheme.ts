@@ -39,8 +39,23 @@ export const zCartItem = z.object({
   quantity : z.number()
 });
 export const zCart = z.array(zCartItem);
-export type CartItem = z.infer<typeof zCartItem>;
-export type Cart = z.infer<typeof zCart>;
+
+export const zAddress = z.object({
+  addressId :z.string(),
+  streetAddress : z.string(),
+  postalCode : z.string(),
+  city : z.string()
+})
+
+export const zCustomer = z.object({
+  id : z.string(),
+  firstName : z.string(),
+  lastName : z.string(),
+  gender : z.string(),
+  dateOfBirth : z.string(),
+  phoneNumber : z.string(),
+  address : zAddress
+})
 
 export type Supplier = z.infer<typeof zSupplier>;
 export type SupplierList = z.infer<typeof zSupplierList>;
@@ -48,3 +63,7 @@ export type Item = z.infer<typeof zItem>;
 export type ItemList = z.infer<typeof zItemList>;
 export type AlcoholFamily = z.infer<typeof zAlcoholFamily>;
 export type AlcoholFamilyList = z.infer<typeof zAlcoholFamilyList>;
+export type CartItem = z.infer<typeof zCartItem>;
+export type Cart = z.infer<typeof zCart>;
+export type Address = z.infer<typeof zAddress>;
+export type Customer = z.infer<typeof zCustomer>;

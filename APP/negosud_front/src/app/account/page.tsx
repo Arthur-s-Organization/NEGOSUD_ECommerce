@@ -17,21 +17,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { formatDateTime } from "@/lib/utils";
 import { logout } from "@/services/authService";
+import { fetchCustomerbyId } from "@/services/customerService";
+import { Customer } from "@/services/scheme";
 import { User, Package, Clock } from "lucide-react";
 import { useRouter } from "next/navigation";
-
-const user = {
-  firstName: "Jean",
-  lastName: "Dupont",
-  email: "jean.dupont@example.com",
-  address: {
-    streetAddress: "123 Rue du Vin",
-    postalCode: "75000",
-    city: "Paris",
-  },
-  phone: "+33 1 23 45 67 89",
-};
+import { useEffect, useState } from "react";
 
 const orders = [
   { id: "ORD001", date: "2023-05-15", total: "250.00 €", status: "4" },
@@ -42,6 +34,25 @@ const orders = [
 ];
 
 export default function AccountPage() {
+  const [customer, setCustomer] = useState<Customer>();
+
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      const loadCustomer = async () => {
+        try {
+          const currentCustomer = await fetchCustomerbyId(userId);
+          if (currentCustomer) {
+            setCustomer(currentCustomer);
+          }
+        } catch (error) {
+          console.error("Erreur lors du chargement de l'utilisateur :", error);
+        }
+      };
+      loadCustomer();
+    }
+  }, []);
+
   const router = useRouter();
   const handleLogout = () => {
     logout();
@@ -83,93 +94,102 @@ export default function AccountPage() {
         Mon Compte NEGOSUD
       </h1>
 
-      <Tabs defaultValue="profile" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="profile">Profil</TabsTrigger>
-          <TabsTrigger value="orders">Commandes</TabsTrigger>
-        </TabsList>
+      {customer && (
+        <Tabs defaultValue="profile" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="profile">Profil</TabsTrigger>
+            <TabsTrigger value="orders">Commandes</TabsTrigger>
+          </TabsList>
 
-        <TabsContent value="profile">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <User className="h-6 w-6 text-primary" />
-                Informations Personnelles
-              </CardTitle>
-              <CardDescription>Vos informations personnelles.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label>Nom</Label>
-                  <p className="text-lg font-medium">
-                    {user.firstName} {user.lastName}
-                  </p>
+          <TabsContent value="profile">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <User className="h-6 w-6 text-primary" />
+                  Informations Personnelles
+                </CardTitle>
+                <CardDescription>
+                  Vos informations personnelles.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label>Nom</Label>
+                    <p className="text-lg font-medium">
+                      {customer.firstName} {customer.lastName}
+                    </p>
+                  </div>
+                  <div>
+                    <Label>Date de naissance</Label>
+                    <p className="text-lg font-medium">
+                      {formatDateTime(customer.dateOfBirth)}
+                    </p>
+                  </div>
+                  <div>
+                    <Label>Adresse</Label>
+                    <p className="text-lg font-medium">
+                      {customer.address.streetAddress},{" "}
+                      {customer.address.postalCode} {customer.address.city}{" "}
+                    </p>
+                  </div>
+                  <div>
+                    <Label>Téléphone</Label>
+                    <p className="text-lg font-medium">
+                      {customer.phoneNumber}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <Label>Email</Label>
-                  <p className="text-lg font-medium">{user.email}</p>
-                </div>
-                <div>
-                  <Label>Adresse</Label>
-                  <p className="text-lg font-medium">
-                    {user.address.streetAddress}, {user.address.postalCode}{" "}
-                    {user.address.city}{" "}
-                  </p>
-                </div>
-                <div>
-                  <Label>Téléphone</Label>
-                  <p className="text-lg font-medium">{user.phone}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
-        <TabsContent value="orders">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Package className="h-6 w-6 text-primary" />
-                Historique des Commandes
-              </CardTitle>
-              <CardDescription>
-                Consultez vos commandes récentes ici.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>N° de Commande</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Total</TableHead>
-                    <TableHead>Statut</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {orders.map((order) => (
-                    <TableRow key={order.id}>
-                      <TableCell>{order.id}</TableCell>
-                      <TableCell>{order.date}</TableCell>
-                      <TableCell>{order.total}</TableCell>
-                      <TableCell>
-                        <span
-                          className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusStyle(
-                            order.status
-                          )}`}>
-                          <Clock className="w-3 h-3 mr-1" />
-                          {getStatusLabel(order.status)}
-                        </span>
-                      </TableCell>
+          <TabsContent value="orders">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Package className="h-6 w-6 text-primary" />
+                  Historique des Commandes
+                </CardTitle>
+                <CardDescription>
+                  Consultez vos commandes récentes ici.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>N° de Commande</TableHead>
+                      <TableHead>Date</TableHead>
+                      <TableHead>Total</TableHead>
+                      <TableHead>Statut</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+                  </TableHeader>
+                  <TableBody>
+                    {orders.map((order) => (
+                      <TableRow key={order.id}>
+                        <TableCell>{order.id}</TableCell>
+                        <TableCell>{order.date}</TableCell>
+                        <TableCell>{order.total}</TableCell>
+                        <TableCell>
+                          <span
+                            className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusStyle(
+                              order.status
+                            )}`}
+                          >
+                            <Clock className="w-3 h-3 mr-1" />
+                            {getStatusLabel(order.status)}
+                          </span>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      )}
       <div className="mt-8 flex justify-center">
         <Button onClick={() => handleLogout()}>Déconnexion</Button>
       </div>
