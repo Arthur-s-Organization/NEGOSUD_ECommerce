@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import type { Cart, CartItem } from "@/services/scheme";
 import CartItemCard from "@/components/CartItem";
 import { getCart, removeFromCart, updateCart } from "@/services/cartService";
+import { Button } from "./ui/button";
+import Link from "next/link";
 
 export default function Cart() {
   const [cart, setCart] = useState<Cart>([]);
@@ -10,7 +12,6 @@ export default function Cart() {
     itemId: string,
     newQuantity: number
   ) => {
-    // Si la nouvelle quantité est 0, supprimer l'élément
     if (newQuantity <= 0) {
       setCart((prevCart) =>
         prevCart.filter((cartItem) => cartItem.item.itemId !== itemId)
@@ -44,7 +45,12 @@ export default function Cart() {
   return (
     <div>
       {cart.length === 0 ? (
-        <p>Votre panier est vide.</p>
+        <div className="flex gap-3 w-fit items-center">
+          <p className="text-lg">Votre panier est vide.</p>
+          <Button variant="secondary">
+            <Link href="/products">Consultez nos produits</Link>
+          </Button>
+        </div>
       ) : (
         <div className="flex flex-col gap-6">
           {cart.map((cartItem: CartItem) => (

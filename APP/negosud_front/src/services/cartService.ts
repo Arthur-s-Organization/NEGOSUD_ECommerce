@@ -1,15 +1,12 @@
-// services/cartService.ts
-
 import axios from "@/app/main";
 
-const API_URL = "http://localhost:5165/api/Cart"; // Assurez-vous que cela correspond à votre endpoint
+const API_URL = "http://localhost:5165/api/Cart";
 
 export const addToCart = async (itemId: string, quantity: number) => {
-  const response = await axios.post(`http://localhost:5165/api/Cart/add`, {
+  const response = await axios.post(`${API_URL}/add`, {
     itemId,
     quantity,
   });
-  console.log("add : ", response.data);
   return response.data;
 };
 
@@ -23,7 +20,6 @@ export const removeFromCart = async (itemId: string) => {
 export const getCart = async () => {
   try {
     const response = await axios.get(API_URL);
-    console.log("get : ", response.data);
     return response.data;
   } catch (error) {
     console.error("Erreur lors de la récupération du panier :", error);
