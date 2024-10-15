@@ -20,7 +20,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { logout } from "@/services/authService";
 import { User, Package, Clock } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 const user = {
   firstName: "Jean",
@@ -48,13 +47,6 @@ export default function AccountPage() {
     logout();
     router.push("/");
   };
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/auth/signin");
-    }
-  }, []);
 
   function getStatusStyle(status: string) {
     switch (status) {
@@ -165,8 +157,7 @@ export default function AccountPage() {
                         <span
                           className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusStyle(
                             order.status
-                          )}`}
-                        >
+                          )}`}>
                           <Clock className="w-3 h-3 mr-1" />
                           {getStatusLabel(order.status)}
                         </span>

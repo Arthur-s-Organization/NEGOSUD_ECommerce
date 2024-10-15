@@ -3,17 +3,21 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using API.Models;
+using Microsoft.AspNetCore.Http;
 
 public class TokenService : ITokenService
 {
 	private readonly IConfiguration _configuration;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-	public TokenService(IConfiguration configuration)
+
+    public TokenService(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
 	{
 		_configuration = configuration;
-	}
+        _httpContextAccessor = httpContextAccessor;
+    }
 
-	public string GenerateJwtToken(Customer user)
+    public string GenerateJwtToken(Customer user)
 	{
 		// Créer une liste de claims qui seront inclus dans le token (par exemple, l'email ou l'ID de l'utilisateur)
 		var claims = new[]
@@ -38,4 +42,20 @@ public class TokenService : ITokenService
 
 		return new JwtSecurityTokenHandler().WriteToken(token);
 	}
+
+	public string AssignToken(string token)
+	{
+        // Ajoute le token dans un cookie HttpOnly
+        var options = new CookieOptions
+        {
+            HttpOnly = true, // Empêche l'accès via JS
+            Secure = false, // Utilise HTTPS
+            SameSite = SameSiteMode.Strict, // Empêche l'accès cross-site
+            Expires = DateTime.UtcNow.AddDays(1)
+        };
+
+        _httpContextAccessor.HttpContext.Response.Cookies.Append("negosudToken", token, options);
+        return token;
+
+    }
 }

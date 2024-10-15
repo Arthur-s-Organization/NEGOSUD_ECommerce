@@ -19,7 +19,7 @@ export default function SignInPage() {
     try {
       await login(username, password);
       // Redirection après connexion réussie
-      router.back(); // Redirigez vers la page d'accueil ou une autre page
+      router.push("/"); // Redirigez vers la page d'accueil ou une autre page
     } catch (error) {
       setError("Erreur de connexion. Vérifiez vos identifiants.");
     }

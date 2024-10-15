@@ -71,12 +71,16 @@ builder.Services.AddSession(options =>
 
 
 //Gestion des CORS
-builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+builder.Services.AddCors(options =>
 {
-    builder.WithOrigins("http://localhost:3000", "https://localhost:7246")
-           .AllowAnyMethod()
-           .AllowAnyHeader();
-}));
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins("http://localhost:3000", "http://localhost:3002", "http://client:3000", "http://10.5.1.12:3000", "http://egotestv10.duhamel-logisitque.fr")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+}); ;
 //
 
 builder.Services.AddHttpContextAccessor();
@@ -122,7 +126,7 @@ app.UseSession(); // Activer la gestion des sessions
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors("MyPolicy");
+app.UseCors();
 
 
 app.MapControllers();
