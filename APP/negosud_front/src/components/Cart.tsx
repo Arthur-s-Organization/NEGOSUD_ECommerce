@@ -11,33 +11,39 @@ import {
   CardContent,
   CardFooter,
 } from "./ui/card";
-import { useRouter } from "next/navigation";
+import { loadStripe } from '@stripe/stripe-js';
 import axios from "axios";
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export default function Cart() {
   const [cart, setCart] = useState<Cart>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [loadingPayment, setLoadingPayment] = useState<boolean>(false);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
 
-  const updateCartItemQuantity = async (
-    itemId: string,
-    newQuantity: number
-  ) => {
-    if (newQuantity <= 0) {
+  const API_URL = "http://localhost:5165/api/Payment";
+
+  const updateCartItemQuantity = async (itemId: string, newQuantity: number) => {
+    try {
+      if (newQuantity <= 0) {
+        setCart((prevCart) =>
+          prevCart.filter((cartItem) => cartItem.item.itemId !== itemId)
+        );
+        await removeFromCart(itemId);
+        return;
+      }
       setCart((prevCart) =>
-        prevCart.filter((cartItem) => cartItem.item.itemId !== itemId)
+        prevCart.map((cartItem) =>
+          cartItem.item.itemId === itemId
+            ? { ...cartItem, quantity: newQuantity }
+            : cartItem
+        )
       );
-      await removeFromCart(itemId);
-      return;
+      await updateCart(itemId, newQuantity);
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour de la quantité :", error);
     }
-    setCart((prevCart) =>
-      prevCart.map((cartItem) =>
-        cartItem.item.itemId === itemId
-          ? { ...cartItem, quantity: newQuantity }
-          : cartItem
-      )
-    );
-    await updateCart(itemId, newQuantity);
   };
 
   useEffect(() => {
@@ -55,33 +61,33 @@ export default function Cart() {
 
   useEffect(() => {
     if (cart.length > 0) {
-      setTotalPrice(
-        cart.reduce((total, cartItem) => {
-          return total + cartItem.item.price * cartItem.quantity;
-        }, 0)
-      );
+      const calculatedTotal = cart.reduce((total, cartItem) => {
+        return total + cartItem.item.price * cartItem.quantity;
+      }, 0);
+      setTotalPrice(calculatedTotal);
     }
   }, [cart]);
 
   const initiatePayment = async (cart: Cart) => {
     setLoadingPayment(true);
+    setPaymentError(null); // Réinitialisation des erreurs
+
     try {
-      const response = await axios.post(
-        "http://localhost:5165/api/payment",
-        cart,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      const response = await axios.post(API_URL, cart);
 
       if (response.data && response.data.id) {
-        // Redirection vers Stripe Checkout
-        window.location.href = `https://checkout.stripe.com/pay/${response.data.id}`;
+        const stripe = await stripePromise;
+        const { error } = await stripe!.redirectToCheckout({ sessionId: response.data.id });
+
+        if (error) {
+          setPaymentError("Erreur lors de la redirection vers Stripe Checkout : " + error.message);
+        }
       } else {
-        console.error("Erreur lors de la création de la session Stripe");
+        throw new Error("Erreur lors de la création de la session Stripe");
       }
     } catch (error) {
       console.error("Erreur lors de l'initiation du paiement :", error);
+      setPaymentError("Une erreur est survenue lors de l'initiation du paiement. Veuillez réessayer.");
     } finally {
       setLoadingPayment(false);
     }
@@ -119,16 +125,11 @@ export default function Cart() {
             <CardContent className="text-lg text-primary">
               Total : {totalPrice.toFixed(2)} €
             </CardContent>
-            <CardFooter>
-              {/* <Button
-                onClick={() => initiatePayment(cart)}
-                disabled={loadingPayment}
-              >
-                {loadingPayment
-                  ? "Redirection vers Stripe..."
-                  : "Procéder au paiement"}
-              </Button> */}
-              <Button onClick={handlePayment}>Procéder au paiement</Button>
+            <CardFooter className="flex flex-col gap-2">
+              <Button onClick={initiatePayment} disabled={loadingPayment}>
+                {loadingPayment ? "Redirection vers Stripe..." : "Procéder au paiement"}
+              </Button>
+              {paymentError && <p className="text-red-500">{paymentError}</p>}
             </CardFooter>
           </Card>
         </div>
