@@ -1,10 +1,8 @@
-﻿using API.Models.Cart;
-using AutoMapper.Configuration.Annotations;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Configuration;
 using Stripe.Checkout;
-using System.Text.Json.Serialization;
+using Stripe;
+using API.Models.Cart;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
@@ -12,11 +10,19 @@ namespace API.Controllers
     [ApiController]
     public class PaymentController : ControllerBase
     {
+        private readonly IConfiguration _configuration;
+
+        public PaymentController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+            StripeConfiguration.ApiKey = _configuration["Stripe:SecretKey"];  // Initialiser la clé secrète Stripe
+        }
+
         [HttpPost]
-        public async Task<IActionResult> CreateCheckoutSession([FromBody] Cart Cart)
+        public async Task<IActionResult> CreateCheckoutSession([FromBody] Cart cart)
         {
             var domain = "http://localhost:3000";
-            if (Cart == null)
+            if (cart == null)
             {
                 return BadRequest("Your cart is empty.");
             }
@@ -32,7 +38,7 @@ namespace API.Controllers
 
             long totalAmount = 0;
 
-            foreach (var item in Cart.Items)
+            foreach (var item in cart.Items)
             {
                 var itemAmountInCents = (long)(item.Item.Price * 100) * item.Quantity;
                 options.LineItems.Add(new SessionLineItemOptions
@@ -62,8 +68,6 @@ namespace API.Controllers
                 var service = new SessionService();
                 Session session = await service.CreateAsync(options);
 
-                // Sauvegarder les modifications du stock (ex: via Entity Framework) ici
-
                 return Ok(new { id = session.Id });
             }
             catch (Exception ex)
@@ -72,5 +76,4 @@ namespace API.Controllers
             }
         }
     }
-
 }
