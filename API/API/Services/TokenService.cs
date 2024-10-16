@@ -58,4 +58,20 @@ public class TokenService : ITokenService
         return token;
 
     }
+
+	public void RemoveCurentToken()
+	{
+        // Supprime le cookie en utilisant le même nom et les mêmes options
+        var options = new CookieOptions
+        {
+            HttpOnly = true, // Assure la sécurité
+            Secure = false, // Utilise HTTPS
+            SameSite = SameSiteMode.Strict, // Empêche l'accès cross-site
+            Expires = DateTime.UtcNow.AddDays(-1) // Expire immédiatement pour forcer la suppression
+        };
+
+        // Supprime le cookie en le réécrivant avec une date d'expiration passée
+        _httpContextAccessor.HttpContext.Response.Cookies.Delete("negosudToken");
+		return;
+    }
 }
