@@ -3,6 +3,7 @@ import "./globals.css";
 import { Playfair_Display } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { Toaster } from "@/components/ui/toaster";
 
 const playfairDisplay = Playfair_Display({
   subsets: ["latin"],
@@ -30,6 +31,7 @@ export default function RootLayout({
       <body className="font-sans bg-primary/5 min-h-screen flex flex-col">
         <Header />
         <div className="flex flex-1 flex-col">{children}</div>
+        <Toaster />
         <Footer />
       </body>
     </html>
