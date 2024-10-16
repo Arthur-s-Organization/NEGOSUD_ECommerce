@@ -5,9 +5,21 @@ import {
   createCustomerOrder,
   createCustomerOrderLine,
 } from "@/services/customerService";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 
 export default function PaymentSucess() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const validAccess = searchParams.get("validAccess");
+  const isTriggered = useRef(false);
+
+  useEffect(() => {
+    if (validAccess !== "true") {
+      router.push("/cart");
+    }
+  }, [validAccess, router]);
+
   const clearCartAndPlaceOrder = async () => {
     try {
       const userId = localStorage.getItem("userId");
@@ -35,14 +47,12 @@ export default function PaymentSucess() {
     }
   };
 
-  const isTriggered = useRef(false);
-
   useEffect(() => {
-    if (isTriggered.current) return;
-    isTriggered.current = true;
-
-    clearCartAndPlaceOrder();
-  }, []);
+    if (validAccess === "true" && !isTriggered.current) {
+      isTriggered.current = true;
+      clearCartAndPlaceOrder();
+    }
+  }, [validAccess]);
   return (
     <div className="px-8 py-6">
       <h1 className="text-3xl font-bold mb-10 font-heading text-primary text-center">
