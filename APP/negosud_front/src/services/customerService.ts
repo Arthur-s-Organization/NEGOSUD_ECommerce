@@ -33,6 +33,12 @@ export const fetchCustomerbyId = async (userId : string) => {
     return response.data;
   };
 
+  export const getCustomerOrderById = async (customerOrderId: string ) => {
+    const response = await axios.get(`http://localhost:5165/api/CustomerOrder/${customerOrderId}`, {
+    });
+    return response.data;
+  };
+
   export const getCustomerOrders = async (customerId: string) => {
     try {
       const response = await axios.get(`http://localhost:5165/api/CustomerOrder/Customer/${customerId}`);
