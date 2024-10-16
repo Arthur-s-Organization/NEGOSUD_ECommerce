@@ -21,16 +21,15 @@ export default function PaymentSucess() {
         console.log("Le panier est déjà vide.");
         return;
       }
-      await Promise.all(
-        cartItems.map(async (cartItem: CartItem) => {
-          const {
-            item: { itemId },
-            quantity,
-          } = cartItem;
-          await createCustomerOrderLine(orderID, itemId, quantity);
-          await removeFromCart(itemId);
-        })
-      );
+      for (const cartItem of cartItems) {
+        const {
+          item: { itemId },
+          quantity,
+        } = cartItem;
+
+        await createCustomerOrderLine(orderID, itemId, quantity);
+        await removeFromCart(itemId);
+      }
       console.log("Panier vidé avec succès !");
     } catch (error) {
       console.error("Erreur lors du vidage du panier :", error);
