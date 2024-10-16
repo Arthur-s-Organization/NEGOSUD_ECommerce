@@ -5,7 +5,6 @@ import {
   createCustomerOrder,
   createCustomerOrderLine,
 } from "@/services/customerService";
-import { CartItem } from "@/services/scheme";
 import { useEffect, useRef } from "react";
 
 export default function PaymentSucess() {

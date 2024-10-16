@@ -35,9 +35,13 @@ export default function Products() {
       <h1 className="text-3xl font-bold mb-10 font-heading text-primary text-center">
         Découvrez notre sélection
       </h1>
-      {/* <p className="text-center max-w-3xl mx-auto mb-10">
-     TODO : Add the text
-      </p> */}
+      <p className="text-center max-w-3xl mx-auto mb-10">
+        Découvrez nos plus beaux crus. Blancs frais et fruités, rosés toniques,
+        rouges légers et croquants, ou plutôt moelleux rafraichissants…
+        laissez-vous tenter par le choix de notre œnologue. À moins que vous ne
+        préféreriez nos Armagnac, Rhum, et autres spiritueux minutieusement
+        sélectionnés.
+      </p>
       {items && (
         <div className="flex gap-10">
           <div className="max-w-[16rem] w-full h-fit py-6 bg-primary px-6 rounded-sm">
