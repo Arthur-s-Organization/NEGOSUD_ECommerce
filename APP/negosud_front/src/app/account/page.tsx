@@ -19,22 +19,18 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatDateTime } from "@/lib/utils";
 import { logout } from "@/services/authService";
-import { fetchCustomerbyId } from "@/services/customerService";
-import { Customer } from "@/services/scheme";
+import {
+  fetchCustomerbyId,
+  getCustomerOrders,
+} from "@/services/customerService";
+import { Customer, Order, OrderList } from "@/services/scheme";
 import { User, Package, Clock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const orders = [
-  { id: "ORD001", date: "2023-05-15", total: "250.00 €", status: "4" },
-  { id: "ORD002", date: "2023-06-02", total: "180.50 €", status: "2" },
-  { id: "ORD003", date: "2023-06-20", total: "320.75 €", status: "3" },
-  { id: "ORD004", date: "2023-06-25", total: "326.75 €", status: "1" },
-  { id: "ORD004", date: "2023-06-25", total: "326.75 €", status: "0" },
-];
-
 export default function AccountPage() {
   const [customer, setCustomer] = useState<Customer>();
+  const [orders, setOrders] = useState<OrderList>([]);
 
   useEffect(() => {
     const userId = localStorage.getItem("userId");
@@ -44,6 +40,12 @@ export default function AccountPage() {
           const currentCustomer = await fetchCustomerbyId(userId);
           if (currentCustomer) {
             setCustomer(currentCustomer);
+            const currentOrders = await getCustomerOrders(currentCustomer.id);
+            if (currentOrders) {
+              setOrders(currentOrders);
+            } else {
+              setOrders([]);
+            }
           }
         } catch (error) {
           console.error("Erreur lors du chargement de l'utilisateur :", error);
@@ -167,10 +169,10 @@ export default function AccountPage() {
                   </TableHeader>
                   <TableBody>
                     {orders.map((order) => (
-                      <TableRow key={order.id}>
-                        <TableCell>{order.id}</TableCell>
-                        <TableCell>{order.date}</TableCell>
-                        <TableCell>{order.total}</TableCell>
+                      <TableRow key={order.orderID}>
+                        <TableCell>{order.orderID}</TableCell>
+                        <TableCell>{order.orderDate}</TableCell>
+                        <TableCell>200 €</TableCell>
                         <TableCell>
                           <span
                             className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusStyle(

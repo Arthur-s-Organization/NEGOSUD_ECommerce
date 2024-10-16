@@ -57,6 +57,20 @@ export const zCustomer = z.object({
   address : zAddress
 })
 
+export const zOrderDetail = z.object({
+  item: zItem, 
+  quantity: z.number(), 
+});
+
+export const zOrder = z.object({
+  orderID: z.string(),  
+  orderDate: z.string(), 
+  status: z.string(), 
+  customer: zCustomer, 
+  orderDetails: z.array(zOrderDetail), 
+});
+export const zOrderList = z.array(zOrder);
+
 export type Supplier = z.infer<typeof zSupplier>;
 export type SupplierList = z.infer<typeof zSupplierList>;
 export type Item = z.infer<typeof zItem>;
@@ -67,3 +81,6 @@ export type CartItem = z.infer<typeof zCartItem>;
 export type Cart = z.infer<typeof zCart>;
 export type Address = z.infer<typeof zAddress>;
 export type Customer = z.infer<typeof zCustomer>;
+export type Order = z.infer<typeof zOrder>;
+export type OrderList = z.infer<typeof zOrderList>;
+export type OrderDetail = z.infer<typeof zOrderDetail>;

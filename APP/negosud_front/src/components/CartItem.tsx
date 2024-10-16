@@ -28,7 +28,7 @@ export default function CartItemCard({
   };
 
   return (
-    <Card className="border border-primary w-fit items-center flex">
+    <Card className="border border-primary w-full items-center flex">
       <CardHeader className="text-center">
         <CardTitle className="text-md ">{cartItem.item.name}</CardTitle>
       </CardHeader>
