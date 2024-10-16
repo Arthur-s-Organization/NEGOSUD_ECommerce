@@ -1,7 +1,9 @@
 ﻿using API.Models;
 using API.Models.DTOs.RequestDTOs;
+using API.Models.DTOs.ResponseDTOs;
 using API.Services;
 using API.Services.IServices;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -18,12 +20,13 @@ namespace API.Controllers
 	{
 		private readonly ISessionService _sessionService;
 		private readonly IItemService _itemService;
-
-		public CartController(ISessionService sessionService, IItemService itemService)
+		private readonly IMapper _mapper;
+		public CartController(ISessionService sessionService, IItemService itemService, IMapper mapper)
 		{
 			_sessionService = sessionService;
 			_itemService = itemService;
-		}
+			_mapper = mapper;
+	}
 
 		[HttpPost("add")]
 		public IActionResult AddToCart([FromBody] AddToCartRequest request)
@@ -38,11 +41,16 @@ namespace API.Controllers
 			}
 			var cart = _sessionService.GetCart(userId);
 
+			
+
 			var item = _itemService.GetItemById(request.ItemId);
 			if (item == null)
 			{
 				return NotFound("Item not found.");
 			}
+
+			var itemResponseDTO = _mapper.Map<ItemResponseDTO>(item); //
+			item = _mapper.Map<Item>(itemResponseDTO); //
 
 			cart.AddItem(item, request.Quantity);
 			_sessionService.SaveCart(userId, cart);

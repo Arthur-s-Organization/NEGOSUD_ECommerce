@@ -266,8 +266,8 @@ namespace API.Services
 		public Item GetItemById(Guid id)
 		{
 			var item = _context.Items
-				.Include(i => i.Supplier)
 				.Include(i => i.AlcoholFamily)
+				.Include(i => i.Supplier)
 				.SingleOrDefault(i => i.ItemId == id);
 			if (item == null)
 			{
