@@ -130,7 +130,8 @@ namespace API.Services
 						var newSupplierOrder = new SupplierOrder
 						{
 							Status = "0",
-							SupplierId = item.SupplierId
+							SupplierId = item.SupplierId,
+							OrderDate = DateTime.Now
 						};
 
 						await _context.SupplierOrders.AddAsync(newSupplierOrder);
