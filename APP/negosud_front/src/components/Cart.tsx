@@ -12,10 +12,12 @@ import {
   CardFooter,
 } from "./ui/card";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export default function Cart() {
   const [cart, setCart] = useState<Cart>([]);
-  const [totalPrice, setTotalPrice] = useState<Number>(0);
+  const [totalPrice, setTotalPrice] = useState<number>(0);
+  const [loadingPayment, setLoadingPayment] = useState<boolean>(false);
 
   const updateCartItemQuantity = async (
     itemId: string,
@@ -55,20 +57,32 @@ export default function Cart() {
     if (cart.length > 0) {
       setTotalPrice(
         cart.reduce((total, cartItem) => {
-          console.log(
-            `Item: ${cartItem.item.price}, Quantity: ${cartItem.quantity}`
-          );
           return total + cartItem.item.price * cartItem.quantity;
         }, 0)
       );
     }
   }, [cart]);
 
-  const router = useRouter();
+  const initiatePayment = async () => {
+    setLoadingPayment(true);
+    try {
+      const response = await axios.post("/api/payment", cart, {
+        headers: { "Content-Type": "application/json" },
+      });
 
-  const handlePayment = () => {
-    router.push("/cart/payment/success?validAccess=true");
+      if (response.data && response.data.id) {
+        // Redirection vers Stripe Checkout
+        window.location.href = `https://checkout.stripe.com/pay/${response.data.id}`;
+      } else {
+        console.error("Erreur lors de la création de la session Stripe");
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'initiation du paiement :", error);
+    } finally {
+      setLoadingPayment(false);
+    }
   };
+
   return (
     <div>
       {cart.length === 0 ? (
@@ -91,13 +105,15 @@ export default function Cart() {
           </div>
           <Card className="text-center h-full">
             <CardHeader>
-              <CardTitle className="text-xl ">Paiement</CardTitle>
+              <CardTitle className="text-xl">Paiement</CardTitle>
             </CardHeader>
             <CardContent className="text-lg text-primary">
-              Total : {totalPrice.toString()} €
+              Total : {totalPrice.toFixed(2)} €
             </CardContent>
             <CardFooter>
-              <Button onClick={handlePayment}>Procéder au paiement</Button>
+              <Button onClick={initiatePayment} disabled={loadingPayment}>
+                {loadingPayment ? "Redirection vers Stripe..." : "Procéder au paiement"}
+              </Button>
             </CardFooter>
           </Card>
         </div>
