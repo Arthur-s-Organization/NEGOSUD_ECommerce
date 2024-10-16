@@ -63,7 +63,6 @@ export default function AccountPage() {
 
   function getStatusStyle(status: string) {
     switch (status) {
-      case "1":
       case "2":
         return "bg-blue-100 text-blue-800";
       case "3":
@@ -77,8 +76,6 @@ export default function AccountPage() {
 
   function getStatusLabel(status: string) {
     switch (status) {
-      case "1":
-        return "Payé";
       case "2":
         return "En traitement";
       case "3":
@@ -89,6 +86,18 @@ export default function AccountPage() {
         return "Une erreur est surevenue, contactez un administrateur";
     }
   }
+
+  function getTotalPrice(order: Order) {
+    let total = 0;
+    order.orderDetails.forEach((orderLine) => {
+      total += orderLine.item.price * orderLine.quantity;
+    });
+    return total;
+  }
+
+  const goToOrderDetails = (orderId: string) => {
+    router.push(`/account/orders/${orderId}`);
+  };
 
   return (
     <div className="container mx-auto p-4 space-y-8">
@@ -169,10 +178,13 @@ export default function AccountPage() {
                   </TableHeader>
                   <TableBody>
                     {orders.map((order) => (
-                      <TableRow key={order.orderID}>
+                      <TableRow
+                        key={order.orderID}
+                        onClick={() => goToOrderDetails(order.orderID)}
+                      >
                         <TableCell>{order.orderID}</TableCell>
                         <TableCell>{order.orderDate}</TableCell>
-                        <TableCell>200 €</TableCell>
+                        <TableCell>{getTotalPrice(order)} €</TableCell>
                         <TableCell>
                           <span
                             className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusStyle(
