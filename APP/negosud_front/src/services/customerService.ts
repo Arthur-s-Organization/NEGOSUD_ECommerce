@@ -1,3 +1,4 @@
+import axios from "axios";
 import { zCustomer } from "./scheme";
 
 export const fetchCustomerbyId = async (userId : string) => {
@@ -14,3 +15,30 @@ export const fetchCustomerbyId = async (userId : string) => {
       return null;
     }
   }
+
+  export const createCustomerOrder = async (status: string, customerId: string) => {
+    const response = await axios.post(`http://localhost:5165/api/CustomerOrder`, {
+      status,
+      customerId,
+    });
+    return response.data;
+  };
+
+  export const createCustomerOrderLine = async (customerOrderId: string ,itemId: string, itemQuantity: number ) => {
+    const response = await axios.post(`http://localhost:5165/api/CustomerOrder/${customerOrderId}/Items/${itemId}/ItemQuantity/${itemQuantity}`, {
+      customerOrderId,
+      itemId,
+      itemQuantity,
+    });
+    return response.data;
+  };
+
+  export const getCustomerOrders = async (customerId: string) => {
+    try {
+      const response = await axios.get(`http://localhost:5165/api/CustomerOrder/Customer/${customerId}`);
+      return response.data;
+    } catch (error) {
+      console.error("Erreur lors de la récupération des commandes de l'utilisateur :", error);
+      return [];
+    }
+  };

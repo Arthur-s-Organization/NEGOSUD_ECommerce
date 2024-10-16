@@ -1,32 +1,49 @@
 "use client";
 
 import { getCart, removeFromCart } from "@/services/cartService";
+import {
+  createCustomerOrder,
+  createCustomerOrderLine,
+} from "@/services/customerService";
 import { CartItem } from "@/services/scheme";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export default function PaymentSucess() {
-  useEffect(() => {
-    const clearCart = async () => {
-      try {
-        const cartData = await getCart();
-        const cartItems = cartData.items;
+  const clearCartAndPlaceOrder = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+      if (!userId) return;
 
-        if (cartItems.length > 0) {
-          await Promise.all(
-            cartItems.map(async (cartItem: CartItem) => {
-              await removeFromCart(cartItem.item.itemId);
-            })
-          );
-          console.log("Panier vidé avec succès !");
-        } else {
-          console.log("Le panier est déjà vide.");
-        }
-      } catch (error) {
-        console.error("Erreur lors du vidage du panier :", error);
+      const { orderID } = await createCustomerOrder("1", userId);
+      const { items: cartItems } = await getCart();
+
+      if (cartItems.length === 0) {
+        console.log("Le panier est déjà vide.");
+        return;
       }
-    };
+      await Promise.all(
+        cartItems.map(async (cartItem: CartItem) => {
+          const {
+            item: { itemId },
+            quantity,
+          } = cartItem;
+          await createCustomerOrderLine(orderID, itemId, quantity);
+          await removeFromCart(itemId);
+        })
+      );
+      console.log("Panier vidé avec succès !");
+    } catch (error) {
+      console.error("Erreur lors du vidage du panier :", error);
+    }
+  };
 
-    clearCart();
+  const isTriggered = useRef(false);
+
+  useEffect(() => {
+    if (isTriggered.current) return;
+    isTriggered.current = true;
+
+    clearCartAndPlaceOrder();
   }, []);
   return (
     <div className="px-8 py-6">
