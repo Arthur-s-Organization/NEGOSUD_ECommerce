@@ -49,6 +49,7 @@ export default function CartItemCard({
             type="number"
             value={cartItem.quantity}
             onChange={(e) => handleQuantityChange(e.target.value)}
+            // onBlur={(e) => handleQuantityChange(e.target.value)}
             className="w-fit"
             min={0}
           />

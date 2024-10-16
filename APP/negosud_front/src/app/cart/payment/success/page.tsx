@@ -27,7 +27,7 @@ export default function PaymentSucess() {
       if (!userId) return;
 
       const { orderID } = await createCustomerOrder("0", userId);
-      const { items: cartItems } = await getCart();
+      const cartItems = await getCart();
 
       if (cartItems.length === 0) {
         console.log("Le panier est déjà vide.");

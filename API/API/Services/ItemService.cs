@@ -90,7 +90,7 @@ namespace API.Services
 			}
 			var query = _context.Items
 				.Include(i => i.Supplier)
-				.Include(i=> i.AlcoholFamily)
+				.Include(i => i.AlcoholFamily)
 				.AsQueryable();
 
 			if (!string.IsNullOrWhiteSpace(filters.Name))
@@ -266,8 +266,6 @@ namespace API.Services
 		public Item GetItemById(Guid id)
 		{
 			var item = _context.Items
-				.Include(i => i.Supplier)
-				.Include(i => i.AlcoholFamily)
 				.SingleOrDefault(i => i.ItemId == id);
 			if (item == null)
 			{
