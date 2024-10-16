@@ -5,8 +5,21 @@ import { fetchItemBySlug } from "@/services/itemsService";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Item } from "@/services/scheme";
+import { addToCart, getCart } from "@/services/cartService";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Deltails() {
+  const { toast } = useToast();
+  const handleAddToCart = async (itemId: string, e: React.FormEvent) => {
+    e.preventDefault();
+    await addToCart(itemId, 1);
+    await getCart();
+
+    toast({
+      title: `${item?.name} a été ajouté à votre panier.`,
+      duration: 3000,
+    });
+  };
   const { slug } = useParams();
   const [item, setItem] = useState<Item | null>();
   const [loading, setLoading] = useState<boolean>(true);
@@ -44,7 +57,9 @@ export default function Deltails() {
           </div>
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between mb-12">
             <span className="text-xl font-bold">{item.price} €</span>
-            <Button>Ajouter au panier</Button>
+            <Button onClick={(e) => handleAddToCart(item.itemId, e)}>
+              Ajouter au panier
+            </Button>
           </div>
         </div>
         <div>
@@ -77,6 +92,7 @@ export default function Deltails() {
                   { label: "Volume (°)", value: item.alcoholVolume },
                   { label: "Contenance", value: item.capacity },
                   { label: "Péremption", value: item.expirationDate },
+                  { label: "Stock", value: item.stock },
                 ].map(
                   (listItem, index) =>
                     !!listItem.value && (
@@ -93,13 +109,10 @@ export default function Deltails() {
                 )}
               </ul>
             </div>
-            <div className="border border-primary flex-1 rounded-lg p-6 flex flex-col gap-4 h-fit">
-              <div className="flex gap-10 items-center">
-                <div className="bg-gray-200 w-[148px] h-[117px] shrink-0"></div>
-                <h3 className="text-xl font-semibold mb-4">
-                  {item.supplier.name}
-                </h3>
-              </div>
+            <div className="border border-primary flex-1 rounded-lg p-6 flex flex-col gap-2">
+              <h3 className="text-xl font-semibold mb-4">
+                {item.supplier.name}
+              </h3>
               <p className="text-sm text-gray-600 mb-2">
                 {item.supplier.description}
               </p>

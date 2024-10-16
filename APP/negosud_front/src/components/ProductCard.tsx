@@ -12,12 +12,19 @@ import { ShoppingCart } from "lucide-react";
 import { Item } from "@/services/scheme";
 import Link from "next/link";
 import { addToCart, getCart } from "@/services/cartService";
+import { useToast } from "@/hooks/use-toast";
 
 export default function ProductCard({ product }: { product: Item }) {
+  const { toast } = useToast();
   const handleAddToCart = async (itemId: string, e: React.FormEvent) => {
     e.preventDefault();
-    await addToCart(itemId, 1); // Ajoute 1 unité du produit
+    await addToCart(itemId, 1);
     await getCart();
+
+    toast({
+      title: `${product.name} a été ajouté à votre panier.`,
+      duration: 3000,
+    });
   };
   return (
     <Link href={`/products/${product.slug}`}>
