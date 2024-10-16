@@ -265,7 +265,10 @@ namespace API.Services
 
 		public Item GetItemById(Guid id)
 		{
-			var item = _context.Items.SingleOrDefault(i => i.ItemId == id);
+			var item = _context.Items
+				.Include(i => i.Supplier)
+				.Include(i => i.AlcoholFamily)
+				.SingleOrDefault(i => i.ItemId == id);
 			if (item == null)
 			{
 				throw new InvalidOperationException($"Unable to get : a item '{id}' doesn't exsists");
