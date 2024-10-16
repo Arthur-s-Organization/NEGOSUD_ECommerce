@@ -89,16 +89,16 @@ namespace API.Controllers
 
 			else//if (result.Succeeded) 
 			{
-				var token = _tokenService.AssignToken(_tokenService.GenerateJwtToken(customer));
+				await var token = _tokenService.AssignToken(_tokenService.GenerateJwtToken(customer));
 				return Ok(new { Token = token , UserId = customer.Id });
 			}
 		}
 
-		//[HttpPost("logout")]
-		//public async Task<IActionResult> Logout()
-		//{
-		//	await _signInManager.SignOutAsync();
-		//	return Ok("Logged out successfully!");
-		//}
+		[HttpPost("logout")]
+		public async Task<IActionResult> Logout()
+		{
+			await _tokenService.RemoveCurentToken();
+			return Ok("Logged out successfully!");
+		}
 	}
 }
