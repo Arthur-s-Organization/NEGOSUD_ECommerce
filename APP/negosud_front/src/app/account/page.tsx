@@ -90,6 +90,14 @@ export default function AccountPage() {
     }
   }
 
+  function getTotalPrice(order: Order) {
+    let total = 0;
+    order.orderDetails.forEach((orderLine) => {
+      total += orderLine.item.price * orderLine.quantity;
+    });
+    return total;
+  }
+
   return (
     <div className="container mx-auto p-4 space-y-8">
       <h1 className="text-3xl font-bold text-center text-primary font-heading">
@@ -172,7 +180,7 @@ export default function AccountPage() {
                       <TableRow key={order.orderID}>
                         <TableCell>{order.orderID}</TableCell>
                         <TableCell>{order.orderDate}</TableCell>
-                        <TableCell>200 €</TableCell>
+                        <TableCell>{getTotalPrice(order)} €</TableCell>
                         <TableCell>
                           <span
                             className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusStyle(
