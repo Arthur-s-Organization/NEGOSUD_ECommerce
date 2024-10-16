@@ -13,10 +13,10 @@ namespace API.Controllers
     public class PaymentController : ControllerBase
     {
         [HttpPost]
-        public async Task<IActionResult> CreateCheckoutSession([FromBody] List<CartItem> items)
+        public async Task<IActionResult> CreateCheckoutSession([FromBody] Cart Cart)
         {
             var domain = "http://localhost:3000";
-            if (items == null || items.Count == 0)
+            if (Cart == null)
             {
                 return BadRequest("Your cart is empty.");
             }
@@ -32,7 +32,7 @@ namespace API.Controllers
 
             long totalAmount = 0;
 
-            foreach (var item in items)
+            foreach (var item in Cart.Items)
             {
                 var itemAmountInCents = (long)(item.Item.Price * 100) * item.Quantity;
                 options.LineItems.Add(new SessionLineItemOptions

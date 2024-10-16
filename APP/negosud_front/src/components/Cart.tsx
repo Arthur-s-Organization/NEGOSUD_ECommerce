@@ -63,12 +63,16 @@ export default function Cart() {
     }
   }, [cart]);
 
-  const initiatePayment = async () => {
+  const initiatePayment = async (cart: Cart) => {
     setLoadingPayment(true);
     try {
-      const response = await axios.post("/api/payment", cart, {
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await axios.post(
+        "http://localhost:5165/api/payment",
+        cart,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
       if (response.data && response.data.id) {
         // Redirection vers Stripe Checkout
@@ -111,8 +115,13 @@ export default function Cart() {
               Total : {totalPrice.toFixed(2)} €
             </CardContent>
             <CardFooter>
-              <Button onClick={initiatePayment} disabled={loadingPayment}>
-                {loadingPayment ? "Redirection vers Stripe..." : "Procéder au paiement"}
+              <Button
+                onClick={() => initiatePayment(cart)}
+                disabled={loadingPayment}
+              >
+                {loadingPayment
+                  ? "Redirection vers Stripe..."
+                  : "Procéder au paiement"}
               </Button>
             </CardFooter>
           </Card>
