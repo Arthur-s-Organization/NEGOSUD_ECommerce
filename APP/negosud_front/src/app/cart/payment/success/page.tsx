@@ -4,6 +4,7 @@ import { getCart, removeFromCart } from "@/services/cartService";
 import {
   createCustomerOrder,
   createCustomerOrderLine,
+  updateCustomerOrder,
 } from "@/services/customerService";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
@@ -25,7 +26,7 @@ export default function PaymentSucess() {
       const userId = localStorage.getItem("userId");
       if (!userId) return;
 
-      const { orderID } = await createCustomerOrder("1", userId);
+      const { orderID } = await createCustomerOrder("0", userId);
       const { items: cartItems } = await getCart();
 
       if (cartItems.length === 0) {
@@ -42,6 +43,7 @@ export default function PaymentSucess() {
         await removeFromCart(itemId);
       }
       console.log("Panier vidé avec succès !");
+      await updateCustomerOrder("1", userId, orderID);
     } catch (error) {
       console.error("Erreur lors du vidage du panier :", error);
     }

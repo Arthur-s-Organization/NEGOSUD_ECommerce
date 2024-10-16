@@ -63,6 +63,7 @@ export default function AccountPage() {
 
   function getStatusStyle(status: string) {
     switch (status) {
+      case "1":
       case "2":
         return "bg-blue-100 text-blue-800";
       case "3":
@@ -76,6 +77,8 @@ export default function AccountPage() {
 
   function getStatusLabel(status: string) {
     switch (status) {
+      case "1":
+        return "Payé";
       case "2":
         return "En traitement";
       case "3":

@@ -87,6 +87,11 @@ export default function Cart() {
     }
   };
 
+  const router = useRouter();
+  const handlePayment = () => {
+    router.push("/cart/payment/success?validAccess=true");
+  };
+
   return (
     <div>
       {cart.length === 0 ? (
@@ -115,14 +120,15 @@ export default function Cart() {
               Total : {totalPrice.toFixed(2)} €
             </CardContent>
             <CardFooter>
-              <Button
+              {/* <Button
                 onClick={() => initiatePayment(cart)}
                 disabled={loadingPayment}
               >
                 {loadingPayment
                   ? "Redirection vers Stripe..."
                   : "Procéder au paiement"}
-              </Button>
+              </Button> */}
+              <Button onClick={handlePayment}>Procéder au paiement</Button>
             </CardFooter>
           </Card>
         </div>

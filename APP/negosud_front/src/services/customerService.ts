@@ -24,6 +24,14 @@ export const fetchCustomerbyId = async (userId : string) => {
     return response.data;
   };
 
+  export const updateCustomerOrder = async (status: string, customerId: string, customerOrderId: string) => {
+    const response = await axios.put(`http://localhost:5165/api/CustomerOrder/${customerOrderId}`, {
+      status,
+      customerId,
+    });
+    return response.data;
+  };
+
   export const createCustomerOrderLine = async (customerOrderId: string ,itemId: string, itemQuantity: number ) => {
     const response = await axios.post(`http://localhost:5165/api/CustomerOrder/${customerOrderId}/Items/${itemId}/ItemQuantity/${itemQuantity}`, {
       customerOrderId,
