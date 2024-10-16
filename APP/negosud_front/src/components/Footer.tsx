@@ -26,19 +26,24 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Main content */}
         <section className="flex flex-col md:flex-row border-t border-b border-secondary py-8 justify-between gap-5">
-          <div className="md:max-w-md">
+          <div className="md:max-w-xl">
             <h2 className="text-3xl font-bold mb-4 text-secondary font-heading">
               Découvrez NegoSud
             </h2>
             <p className="text-sm text-balance">
-              Découvrez une sélection de vins d'exception dans notre espace
-              dédié, dirigé par un œnologue passionné. Grâce à nos partenariats
-              avec des domaines renommés tels que Tariquet, Pellehaut, Joy,
-              Vignoble Fontan et Uby, nous vous offrons la possibilité de
-              déguster et d'acheter des crus de plusieurs régions. Un lieu idéal
-              pour les amateurs de vin et les visiteurs en quête d'authenticité.
+              NégoSud est une entreprise passionnée par l’univers viticole,
+              spécialisée dans la vente de vins fins et raffinés. Nous
+              sélectionnons avec soin des crus d’exception provenant de domaines
+              renommés du Sud-Ouest, afin d’offrir à nos clients une expérience
+              gustative unique. Notre équipe est dévouée à partager notre amour
+              du vin et du savoir-faire local. Nous vous conseillons sur les
+              meilleures accords mets et vins pour chaque occasion, qu’il
+              s’agisse d’un repas festif entre amis, d’un événement spécial ou
+              simplement d’un apéritif à partager. Explorez notre cave en ligne,
+              ses crus scrupuleusement sélectionnés par notre équipe, ses
+              spiritueux de qualité supérieure et ses accessoires destinés aux
+              passionnés d’œnologie.
             </p>
           </div>
           <div>
@@ -62,7 +67,6 @@ export default function Footer() {
           </div>
         </section>
 
-        {/* Copyright */}
         <div className="mt-8 text-center text-sm">
           © 2024 NegoSud. Tous droits réservés. L'abus d'alcool est dangereux
           pour la santé, à consommer avec modération.

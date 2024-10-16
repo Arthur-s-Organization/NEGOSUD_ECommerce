@@ -9,12 +9,12 @@ export default function Hero() {
           NEGOSUD
         </h1>
         <p className="text-center md:text-lg mb-10 max-w-3xl mx-auto text-white">
-          Découvrez une sélection de vins d'exception dans notre espace dédié,
-          dirigé par un œnologue passionné. Grâce à nos partenariats avec des
-          domaines renommés tels que Tariquet, Pellehaut, Joy, Vignoble Fontan
-          et Uby, nous vous offrons la possibilité de déguster et d'acheter des
-          crus de plusieurs régions. Un lieu idéal pour les amateurs de vin et
-          les visiteurs en quête d'authenticité.
+          NégoSud, c’est le rêve d’un œnologue passionné. Son ambition ? Offrir
+          un lieu de rencontre entre les amateurs de vins, les visiteurs en
+          quête d’expérience authentique, et les crus de notre terroir. Nichée
+          au cœur de la Gascogne, terre de gastronomie par excellence, notre
+          boutique vous accueille pour vous faire découvrir les meilleurs
+          domaines : Tariquet, Pellehaut, Joy, Vignoble Fontan ou encore Uby.
         </p>
         <div className="relative w-full h-[300px] md:h-[500px] lg:h-[600px]">
           <Image
