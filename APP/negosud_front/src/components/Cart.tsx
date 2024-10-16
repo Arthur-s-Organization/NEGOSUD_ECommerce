@@ -11,6 +11,7 @@ import {
   CardContent,
   CardFooter,
 } from "./ui/card";
+import { useRouter } from "next/navigation";
 
 export default function Cart() {
   const [cart, setCart] = useState<Cart>([]);
@@ -63,6 +64,11 @@ export default function Cart() {
     }
   }, [cart]);
 
+  const router = useRouter();
+
+  const handlePayment = () => {
+    router.push("/cart/payment/success?validAccess=true");
+  };
   return (
     <div>
       {cart.length === 0 ? (
@@ -91,9 +97,7 @@ export default function Cart() {
               Total : {totalPrice.toString()} €
             </CardContent>
             <CardFooter>
-              <Button>
-                <Link href="/cart/payment/success">Procéder au paiement</Link>
-              </Button>
+              <Button onClick={handlePayment}>Procéder au paiement</Button>
             </CardFooter>
           </Card>
         </div>
