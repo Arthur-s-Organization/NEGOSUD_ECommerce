@@ -89,7 +89,7 @@ namespace API.Controllers
 
 			else//if (result.Succeeded) 
 			{
-				await var token = _tokenService.AssignToken(_tokenService.GenerateJwtToken(customer));
+				 var token = _tokenService.AssignToken(_tokenService.GenerateJwtToken(customer));
 				return Ok(new { Token = token , UserId = customer.Id });
 			}
 		}
@@ -97,7 +97,7 @@ namespace API.Controllers
 		[HttpPost("logout")]
 		public async Task<IActionResult> Logout()
 		{
-			await _tokenService.RemoveCurentToken();
+			_tokenService.RemoveCurentToken();
 			return Ok("Logged out successfully!");
 		}
 	}
