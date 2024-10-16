@@ -11,10 +11,12 @@ import {
   CardContent,
   CardFooter,
 } from "./ui/card";
-import { loadStripe } from '@stripe/stripe-js';
+import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+);
 
 export default function Cart() {
   const [cart, setCart] = useState<Cart>([]);
@@ -24,7 +26,10 @@ export default function Cart() {
 
   const API_URL = "http://localhost:5165/api/Payment";
 
-  const updateCartItemQuantity = async (itemId: string, newQuantity: number) => {
+  const updateCartItemQuantity = async (
+    itemId: string,
+    newQuantity: number
+  ) => {
     try {
       if (newQuantity <= 0) {
         setCart((prevCart) =>
@@ -77,27 +82,28 @@ export default function Cart() {
 
       if (response.data && response.data.id) {
         const stripe = await stripePromise;
-        const { error } = await stripe!.redirectToCheckout({ sessionId: response.data.id });
+        const { error } = await stripe!.redirectToCheckout({
+          sessionId: response.data.id,
+        });
 
         if (error) {
-          setPaymentError("Erreur lors de la redirection vers Stripe Checkout : " + error.message);
+          setPaymentError(
+            "Erreur lors de la redirection vers Stripe Checkout : " +
+              error.message
+          );
         }
       } else {
         throw new Error("Erreur lors de la création de la session Stripe");
       }
     } catch (error) {
       console.error("Erreur lors de l'initiation du paiement :", error);
-      setPaymentError("Une erreur est survenue lors de l'initiation du paiement. Veuillez réessayer.");
+      setPaymentError(
+        "Une erreur est survenue lors de l'initiation du paiement. Veuillez réessayer."
+      );
     } finally {
       setLoadingPayment(false);
     }
   };
-
-  const router = useRouter();
-  const handlePayment = () => {
-    router.push("/cart/payment/success?validAccess=true");
-  };
-
   return (
     <div>
       {cart.length === 0 ? (
@@ -126,8 +132,13 @@ export default function Cart() {
               Total : {totalPrice.toFixed(2)} €
             </CardContent>
             <CardFooter className="flex flex-col gap-2">
-              <Button onClick={initiatePayment} disabled={loadingPayment}>
-                {loadingPayment ? "Redirection vers Stripe..." : "Procéder au paiement"}
+              <Button
+                onClick={() => initiatePayment(cart)}
+                disabled={loadingPayment}
+              >
+                {loadingPayment
+                  ? "Redirection vers Stripe..."
+                  : "Procéder au paiement"}
               </Button>
               {paymentError && <p className="text-red-500">{paymentError}</p>}
             </CardFooter>
