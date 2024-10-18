@@ -4,6 +4,7 @@ using API.Models.DTOs.RequestDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace API.Controllers
 {
@@ -62,10 +63,61 @@ namespace API.Controllers
 				return Ok(new { Token = token });
 			}
 
-	
-
-
 		}
+
+		[HttpPut("update")]
+		public async Task<IActionResult> UpdateCustomer([FromBody] UpdateCustomerRequestDTO model)
+		{
+			if (!ModelState.IsValid)
+				return BadRequest(ModelState);
+
+			var customer = await _userManager.FindByEmailAsync(model.Email);
+			if (customer == null)
+			{
+				return Unauthorized("Customer not found.");
+			}
+
+			if (!string.IsNullOrEmpty(model.Email) && model.Email != customer.Email)
+			{
+				var setEmailResult = await _userManager.SetEmailAsync(customer, model.Email);
+				if (!setEmailResult.Succeeded)
+				{
+					return BadRequest(setEmailResult.Errors);
+				}
+			}
+
+			// Mise à jour mot de passe
+			if (!string.IsNullOrEmpty(model.OldPassword) && !string.IsNullOrEmpty(model.NewPassword))
+			{
+				var passwordCheckResult = await _userManager.CheckPasswordAsync(customer, model.OldPassword);
+				if (!passwordCheckResult)
+				{
+					return BadRequest("The old password is incorrect.");
+				}
+
+				var passwordChangeResult = await _userManager.ChangePasswordAsync(customer, model.OldPassword, model.NewPassword);
+				if (!passwordChangeResult.Succeeded)
+				{
+					return BadRequest(passwordChangeResult.Errors);
+				}
+			}
+
+			customer.FirstName = model.FirstName;
+			customer.LastName = model.LastName;
+			customer.PhoneNumber = model.PhoneNumber;
+			customer.Gender = model.Gender;
+			customer.DateOfBirth = model.DateOfBirth;
+			customer.AddressId = model.AddressId;
+		
+			var updateResult = await _userManager.UpdateAsync(customer);
+			if (!updateResult.Succeeded)
+			{
+				return BadRequest(updateResult.Errors);
+			}
+
+			return Ok("Customer updated successfully!");
+		}
+
 
 
 		[HttpPost("login")]
