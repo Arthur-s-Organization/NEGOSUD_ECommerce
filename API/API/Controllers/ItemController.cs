@@ -102,7 +102,7 @@ namespace API.Controllers
 		}
 
 		[HttpPost()]
-		public async Task<ActionResult<ItemResponseDTO>> AddItem([FromForm]ItemRequestDTO itemRequestDTO)
+		public async Task<ActionResult<ItemResponseDTO>> AddItem(ItemRequestDTO itemRequestDTO)
 		{
 			try
 			{
