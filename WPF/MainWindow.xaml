@@ -26,11 +26,23 @@
 
     
             <!-- DataGrid -->
-            <DataGrid x:Name="DataGrid" Grid.Column="1" AutoGenerateColumns="False" Margin="10" CanUserAddRows="False">
+        <DataGrid x:Name="DataGrid" Grid.Column="1" AutoGenerateColumns="False" Margin="10" CanUserAddRows="False" CellEditEnding="DataGrid_CellEditEnding">
                 <DataGrid.Columns>
                     <!-- Colonnes pour les Items -->
                     <DataGridTextColumn Header="Item Name" Binding="{Binding Name}" />
-                    <DataGridTextColumn Header="Stock" Binding="{Binding Stock}" />
+                    <DataGridTemplateColumn Header="Stock">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Stock}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding Stock, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                         PreviewTextInput="NumberValidationTextBox" />
+                            </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Price" Binding="{Binding Price}" />
                     <DataGridTextColumn Header="Origin Country" Binding="{Binding OriginCountry}" />
                     <DataGridTextColumn Header="Supplier Item Name" Binding="{Binding Supplier.Name}" />

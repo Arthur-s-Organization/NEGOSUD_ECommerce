@@ -45,7 +45,7 @@ namespace WPF
         {
             try
             {
-                items = await client.GetFromJsonAsync<List<ItemResponseDTO>>("https://localhost:7246/api/Item");
+                items = await client.GetFromJsonAsync<List<ItemResponseDTO>>("http://localhost:5165/api/Item");
             }
             catch (HttpRequestException e)
             {
@@ -57,7 +57,7 @@ namespace WPF
         {
             try
             {
-                suppliers = await client.GetFromJsonAsync<List<SupplierResponseDTO>>("https://localhost:7246/api/Supplier");
+                suppliers = await client.GetFromJsonAsync<List<SupplierResponseDTO>>("http://localhost:5165/api/Supplier");
             }
             catch (HttpRequestException e)
             {
@@ -69,7 +69,7 @@ namespace WPF
         {
             try
             {
-                customers = await client.GetFromJsonAsync<List<CustomerResponseDTO>>("https://localhost:7246/api/Customer");
+                customers = await client.GetFromJsonAsync<List<CustomerResponseDTO>>("http://localhost:5165/api/Customer");
             }
             catch (HttpRequestException e)
             {
@@ -81,7 +81,7 @@ namespace WPF
         {
             try
             {
-                alcoholFamily = await client.GetFromJsonAsync<List<AlcoholFamilyResponseDTO>>("https://localhost:7246/api/AlcoholFamily");
+                alcoholFamily = await client.GetFromJsonAsync<List<AlcoholFamilyResponseDTO>>("http://localhost:5165/api/AlcoholFamily");
             }
             catch (HttpRequestException e)
             {
@@ -93,7 +93,7 @@ namespace WPF
         {
             try
             {
-                addresses = await client.GetFromJsonAsync<List<AddressResponseDTO>>("https://localhost:7246/api/Adress");
+                addresses = await client.GetFromJsonAsync<List<AddressResponseDTO>>("http://localhost:5165/api/Adress");
             }
             catch (HttpRequestException e)
             {
@@ -215,7 +215,7 @@ namespace WPF
                             throw new InvalidOperationException("Type d'élément non géré.");
                         }
 
-                        string apiUrl = $"https://localhost:7246/api/{apiType}/{id}";
+                        string apiUrl = $"http://localhost:5165/api/{apiType}/{id}";
                         var response = await client.DeleteAsync(apiUrl);
 
                         if (response.IsSuccessStatusCode)
@@ -390,6 +390,60 @@ namespace WPF
             else if (DataGrid.ItemsSource == addresses)
                 return "Addresses";
             return string.Empty;
+        }
+
+        private void NumberValidationTextBox(object sender, System.Windows.Input.TextCompositionEventArgs e)
+        {
+            e.Handled = !int.TryParse(e.Text, out _);
+        }
+
+        private async void DataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            if (e.EditAction == DataGridEditAction.Commit)
+            {
+                var dataGrid = sender as DataGrid;
+                var editedItem = e.Row.Item as ItemResponseDTO; // Cast de l'objet modifié en ItemResponseDTO
+
+                if (editedItem != null)
+                {
+                    try
+                    {
+                        using (var client = new HttpClient())
+                        {
+                            // Création du multipart content
+                            var multipartContent = new MultipartFormDataContent();
+
+                            // Ajout des champs dans le multipart
+                            multipartContent.Add(new StringContent(editedItem.Name), "Name");
+                            multipartContent.Add(new StringContent(editedItem.Stock.ToString()), "Stock");
+                            multipartContent.Add(new StringContent(editedItem.Price.ToString()), "Price");
+                            multipartContent.Add(new StringContent(editedItem.OriginCountry), "OriginCountry");
+                            multipartContent.Add(new StringContent(editedItem.Description), "Description");
+                            multipartContent.Add(new StringContent(editedItem.IsActive.ToString()), "IsActive");
+                            multipartContent.Add(new StringContent(editedItem.Supplier.SupplierId.ToString()), "SupplierId");
+                            multipartContent.Add(new StringContent(editedItem.AlcoholFamily.AlcoholFamilyId.ToString()), "AlcoholFamilyId");
+                            multipartContent.Add(new StringContent(editedItem.Category), "Category");
+                            multipartContent.Add(new StringContent(editedItem.AlcoholVolume), "AlcoholVolume");
+                            multipartContent.Add(new StringContent(editedItem.Year), "Year");
+                            multipartContent.Add(new StringContent(editedItem.Capacity.ToString()), "Capacity");
+                            multipartContent.Add(new StringContent(editedItem.ExpirationDate.ToString()), "ExpirationDate");
+
+
+                            // Envoi de la requête PUT avec le multipart content
+                            var response = await client.PutAsync($"http://localhost:5165/api/Item/{editedItem.ItemId}", multipartContent);
+
+                            if (!response.IsSuccessStatusCode)
+                            {
+                                MessageBox.Show("Erreur lors de la mise à jour du stock dans la base de données.");
+                            }
+                        }
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        MessageBox.Show($"Erreur lors de la mise à jour : {ex.Message}");
+                    }
+                }
+            }
         }
     }
 }

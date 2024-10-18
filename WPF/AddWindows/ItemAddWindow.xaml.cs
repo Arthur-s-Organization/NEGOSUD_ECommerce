@@ -35,8 +35,8 @@ namespace WPF
             try
             {
                 // Charger les fournisseurs et les familles d'alcool
-                suppliers = await client.GetFromJsonAsync<List<SupplierResponseDTO>>("https://localhost:7246/api/Supplier");
-                alcoholFamilies = await client.GetFromJsonAsync<List<AlcoholFamilyResponseDTO>>("https://localhost:7246/api/AlcoholFamily");
+                suppliers = await client.GetFromJsonAsync<List<SupplierResponseDTO>>("http://localhost:5165/api/Supplier");
+                alcoholFamilies = await client.GetFromJsonAsync<List<AlcoholFamilyResponseDTO>>("http://localhost:5165/api/AlcoholFamily");
 
                 // Lier les données aux ComboBox
                 SupplierComboBox.ItemsSource = suppliers;
@@ -131,7 +131,7 @@ namespace WPF
                 }
 
                 // Envoyer la requête avec multipart form-data
-                var response = await client.PostAsync("https://localhost:7246/api/Item", multipartContent);
+                var response = await client.PostAsync("http://localhost:5165/api/Item", multipartContent);
 
                 // Vérifier si la requête a réussi
                 if (response.IsSuccessStatusCode)

@@ -60,8 +60,8 @@ namespace WPF
             try
             {
                 // Charger les fournisseurs et les familles d'alcool
-                suppliers = await client.GetFromJsonAsync<List<SupplierResponseDTO>>("https://localhost:7246/api/Supplier");
-                alcoholFamilies = await client.GetFromJsonAsync<List<AlcoholFamilyResponseDTO>>("https://localhost:7246/api/AlcoholFamily");
+                suppliers = await client.GetFromJsonAsync<List<SupplierResponseDTO>>("http://localhost:5165/api/Supplier");
+                alcoholFamilies = await client.GetFromJsonAsync<List<AlcoholFamilyResponseDTO>>("http://localhost:5165/api/AlcoholFamily");
 
                 // Lier les données aux ComboBox
                 SupplierComboBox.ItemsSource = suppliers;
@@ -157,7 +157,7 @@ namespace WPF
                 }
 
                 // Envoyer la requête PUT à l'API avec les données du formulaire et l'image
-                var response = await client.PutAsync($"https://localhost:7246/api/Item/{itemId}", multipartContent);
+                var response = await client.PutAsync($"http://localhost:5165/api/Item/{itemId}", multipartContent);
 
                 // Vérifier si la requête a réussi
                 if (response.IsSuccessStatusCode)

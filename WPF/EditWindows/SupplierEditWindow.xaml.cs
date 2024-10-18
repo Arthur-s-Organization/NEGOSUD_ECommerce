@@ -38,7 +38,7 @@ namespace WPF
             try
             {
                 // Charger les adresses
-                addresses = await client.GetFromJsonAsync<List<AddressResponseDTO>>("https://localhost:7246/api/Adress");
+                addresses = await client.GetFromJsonAsync<List<AddressResponseDTO>>("http://localhost:5165/api/Adress");
 
                 // Lier les données aux ComboBox
                 AddressComboBox.ItemsSource = addresses;
@@ -68,7 +68,7 @@ namespace WPF
                 // Envoyer la requête PUT à l'API
                 using (HttpClient client = new HttpClient())
                 {
-                    var response = await client.PutAsync($"https://localhost:7246/api/Supplier/{supplierId}", content);
+                    var response = await client.PutAsync($"http://localhost:5165/api/Supplier/{supplierId}", content);
 
                     // Vérifier si la requête a réussi
                     if (response.IsSuccessStatusCode)

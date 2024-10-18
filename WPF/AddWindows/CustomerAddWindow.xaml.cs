@@ -28,7 +28,7 @@ namespace WPF
             try
             {
                 // Charger les adresses
-                addresses = await client.GetFromJsonAsync<List<AddressResponseDTO>>("https://localhost:7246/api/Adress");
+                addresses = await client.GetFromJsonAsync<List<AddressResponseDTO>>("http://localhost:5165/api/Adress");
 
                 // Lier les données aux ComboBox
                 AddressComboBox.ItemsSource = addresses;
@@ -51,7 +51,6 @@ namespace WPF
                         LastName = LastName.Text,
                         Gender = Gender.Text,
                         DateOfBirth = dateOfBirth, // Assignation correcte
-                        EmailAddress = EmailAdress.Text,
                         PhoneNumber = PhoneNumber.Text
                     };
                     // Convertir l'objet en JSON
@@ -61,7 +60,7 @@ namespace WPF
                     // Envoyer la requête PUT à l'API
                     using (HttpClient client = new HttpClient())
                     {
-                        var response = await client.PostAsync($"https://localhost:7246/api/Customer", content);
+                        var response = await client.PostAsync($"http://localhost:5165/api/Customer", content);
 
                         // Vérifier si la requête a réussi
                         if (response.IsSuccessStatusCode)

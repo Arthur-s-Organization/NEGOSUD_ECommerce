@@ -43,7 +43,7 @@ namespace WPF
                 // Envoyer la requête PUT à l'API
                 using (HttpClient client = new HttpClient())
                 {
-                    var response = await client.PutAsync($"https://localhost:7246/api/AlcoholFamily/{AlcoholFamilyId}", content);
+                    var response = await client.PutAsync($"http://localhost:5165/api/AlcoholFamily/{AlcoholFamilyId}", content);
 
                     // Vérifier si la requête a réussi
                     if (response.IsSuccessStatusCode)
