@@ -276,5 +276,34 @@ namespace API.Services
 			return item;
 		}
 
+		public async Task<byte[]> GetItemImageAsync(Guid itemId)
+		{
+			var item = await _context.Items.FindAsync(itemId);
+
+			if (item == null)
+			{
+				throw new InvalidOperationException($"Unable to get image: Item '{itemId}' doesn't exist.");
+			}
+
+			if (string.IsNullOrEmpty(item.ItemImagePath))
+			{
+				throw new InvalidOperationException($"Item '{itemId}' doesn't have an associated image.");
+			}
+
+			// Construire le chemin d'accès à l'image
+			var folderPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Images");
+			var filePath = Path.Combine(folderPath, item.ItemImagePath);
+
+			// Vérifier si le fichier existe
+			if (!File.Exists(filePath))
+			{
+				throw new FileNotFoundException($"The image file for item '{itemId}' was not found.");
+			}
+
+			// Lire et retourner les octets du fichier image
+			return await File.ReadAllBytesAsync(filePath);
+		}
+
+
 	}
 }

@@ -17,6 +17,7 @@ namespace API.Services.IServices
 		public Task<ItemResponseDTO> AddItemAsync(ItemRequestDTO itemRequestDTO);
 
 		public Item GetItemById(Guid id);
+		public  Task<byte[]> GetItemImageAsync(Guid itemId);
 
 	}
 }
