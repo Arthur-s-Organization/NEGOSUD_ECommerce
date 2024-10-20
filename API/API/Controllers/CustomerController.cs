@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using API.Models.DTOs.RequestDTOs;
 using API.Services.IServices;
 using API.Models.DTOs.ResponseDTOs;
+using API.Utils;
 
 namespace API.Controllers
 {
@@ -35,7 +36,7 @@ namespace API.Controllers
 				var customerResponseDTO = await _CustomerService.GetCustomerByIdAsync(id);
 				return Ok(customerResponseDTO);
 			}
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}
@@ -49,7 +50,7 @@ namespace API.Controllers
 				var customerResponseDTO = await _CustomerService.AddCustomerAsync(customerRequestDTO);
 				return customerResponseDTO;
 			}
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}
@@ -64,7 +65,7 @@ namespace API.Controllers
 				return Ok(customerResponseDTO);
 			}
 
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}
@@ -80,7 +81,7 @@ namespace API.Controllers
 				return Ok(customerResponseDTO);
 
 			}
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}

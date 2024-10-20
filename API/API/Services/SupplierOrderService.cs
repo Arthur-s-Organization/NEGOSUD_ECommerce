@@ -3,6 +3,7 @@ using API.Models;
 using API.Models.DTOs.RequestDTOs;
 using API.Models.DTOs.ResponseDTOs;
 using API.Services.IServices;
+using API.Utils;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,7 +25,7 @@ namespace API.Services
 
 			if (supplier == null)
 			{
-				throw new InvalidOperationException($"Unable to add : supplier '{supplierOrderRequestDTO.SupplierId}' doesn't exists");
+				throw new ValidationException($"Unable to add : supplier '{supplierOrderRequestDTO.SupplierId}' doesn't exists");
 			}
 
 			var supplierOrder = _mapper.Map<SupplierOrder>(supplierOrderRequestDTO);
@@ -41,7 +42,7 @@ namespace API.Services
 			var supplierOrder = await _context.SupplierOrders.SingleOrDefaultAsync(so => so.OrderID == id);
 			if (supplierOrder is null)
 			{
-				throw new InvalidOperationException($"Unable to delete : supplier '{id}' doesn't exists");
+				throw new ValidationException($"Unable to delete : supplier '{id}' doesn't exists");
 			}
 			_context.SupplierOrders.Remove(supplierOrder);
 			await _context.SaveChangesAsync();
@@ -71,7 +72,7 @@ namespace API.Services
 				.SingleOrDefaultAsync(so => so.OrderID == id);
 			if (supplierOrder is null)
 			{
-				throw new InvalidOperationException($"Unable to get : supplierOrder '{id}' doesn't exists");
+				throw new ValidationException($"Unable to get : supplierOrder '{id}' doesn't exists");
 			}
 
 			var supplierOrderResponseDTO = _mapper.Map<SupplierOrderResponseDTO>(supplierOrder);
@@ -83,7 +84,7 @@ namespace API.Services
 			var supplier = await _context.Suppliers.FindAsync(supplierId);
 			if (supplier == null)
 			{
-				throw new InvalidOperationException($"Unable to get : supplier '{supplierId}' doesn't exists");
+				throw new ValidationException($"Unable to get : supplier '{supplierId}' doesn't exists");
 			}
 
 			var supplierOrders = await _context.SupplierOrders
@@ -108,7 +109,7 @@ namespace API.Services
 
 			if (supplierOrder == null)
 			{
-				throw new InvalidOperationException($"Unable to update : supplierOrder '{id}' doesn't exists");
+				throw new ValidationException($"Unable to update : supplierOrder '{id}' doesn't exists");
 			}
 
 
@@ -138,14 +139,14 @@ namespace API.Services
 
 			if (supplierOrder == null)
 			{
-				throw new InvalidOperationException($"Unable to add : supplierOrder '{supplierOrderId}' doesn't exists");
+				throw new ValidationException($"Unable to add : supplierOrder '{supplierOrderId}' doesn't exists");
 			}
 
 			var item = await _context.Items.SingleOrDefaultAsync(i => i.ItemId == itemId);
 
 			if (item == null)
 			{
-				throw new InvalidOperationException($"Unable to add : item '{itemId}' doesn't exists");
+				throw new ValidationException($"Unable to add : item '{itemId}' doesn't exists");
 			}
 
 			var existingOrderDetail = await _context.OrderDetails
@@ -153,14 +154,14 @@ namespace API.Services
 
 			if (existingOrderDetail != null)
 			{
-				throw new InvalidOperationException($"Unable to add : this orderDetail already exists");
+				throw new ValidationException($"Unable to add : this orderDetail already exists");
 			}
 
 			var itemOwnToSupplier = await _context.Items
 				.SingleOrDefaultAsync(i => i.ItemId == itemId && i.SupplierId == supplierOrder.SupplierId);
 			if (itemOwnToSupplier == null)
 			{
-				throw new InvalidOperationException($"Unable to add : item {itemId} doesn't belong to the supplier {supplierOrder.SupplierId}.");
+				throw new ValidationException($"Unable to add : item {itemId} doesn't belong to the supplier {supplierOrder.SupplierId}.");
 			}
 
 			var orderDetail = new OrderDetail

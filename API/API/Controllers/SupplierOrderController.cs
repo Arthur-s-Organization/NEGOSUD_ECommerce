@@ -5,6 +5,7 @@ using API.Models.DTOs.RequestDTOs;
 using API.Services.IServices;
 using API.Models.DTOs.ResponseDTOs;
 using API.Services;
+using API.Utils;
 
 namespace API.Controllers
 {
@@ -36,7 +37,7 @@ namespace API.Controllers
 				return Ok(supplierOrderReponseDTO);
 
 			}
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}
@@ -51,7 +52,7 @@ namespace API.Controllers
 				var supplierOrdersResponseDTOs = await _SupplierOrderService.GetSupplierOrdersBySupplierIdAsync(supplierId);
 				return Ok(supplierOrdersResponseDTOs);
 			}
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}
@@ -67,7 +68,7 @@ namespace API.Controllers
 
 			}
 
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}
@@ -82,7 +83,7 @@ namespace API.Controllers
 				return Ok(supplierOrderResponseDTO);
 			}
 
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}
@@ -96,7 +97,7 @@ namespace API.Controllers
 				var supplierOrderResponseDTO = await _SupplierOrderService.DeleteSupplierOrderAsync(id);
 				return Ok(supplierOrderResponseDTO);
 			}
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}
@@ -111,7 +112,7 @@ namespace API.Controllers
 				return Ok(orderDetail);
 
 			}
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}

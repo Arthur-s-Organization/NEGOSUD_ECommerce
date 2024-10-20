@@ -3,6 +3,7 @@ using API.Models;
 using API.Models.DTOs.RequestDTOs;
 using API.Models.DTOs.ResponseDTOs;
 using API.Services.IServices;
+using API.Utils;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
@@ -35,7 +36,7 @@ namespace API.Services
 			var address = await _context.Addresses.SingleOrDefaultAsync(a => a.AddressId == id);
 			if (address is null)
 			{
-				throw new InvalidOperationException($"Unable to delete : Address '{id}' not found");
+				throw new ValidationException($"Unable to delete : Address '{id}' not found");
 			}
 			_context.Addresses.Remove(address);
 			await _context.SaveChangesAsync();
@@ -50,7 +51,7 @@ namespace API.Services
 			var address = await _context.Addresses.SingleOrDefaultAsync(a => a.AddressId == id);
 			if (address is null)
 			{
-				throw new InvalidOperationException($"Unable to get : Address '{id}' not found");
+				throw new ValidationException($"Unable to get : Address '{id}' not found");
 			}
 
 			var addressResponseDTO = _mapper.Map<AddressResponseDTO>(address);
@@ -72,7 +73,7 @@ namespace API.Services
 			var address = await _context.Addresses.FindAsync(id);
 			if (address == null)
 			{
-				throw new InvalidOperationException($"Unable tu Update : Address '{id}' not found");
+				throw new ValidationException($"Unable tu Update : Address '{id}' not found");
 			}
 
 			_mapper.Map(addressRequestDTO, address);
