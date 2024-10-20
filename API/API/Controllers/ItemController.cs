@@ -2,6 +2,7 @@
 using API.Models.DTOs.ResponseDTOs;
 using API.Services;
 using API.Services.IServices;
+using API.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,7 +28,7 @@ namespace API.Controllers
 				var itemResponseDTO = await _itemService.DeleteItemAsync(id);
 				return Ok(itemResponseDTO);
 			}
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}
@@ -51,7 +52,7 @@ namespace API.Controllers
 				return Ok(itemResponseDTO);
 			}
 
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}
@@ -80,7 +81,7 @@ namespace API.Controllers
 				return Ok(result);
 			}
 
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}
@@ -95,7 +96,7 @@ namespace API.Controllers
 				return Ok(itemResponseDTO);
 			}
 
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}
@@ -110,7 +111,7 @@ namespace API.Controllers
 				return Ok(itemResponseDTO);
 			}
 
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}
@@ -120,9 +121,16 @@ namespace API.Controllers
 		[HttpGet("{slug}")]
 		public async Task<ActionResult<IEnumerable<ItemResponseDTO>>> GetItemsBySlug(string slug)
 		{
-			var ItemResponseDTO = await _itemService.GetItemBySlugAsync(slug);
+			try
+			{
+				var ItemResponseDTO = await _itemService.GetItemBySlugAsync(slug);
+				return Ok(ItemResponseDTO);
+			}
+			catch (ValidationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 
-			return Ok(ItemResponseDTO);
 		}
 
 		[HttpGet("{id}/image")]

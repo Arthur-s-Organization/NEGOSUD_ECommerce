@@ -34,7 +34,7 @@ namespace API.Services
 			var item = await _context.Items.FindAsync(id);
 			if (item is null)
 			{
-				throw new InvalidOperationException($"Unable to delete : Item '{id}' doesn't exists");
+				throw new ValidationException($"Unable to delete : Item '{id}' doesn't exists");
 			}
 			_context.Items.Remove(item);
 			await _context.SaveChangesAsync();
@@ -86,7 +86,7 @@ namespace API.Services
 		{
 			if (filters.MaxPrice < filters.MinPrice)
 			{
-				throw new InvalidOperationException($"Unable to get : Max Price is inferior to Min Price");
+				throw new ValidationException($"Unable to get : Max Price is inferior to Min Price");
 			}
 			var query = _context.Items
 				.Include(i => i.Supplier)
@@ -149,7 +149,7 @@ namespace API.Services
 				.SingleOrDefaultAsync(ai => ai.Slug == slug);
 			if (item is null)
 			{
-				throw new InvalidOperationException($"Unable to get : Item '{slug}' doesn't exists");
+				throw new ValidationException($"Unable to get : Item '{slug}' doesn't exists");
 			}
 
 			var itemResponseDTO = _mapper.Map<ItemResponseDTO>(item);
@@ -161,7 +161,7 @@ namespace API.Services
 			var supplier = await _context.Suppliers.FindAsync(supplierId);
 			if (supplier == null)
 			{
-				throw new InvalidOperationException($"Unable to get : supplier '{supplierId}' doesn't exists");
+				throw new ValidationException($"Unable to get : supplier '{supplierId}' doesn't exists");
 			}
 
 			var items = await _context.Items
@@ -180,25 +180,25 @@ namespace API.Services
 			var item = await _context.Items.FindAsync(id);
 			if (item == null)
 			{
-				throw new InvalidOperationException($"Unable to modify : Item '{id}' doesn't exists");
+				throw new ValidationException($"Unable to modify : Item '{id}' doesn't exists");
 			}
 
 			var alcoholFamily = await _context.AlcoholFamilies.FindAsync(itemRequestDTO.AlcoholFamilyId);
 			if (alcoholFamily == null)
 			{
-				throw new InvalidOperationException($"Unable to modify : alcoholFamily named '{itemRequestDTO.AlcoholFamilyId}' already exsists");
+				throw new ValidationException($"Unable to modify : alcoholFamily named '{itemRequestDTO.AlcoholFamilyId}' already exsists");
 			}
 
 			var supplier = _context.Suppliers.SingleOrDefault(i => i.SupplierId == itemRequestDTO.SupplierId);
 			if (supplier == null)
 			{
-				throw new InvalidOperationException($"Unable to modify : supplier '{itemRequestDTO.SupplierId}' doesn't exists");
+				throw new ValidationException($"Unable to modify : supplier '{itemRequestDTO.SupplierId}' doesn't exists");
 			}
 
 			var itemNameExist = await _context.Items.SingleOrDefaultAsync(i => i.Name == itemRequestDTO.Name && i.ItemId != id);
 			if (itemNameExist != null)
 			{
-				throw new InvalidOperationException($"Unable to modify : Item named '{item.Name}' already exsists");
+				throw new ValidationException($"Unable to modify : Item named '{item.Name}' already exsists");
 			}
 
 			_mapper.Map(itemRequestDTO, item);
@@ -217,20 +217,20 @@ namespace API.Services
 
 			if (alcoholFamily == null && itemRequestDTO.AlcoholFamilyId != null)
 			{
-				throw new InvalidOperationException($"Unable to add : alcoholfamily '{itemRequestDTO.AlcoholFamilyId}' doesn't exists");
+				throw new ValidationException($"Unable to add : alcoholfamily '{itemRequestDTO.AlcoholFamilyId}' doesn't exists");
 			}
 
 			var supplier = _context.Suppliers.SingleOrDefault(ai => ai.SupplierId == itemRequestDTO.SupplierId);
 
 			if (supplier == null)
 			{
-				throw new InvalidOperationException($"Unable to add : supplier '{itemRequestDTO.SupplierId}' doesn't exists");
+				throw new ValidationException($"Unable to add : supplier '{itemRequestDTO.SupplierId}' doesn't exists");
 			}
 
 			var itemNameExist = await _context.Items.SingleOrDefaultAsync(ai => ai.Name == itemRequestDTO.Name);
 			if (itemNameExist != null)
 			{
-				throw new InvalidOperationException($"Unable to add : a alcoholItem named '{itemRequestDTO.Name}' already exsists");
+				throw new ValidationException($"Unable to add : a alcoholItem named '{itemRequestDTO.Name}' already exsists");
 			}
 
 
@@ -271,7 +271,7 @@ namespace API.Services
 				.SingleOrDefault(i => i.ItemId == id);
 			if (item == null)
 			{
-				throw new InvalidOperationException($"Unable to get : a item '{id}' doesn't exsists");
+				throw new ValidationException($"Unable to get : a item '{id}' doesn't exsists");
 			}
 			return item;
 		}
@@ -282,12 +282,12 @@ namespace API.Services
 
 			if (item == null)
 			{
-				throw new InvalidOperationException($"Unable to get image: Item '{itemId}' doesn't exist.");
+				throw new ValidationException($"Unable to get image: Item '{itemId}' doesn't exist.");
 			}
 
 			if (string.IsNullOrEmpty(item.ItemImagePath))
 			{
-				throw new InvalidOperationException($"Item '{itemId}' doesn't have an associated image.");
+				throw new ValidationException($"Item '{itemId}' doesn't have an associated image.");
 			}
 
 			// Construire le chemin d'accès à l'image

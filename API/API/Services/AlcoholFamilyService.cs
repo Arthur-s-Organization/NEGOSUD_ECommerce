@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using API.Models.DTOs.ResponseDTOs;
 using API.Models.DTOs.RequestDTOs;
 using API.Services.IServices;
+using API.Utils;
 
 namespace API.Services
 {
@@ -24,7 +25,7 @@ namespace API.Services
 			var alcoholFamilyNameExist = await _context.AlcoholFamilies.SingleOrDefaultAsync(af => af.Name == alcoholFamilyDTO.Name);
 			if (alcoholFamilyNameExist != null) 
 			{
-				throw new InvalidOperationException($"Unable to add : a alcohol Family named '{alcoholFamilyDTO.Name}' already exsists");
+				throw new ValidationException($"Unable to add : a alcohol Family named '{alcoholFamilyDTO.Name}' already exsists");
 			}
 
 			var alcoholFamily = _mapper.Map<AlcoholFamily>(alcoholFamilyDTO);
@@ -41,7 +42,7 @@ namespace API.Services
 			var alcoholFamily = await _context.AlcoholFamilies.FindAsync(id);
 			if (alcoholFamily is null)
 			{
-				throw new InvalidOperationException($"Unable to delete : alcohol Family '{id}' doesn't exists");
+				throw new ValidationException($"Unable to delete : alcohol Family '{id}' doesn't exists");
 			}
 
 			_context.AlcoholFamilies.Remove(alcoholFamily);
@@ -57,7 +58,7 @@ namespace API.Services
 			var alcoholFamily = await _context.AlcoholFamilies.FindAsync(id);
 			if (alcoholFamily is null)
 			{
-				throw new InvalidOperationException($"Unable to get : alcohol Family '{id}' doesn't exists");
+				throw new ValidationException($"Unable to get : alcohol Family '{id}' doesn't exists");
 			}
 
 			var alcoholFamilyResponseDTO = _mapper.Map<AlcoholFamilyResponseDTO>(alcoholFamily);
@@ -80,13 +81,13 @@ namespace API.Services
 			var alcoholFamily = await _context.AlcoholFamilies.FindAsync(id);
 			if (alcoholFamily == null)
 			{
-				throw new InvalidOperationException($"Unable to modify : the alcohol Family '{id}' doesn't exists");
+				throw new ValidationException($"Unable to modify : the alcohol Family '{id}' doesn't exists");
 			}
 
 			var alcoholFamilyNameExist = await _context.AlcoholFamilies.SingleOrDefaultAsync(af => af.Name == alcoholFamilyRequestDTO.Name && af.AlcoholFamilyId != id);
 			if (alcoholFamilyNameExist != null)
 			{
-				throw new InvalidOperationException($"Unable to modify : alcohol Family named '{alcoholFamilyRequestDTO.Name}' already exsists");
+				throw new ValidationException($"Unable to modify : alcohol Family named '{alcoholFamilyRequestDTO.Name}' already exsists");
 			}
 
 			_mapper.Map(alcoholFamilyRequestDTO, alcoholFamily);

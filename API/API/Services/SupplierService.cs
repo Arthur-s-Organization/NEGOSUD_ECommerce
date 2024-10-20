@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using API.Models.DTOs.RequestDTOs;
 using API.Services.IServices;
 using API.Models.DTOs.ResponseDTOs;
+using API.Utils;
 
 namespace API.Services
 {
@@ -29,23 +30,23 @@ namespace API.Services
 
 			if (adress == null)
 			{
-				throw new InvalidOperationException($"Unable to add adress : adress '{supplierRequestDTO.AddressId}' doesn't exists");
+				throw new ValidationException($"Unable to add adress : adress '{supplierRequestDTO.AddressId}' doesn't exists");
 			}
 
 			if (adress.Supplier != null)
 			{
-				throw new InvalidOperationException($"Unable to add adress :  adress '{supplierRequestDTO.AddressId}' already own to an other supplier");
+				throw new ValidationException($"Unable to add adress :  adress '{supplierRequestDTO.AddressId}' already own to an other supplier");
 			}
 
 			if (adress.Customer != null)
 			{
-				throw new InvalidOperationException($"Unable to add adress :  adress '{supplierRequestDTO.AddressId}' already own to a customer");
+				throw new ValidationException($"Unable to add adress :  adress '{supplierRequestDTO.AddressId}' already own to a customer");
 			}
 
 			var supplierNameExist = await _context.Suppliers.SingleOrDefaultAsync(s => s.Name == supplierRequestDTO.Name);
 			if (supplierNameExist != null)
 			{
-				throw new InvalidOperationException($"Unable to add : a supplier named '{supplierRequestDTO.Name}' already exsists");
+				throw new ValidationException($"Unable to add : a supplier named '{supplierRequestDTO.Name}' already exsists");
 			}
 
 			var supplier = _mapper.Map<Supplier>(supplierRequestDTO);
@@ -62,7 +63,7 @@ namespace API.Services
 			var supplier = await _context.Suppliers.FindAsync(id);
 			if (supplier is null)
 			{
-				throw new InvalidOperationException($"Unable to delete : supplier '{id}' doesn't exists");
+				throw new ValidationException($"Unable to delete : supplier '{id}' doesn't exists");
 			}
 
 			_context.Suppliers.Remove(supplier);
@@ -87,7 +88,7 @@ namespace API.Services
 			var supplier = await _context.Suppliers.Include(s => s.Address).Include(s => s.Items).Include(s => s.SupplierOrders).SingleOrDefaultAsync(s => s.SupplierId == id);
 			if (supplier is null)
 			{
-				throw new InvalidOperationException($"Unable to get : supplier '{id}' doesn't exists");
+				throw new ValidationException($"Unable to get : supplier '{id}' doesn't exists");
 			}
 
 			var supplierResponseDTO = _mapper.Map<SupplierResponseDTO>(supplier);
@@ -100,13 +101,13 @@ namespace API.Services
 			var supplier = await _context.Suppliers.FindAsync(id);
 			if (supplier == null)
 			{
-				throw new InvalidOperationException($"Unable to modify : supplier '{id}' doesn't exists");
+				throw new ValidationException($"Unable to modify : supplier '{id}' doesn't exists");
 			}
 
 			var supplierNameExist = await _context.Suppliers.SingleOrDefaultAsync(s => s.Name == supplierRequestDTO.Name && s.SupplierId != id);
 			if (supplierNameExist != null)
 			{
-				throw new InvalidOperationException($"Unable to modify : supplier named '{supplierRequestDTO.Name}' already exsists");
+				throw new ValidationException($"Unable to modify : supplier named '{supplierRequestDTO.Name}' already exsists");
 			}
 
 			_mapper.Map(supplierRequestDTO, supplier);

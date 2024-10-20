@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using API.Models.DTOs.ResponseDTOs;
 using API.Models.DTOs.RequestDTOs;
 using API.Services.IServices;
+using API.Utils;
 
 namespace API.Controllers
 {
@@ -36,7 +37,7 @@ namespace API.Controllers
 				return Ok(alcoholFamiliesResponseDTO);
 			}
 
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}
@@ -51,7 +52,7 @@ namespace API.Controllers
 				var alcoholFamilyResponseDTO = await _AlcoholFamilyService.AddAlcoholFamilyAsync(alcoholFamilyRequestDTO);
 				return Ok(alcoholFamilyResponseDTO);
 			}
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}
@@ -66,7 +67,7 @@ namespace API.Controllers
 				var alcoholFamilyResponseDTO = await _AlcoholFamilyService.UpdateAlcoholFamilyAsync(id, alcoholFamilyRequestDTO);
 				return Ok(alcoholFamilyResponseDTO);
 			}
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}
@@ -82,7 +83,7 @@ namespace API.Controllers
 				return Ok(alcoholFamilyResponseDTO);
 			}
 
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}

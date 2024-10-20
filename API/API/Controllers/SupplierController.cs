@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using API.Models.DTOs.RequestDTOs;
 using API.Services.IServices;
 using API.Models.DTOs.ResponseDTOs;
+using API.Utils;
 
 namespace API.Controllers
 {
@@ -36,7 +37,7 @@ namespace API.Controllers
 				return Ok(supplierResponseDTO);
 			}
 
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}
@@ -51,7 +52,7 @@ namespace API.Controllers
 
 				return Ok(supplierResponseDTO);
 			}
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}
@@ -67,7 +68,7 @@ namespace API.Controllers
 				return Ok(supplierResponseDTO);
 			}
 
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}
@@ -82,7 +83,7 @@ namespace API.Controllers
 				return Ok(supplierResponseDTO);
 			}
 
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using API.Models.DTOs.RequestDTOs;
 using API.Services.IServices;
 using API.Models.DTOs.ResponseDTOs;
+using API.Utils;
 
 namespace API.Controllers
 {
@@ -34,7 +35,7 @@ namespace API.Controllers
 				var customerOrdersResponseDTO = await _CustomerOrderService.GetCustomerOrderByIdAsync(id);
 				return Ok(customerOrdersResponseDTO);
 			}
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}
@@ -48,7 +49,7 @@ namespace API.Controllers
 				var customerOrdersResponseDTOs = await _CustomerOrderService.GetCustomerOrdersByCustomerIdAsync(customerId);
 				return Ok(customerOrdersResponseDTOs);
 			}
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}
@@ -63,7 +64,7 @@ namespace API.Controllers
 				var CustomerOrdersResponseDTO = await _CustomerOrderService.AddCustomerOrderAsync(customerOrderRequestDTO);
 				return Ok(CustomerOrdersResponseDTO);
 			}
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}
@@ -78,7 +79,7 @@ namespace API.Controllers
 				var CustomerOrdersResponseDTO = await _CustomerOrderService.UpdateCustomerOrderAsync(id, customerOrderRequestDTO);
 				return Ok(CustomerOrdersResponseDTO);
 			}
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}
@@ -92,7 +93,7 @@ namespace API.Controllers
 				var CustomerOrdersResponseDTO = await _CustomerOrderService.DeleteCustomerOrderAsync(id);
 				return Ok(CustomerOrdersResponseDTO);
 			}
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}
@@ -106,7 +107,7 @@ namespace API.Controllers
 				var orderDetail = await _CustomerOrderService.AddItemToCustomerOrderAsync(customerOrderId, itemId, itemQuantity);
 				return Ok(orderDetail);
 			}
-			catch (InvalidOperationException ex)
+			catch (ValidationException ex)
 			{
 				return BadRequest(ex.Message);
 			}

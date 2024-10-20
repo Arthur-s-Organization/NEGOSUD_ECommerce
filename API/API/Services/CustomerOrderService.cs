@@ -3,6 +3,7 @@ using API.Models;
 using API.Models.DTOs.RequestDTOs;
 using API.Models.DTOs.ResponseDTOs;
 using API.Services.IServices;
+using API.Utils;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,7 +25,7 @@ namespace API.Services
 
 			if (customer == null)
 			{
-				throw new InvalidOperationException($"Unable to add : customer '{customerOrderRequestDTO.CustomerId}' doesn't exists");
+				throw new ValidationException($"Unable to add : customer '{customerOrderRequestDTO.CustomerId}' doesn't exists");
 			}
 
 			var customerOrder = _mapper.Map<CustomerOrder>(customerOrderRequestDTO);
@@ -41,7 +42,7 @@ namespace API.Services
 			var customerOrder = await _context.CustomerOrders.SingleOrDefaultAsync(co => co.OrderID == id);
 			if (customerOrder is null)
 			{
-				throw new InvalidOperationException($"Unable to delete : customer '{id}' doesn't exists");
+				throw new ValidationException($"Unable to delete : customer '{id}' doesn't exists");
 			}
 			_context.CustomerOrders.Remove(customerOrder);
 			await _context.SaveChangesAsync();
@@ -78,7 +79,7 @@ namespace API.Services
 				.SingleOrDefaultAsync(co => co.OrderID == id);
 			if (customerOrder is null)
 			{
-				throw new InvalidOperationException($"Unable to get : customerOrder '{id}' doesn't exists");
+				throw new ValidationException($"Unable to get : customerOrder '{id}' doesn't exists");
 			}
 
 			var customerOrderResponseDTO = _mapper.Map<CustomerOrderResponseDTO>(customerOrder);
@@ -91,7 +92,7 @@ namespace API.Services
 			var customer = await _context.Customers.FindAsync(customerId);
 			if (customer == null)
 			{
-				throw new InvalidOperationException($"Unable to get : customer '{customerId}' doesn't exists");
+				throw new ValidationException($"Unable to get : customer '{customerId}' doesn't exists");
 			}
 
 			var customerOrders = await _context.CustomerOrders
@@ -115,7 +116,7 @@ namespace API.Services
 
 			if (customerOrder == null)
 			{
-				throw new InvalidOperationException($"Unable to update : customerOrder '{id}' doesn't exists");
+				throw new ValidationException($"Unable to update : customerOrder '{id}' doesn't exists");
 			}
 
 			// Cas ou la commande client passe en statut "payée" (donc validée)
@@ -161,7 +162,7 @@ namespace API.Services
 					// On vérifie que l'on a assez de stock pour envoyer la commande
 					if (orderDetail.Quantity > item.Stock)
 					{
-						throw new InvalidOperationException($"Unable to update : There is not enough stock to ship the order");
+						throw new ValidationException($"Unable to update : There is not enough stock to ship the order");
 					}
 					// on incrémente la quantitySold de l'item
 					item.QuantitySold += orderDetail.Quantity;
@@ -190,13 +191,13 @@ namespace API.Services
 			var customerOrder = await _context.CustomerOrders.SingleOrDefaultAsync(co => co.OrderID == customerOrderId);
 			if (customerOrder == null)
 			{
-				throw new InvalidOperationException($"Unable to add : customerOrder '{customerOrderId}' doesn't exists");
+				throw new ValidationException($"Unable to add : customerOrder '{customerOrderId}' doesn't exists");
 			}
 
 			var item = await _context.Items.SingleOrDefaultAsync(i => i.ItemId == itemId);
 			if (item == null)
 			{
-				throw new InvalidOperationException($"Unable to add : item '{itemId}' doesn't exists");
+				throw new ValidationException($"Unable to add : item '{itemId}' doesn't exists");
 			}
 
 			var existingOrderDetail = await _context.OrderDetails
@@ -204,7 +205,7 @@ namespace API.Services
 
 			if (existingOrderDetail != null)
 			{
-				throw new InvalidOperationException($"Unable to add : this orderDetail already exists");
+				throw new ValidationException($"Unable to add : this orderDetail already exists");
 			}
 
 			var orderDetail = new OrderDetail

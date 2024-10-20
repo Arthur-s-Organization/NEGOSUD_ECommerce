@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using API.Models.DTOs.RequestDTOs;
 using API.Services.IServices;
 using API.Models.DTOs.ResponseDTOs;
+using API.Utils;
 
 namespace API.Services
 {
@@ -28,18 +29,18 @@ namespace API.Services
 
 			if (adress == null)
 			{
-				throw new InvalidOperationException($"Unable to add adress : adress '{customerRequestDTO.AddressId}' doesn't exists");
+				throw new ValidationException($"Unable to add adress : adress '{customerRequestDTO.AddressId}' doesn't exists");
 			}
 
 
 			if (adress.Supplier != null)
 			{
-				throw new InvalidOperationException($"Unable to add adress :  adress '{customerRequestDTO.AddressId}' already belongs to a supplier");
+				throw new ValidationException($"Unable to add adress :  adress '{customerRequestDTO.AddressId}' already belongs to a supplier");
 			}
 
 			if (adress.Customer != null)
 			{
-				throw new InvalidOperationException($"Unable to add adress :  adress '{customerRequestDTO.AddressId}' already belongs to an other customer");
+				throw new ValidationException($"Unable to add adress :  adress '{customerRequestDTO.AddressId}' already belongs to an other customer");
 			}
 
 
@@ -56,7 +57,7 @@ namespace API.Services
 			var customer = await _context.Customers.SingleOrDefaultAsync(c => c.Id == id);
 			if (customer is null)
 			{
-				throw new InvalidOperationException($"Unable to delete : customer '{id}' doesn't exists");
+				throw new ValidationException($"Unable to delete : customer '{id}' doesn't exists");
 			}
 			_context.Customers.Remove(customer);
 			await _context.SaveChangesAsync();
@@ -80,7 +81,7 @@ namespace API.Services
 			if (customer is null)
 
 			{
-				throw new InvalidOperationException($"Unable to get : customer '{id}' doesn't exists");
+				throw new ValidationException($"Unable to get : customer '{id}' doesn't exists");
 			}
 			var customerResponseDTO = _mapper.Map<CustomerResponseDTO>(customer);
 			return customerResponseDTO;
@@ -94,7 +95,7 @@ namespace API.Services
 				.SingleOrDefaultAsync(c => c.Id == id);
 			if (customer == null)
 			{
-				throw new InvalidOperationException($"Unable to modify : customer '{id}' doesn't exists");
+				throw new ValidationException($"Unable to modify : customer '{id}' doesn't exists");
 			}
 
 			_mapper.Map(customerRequestDTO, customer);
