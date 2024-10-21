@@ -6,10 +6,8 @@ namespace API.Services.IServices
 {
     public interface ICustomerService
     {
-        public Task<CustomerResponseDTO> AddCustomerAsync(CustomerRequestDTO customerRequestDTO);
         public Task<IEnumerable<CustomerResponseDTO>> GetAllCustomersAsync();
         public Task<CustomerResponseDTO> GetCustomerByIdAsync(string id);
-        public Task<CustomerResponseDTO> UpdateCustomerAsync(string id, CustomerRequestDTO customerRequestDTO);
         public Task<CustomerResponseDTO> DeleteCustomerAsync(string id);
     }
 }

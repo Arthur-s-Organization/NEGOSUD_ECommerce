@@ -20,37 +20,7 @@ namespace API.Services
 			_mapper = mapper;
 		}
 
-		public async Task<CustomerResponseDTO> AddCustomerAsync(CustomerRequestDTO customerRequestDTO)
-		{
-			var adress = await _context.Addresses
-			.Include(a => a.Supplier)
-			.Include(a => a.Customer)
-			.SingleOrDefaultAsync(a => a.AddressId == customerRequestDTO.AddressId);
-
-			if (adress == null)
-			{
-				throw new ValidationException($"Unable to add adress : adress '{customerRequestDTO.AddressId}' doesn't exists");
-			}
-
-
-			if (adress.Supplier != null)
-			{
-				throw new ValidationException($"Unable to add adress :  adress '{customerRequestDTO.AddressId}' already belongs to a supplier");
-			}
-
-			if (adress.Customer != null)
-			{
-				throw new ValidationException($"Unable to add adress :  adress '{customerRequestDTO.AddressId}' already belongs to an other customer");
-			}
-
-
-			var customer = _mapper.Map<Customer>(customerRequestDTO);
-			await _context.Customers.AddAsync(customer);
-			await _context.SaveChangesAsync();
-
-			var customerResponseDTO = _mapper.Map<CustomerResponseDTO>(customer);
-			return customerResponseDTO;
-		}
+		
 
 		public async Task<CustomerResponseDTO> DeleteCustomerAsync(string id)
 		{
@@ -66,6 +36,7 @@ namespace API.Services
 			return customerResponseDTO;
 		}
 
+
 		public async Task<IEnumerable<CustomerResponseDTO>> GetAllCustomersAsync()
 		{
 			var customers = await _context.Customers.Include(c => c.Address).ToListAsync();
@@ -75,6 +46,7 @@ namespace API.Services
 			return custmersResponseDTO;
 		}
 
+
 		public async Task<CustomerResponseDTO> GetCustomerByIdAsync(string id)
 		{
 			var customer = await _context.Customers.Include(c => c.Address).SingleOrDefaultAsync(c => c.Id == id);
@@ -83,24 +55,6 @@ namespace API.Services
 			{
 				throw new ValidationException($"Unable to get : customer '{id}' doesn't exists");
 			}
-			var customerResponseDTO = _mapper.Map<CustomerResponseDTO>(customer);
-			return customerResponseDTO;
-		}
-
-		public async Task<CustomerResponseDTO> UpdateCustomerAsync(string id, CustomerRequestDTO customerRequestDTO)
-		{
-
-			var customer = await _context.Customers
-				.Include(c => c.Address)
-				.SingleOrDefaultAsync(c => c.Id == id);
-			if (customer == null)
-			{
-				throw new ValidationException($"Unable to modify : customer '{id}' doesn't exists");
-			}
-
-			_mapper.Map(customerRequestDTO, customer);
-
-			await _context.SaveChangesAsync();
 			var customerResponseDTO = _mapper.Map<CustomerResponseDTO>(customer);
 			return customerResponseDTO;
 		}

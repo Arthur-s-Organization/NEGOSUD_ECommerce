@@ -42,35 +42,6 @@ namespace API.Controllers
 			}
 		}
 
-		[HttpPost]
-		public async Task<ActionResult<CustomerResponseDTO>> AddCustomer(CustomerRequestDTO customerRequestDTO)
-		{
-			try
-			{
-				var customerResponseDTO = await _CustomerService.AddCustomerAsync(customerRequestDTO);
-				return customerResponseDTO;
-			}
-			catch (ValidationException ex)
-			{
-				return BadRequest(ex.Message);
-			}
-		}
-
-		[HttpPut("{id}")]
-		public async Task<ActionResult<CustomerResponseDTO>> UpdateCustomer(string id, CustomerRequestDTO customerRequestDTO)
-		{
-			try
-			{
-				var customerResponseDTO = await _CustomerService.UpdateCustomerAsync(id, customerRequestDTO);
-				return Ok(customerResponseDTO);
-			}
-
-			catch (ValidationException ex)
-			{
-				return BadRequest(ex.Message);
-			}
-		}
-
 
 		[HttpDelete("{id}")]
 		public async Task<ActionResult<CustomerResponseDTO>> DeleteCustomer(string id)
