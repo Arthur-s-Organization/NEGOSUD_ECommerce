@@ -225,7 +225,7 @@ namespace WPF
                     },
                     "Supplier Orders" => column.Header.ToString() switch
                     {
-                        "Order Id" or "Status" => Visibility.Visible,
+                        "Order Id" or "Order Status" => Visibility.Visible,
                         _ => Visibility.Collapsed,
                     },
                     _ => Visibility.Collapsed,
