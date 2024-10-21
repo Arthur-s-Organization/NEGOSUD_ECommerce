@@ -1,5 +1,7 @@
 import { Filters } from '@/components/FilterForm';
 import { zItem, zItemList} from './scheme'; 
+import { headers } from 'next/headers';
+import axios from 'axios';
 export const fetchAllItems = async () => {
   try {
     const response = await fetch("http://localhost:5165/api/Item");
@@ -78,3 +80,17 @@ export const fetchFilteredItems = async (filters : Filters | {name : string}) =>
     return null;
   }
 }
+
+
+export const fetchItemImage = async (id: string) => {
+  try {
+    const response = await axios.get(`http://localhost:5165/api/Item/${id}/image`, {
+      responseType: 'blob'
+      
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Erreur lors de la récupération de l'image:", error);
+    return null;
+  }
+};

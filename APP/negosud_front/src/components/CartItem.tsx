@@ -7,8 +7,9 @@ import {
   CardTitle,
 } from "./ui/card";
 import { Input } from "./ui/input";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CartItem } from "@/services/scheme";
+import { fetchItemImage } from "@/services/itemsService";
 
 export default function CartItemCard({
   cartItem,
@@ -18,8 +19,24 @@ export default function CartItemCard({
   updateCartItemQuantity: (itemId: string, quantity: number) => void;
 }) {
   const [quantity, setQuantity] = useState(cartItem.quantity);
+  const [itemImage, setItemImage] = useState<string | null>(null);
   const boxes = Math.floor(cartItem.quantity / 6);
   const bottles = cartItem.quantity % 6;
+
+  useEffect(() => {
+    const loadImage = async () => {
+      try {
+        const imageBlob = await fetchItemImage(cartItem.item.itemId);
+        if (imageBlob) {
+          const imageUrl = URL.createObjectURL(imageBlob);
+          setItemImage(imageUrl);
+        }
+      } catch (error) {
+        console.error("Erreur lors du chargement de l'image :", error);
+      }
+    };
+    loadImage();
+  }, []);
 
   const handleQuantityChange = (value: string) => {
     const newQuantity = Number(value);
@@ -34,7 +51,7 @@ export default function CartItemCard({
       </CardHeader>
       <CardContent className="p-0">
         <Image
-          src={"/image-placeholder.png"}
+          src={itemImage || "/image-placeholder.png"}
           alt={"item image"}
           width={207}
           height={300}
@@ -47,7 +64,7 @@ export default function CartItemCard({
           Quantité :
           <Input
             type="number"
-            value={cartItem.quantity}
+            value={quantity}
             onChange={(e) => handleQuantityChange(e.target.value)}
             className="w-fit"
             min={0}
