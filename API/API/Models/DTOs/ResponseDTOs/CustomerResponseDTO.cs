@@ -9,6 +9,7 @@
 		public DateTime DateOfBirth { get; set; }
 		//public string EmailAddress { get; set; }
 		public string PhoneNumber { get; set; }
+		public string Email { get; set; }
 		public virtual AddressResponseDTO Address { get; set; }
 	}
 }
