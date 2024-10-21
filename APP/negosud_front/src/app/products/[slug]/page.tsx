@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { fetchItemBySlug } from "@/services/itemsService";
+import { fetchItemBySlug, fetchItemImage } from "@/services/itemsService";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Item } from "@/services/scheme";
@@ -20,28 +20,41 @@ export default function Deltails() {
       duration: 3000,
     });
   };
+
   const { slug } = useParams();
-  const [item, setItem] = useState<Item | null>();
+  const [item, setItem] = useState<Item | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [itemImage, setItemImage] = useState<string | null>(null);
+
   useEffect(() => {
     const getItemBySlug = async () => {
       try {
         const fetchedItem = await fetchItemBySlug(slug.toString());
         setItem(fetchedItem);
+        if (fetchedItem) {
+          const imageBlob = await fetchItemImage(fetchedItem?.itemId);
+          if (imageBlob) {
+            const imageUrl = URL.createObjectURL(imageBlob);
+            setItemImage(imageUrl);
+          }
+        }
       } catch (err) {
         setError("Erreur lors du chargement de l'élément");
       } finally {
         setLoading(false);
       }
     };
+
     if (slug) {
       getItemBySlug();
     }
   }, [slug]);
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
   if (!item) return <div>Aucun produit trouvé.</div>;
+
   return (
     <div className="px-10 py-8">
       <div className="flex gap-8 items-start">
@@ -49,7 +62,7 @@ export default function Deltails() {
           <div className="relative w-[15rem] h-[20rem]">
             <Image
               className="object-cover"
-              src="/image-placeholder.png"
+              src={itemImage || "/image-placeholder.png"}
               alt={`image de présentation de ${item.name}`}
               layout="fill"
               objectFit="cover"
@@ -68,14 +81,14 @@ export default function Deltails() {
             {item.description}
           </p>
           <h2 className="text-xl font-bold mb-6 uppercase">
-            Informations détaillés
+            Informations détaillées
           </h2>
           <div className="flex flex-col md:flex-row gap-8">
             <div className="border border-primary rounded-lg p-6 h-fit">
               <h3 className="text-xl font-semibold mb-4">
                 Informations : {item.name}
               </h3>
-              <ul className=" grid md:grid-cols-2 gap-x-6">
+              <ul className="grid md:grid-cols-2 gap-x-6">
                 {[
                   { label: "Millésime", value: item.year },
                   {

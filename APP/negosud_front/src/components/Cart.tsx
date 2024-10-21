@@ -4,13 +4,7 @@ import CartItemCard from "@/components/CartItem";
 import { getCart, removeFromCart, updateCart } from "@/services/cartService";
 import { Button } from "./ui/button";
 import Link from "next/link";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from "./ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 import axios from "axios";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useRouter } from "next/navigation";
