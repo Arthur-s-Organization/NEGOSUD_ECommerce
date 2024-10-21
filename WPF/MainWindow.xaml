@@ -24,6 +24,7 @@
             <Button Name="btnAddress" Content="Address" Click="btnAddress_Click" Margin="5"/>
             <Separator Margin="0 10 0 10"/>
             <Button Name="btnCustomerOrder" Content="Customer Order" Click="btnCustomerOrder_Click" Margin="5"/>
+            <Button Name="btnSupplierOrder" Content="Supplier Order" Click="btnSupplierOrder_Click" Margin="5"/>
         </StackPanel>
 
 
@@ -63,15 +64,15 @@
                 <DataGridTextColumn Header="Email Address" Binding="{Binding Email}" Visibility="Collapsed" />
                 <DataGridTextColumn Header="Phone Number" Binding="{Binding PhoneNumber}" Visibility="Collapsed" />
 
-                <!-- Colonne pour les familles -->
+                <!-- Colonnes pour les familles -->
                 <DataGridTextColumn Header="Alcohol Family Name" Binding="{Binding Name}" Visibility="Collapsed"/>
 
-                <!-- Colonne pour les adresses-->
+                <!-- Colonnes pour les adresses-->
                 <DataGridTextColumn Header="Street Address" Binding="{Binding StreetAddress}" Visibility="Collapsed" />
                 <DataGridTextColumn Header="Address City" Binding="{Binding City}" Visibility="Collapsed" />
                 <DataGridTextColumn Header="Postal Code" Binding="{Binding PostalCode}" Visibility="Collapsed"/>
 
-                <!-- Colonne pour les commandes clients-->
+                <!-- Colonnes pour les commandes clients -->
                 <DataGridTextColumn Header="Order Id" Binding="{Binding OrderID}" Visibility="Collapsed" />
                 <DataGridTemplateColumn Header="Status" Visibility="Collapsed">
                     <DataGridTemplateColumn.CellTemplate>
@@ -86,7 +87,23 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>
+                
+                <!-- Colonnes pour les commandes fournisseurs -->
+                <DataGridTemplateColumn Header="Order Status" Visibility="Collapsed">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Status}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                PreviewTextInput="NumberValidationTextBox" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
 
+                <!-- Colonnes pour les actions -->
                 <DataGridTemplateColumn Header="Actions">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>

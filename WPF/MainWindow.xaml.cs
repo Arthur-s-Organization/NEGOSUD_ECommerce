@@ -14,6 +14,7 @@ using WPF.Class.CustomerOrder;
 using WPF.Class.Item;
 using WPF.Class.Supplier;
 using Newtonsoft.Json;
+using WPF.Class.SupplierOrder;
 
 namespace WPF
 {
@@ -26,6 +27,7 @@ namespace WPF
         private List<AlcoholFamilyResponseDTO> alcoholFamily;
         private List<AddressResponseDTO> addresses;
         private List<CustomerOrderResponseDTO> customerOrders;
+        private List<SupplierOrderResponseDTO> suppliersOrders;
 
         public MainWindow()
         {
@@ -43,7 +45,8 @@ namespace WPF
                 var alcoholTask = LoadAlcoholFamily();
                 var addressesTask = LoadAddress();
                 var customerOrdersTask = LoadCustomerOrders();
-                await Task.WhenAll(itemsTask, suppliersTask, customersTask, alcoholTask, addressesTask, customerOrdersTask);
+                var supplierOrdersTask = LoadSupplierOrders();
+                await Task.WhenAll(itemsTask, suppliersTask, customersTask, alcoholTask, addressesTask, customerOrdersTask, supplierOrdersTask);
             }
             catch (Exception e)
             {
@@ -119,7 +122,19 @@ namespace WPF
             }
             catch (HttpRequestException e)
             {
-                MessageBox.Show($"Erreur lors de la récupération des adresses : {e.Message}");
+                MessageBox.Show($"Erreur lors de la récupération des commandes client : {e.Message}");
+            }
+        }
+
+        private async Task LoadSupplierOrders()
+        {
+            try
+            {
+                suppliersOrders = await client.GetFromJsonAsync<List<SupplierOrderResponseDTO>>("http://localhost:5165/api/SupplierOrder");
+            }
+            catch (HttpRequestException e)
+            {
+                MessageBox.Show($"Erreur lors de la récupération des commandes fournisseurs : {e.Message}");
             }
         }
 
@@ -157,6 +172,12 @@ namespace WPF
         {
             DataGrid.ItemsSource = customerOrders;
             SetColumnsVisibility(false, "Customer Orders");
+        }
+
+        private void btnSupplierOrder_Click(object sender, RoutedEventArgs e)
+        {
+            DataGrid.ItemsSource = suppliersOrders;
+            SetColumnsVisibility(false, "Supplier Orders");
         }
 
         private void btnRefresh_Click(object sender, RoutedEventArgs e)
@@ -198,6 +219,11 @@ namespace WPF
                         _ => Visibility.Collapsed,
                     },
                     "Customer Orders" => column.Header.ToString() switch
+                    {
+                        "Order Id" or "Status" => Visibility.Visible,
+                        _ => Visibility.Collapsed,
+                    },
+                    "Supplier Orders" => column.Header.ToString() switch
                     {
                         "Order Id" or "Status" => Visibility.Visible,
                         _ => Visibility.Collapsed,
@@ -526,7 +552,50 @@ namespace WPF
                     }
                 }
             }
+            if (e.Column is DataGridTemplateColumn && e.Column.Header.ToString() == "Order Status")
+            {
+                if (e.EditAction == DataGridEditAction.Commit)
+                {
+                    var dataGrid = sender as DataGrid;
+                    var editedOrder = e.Row.Item as SupplierOrderResponseDTO; // Cast de l'objet modifié en ItemResponseDTO
 
+                    if (editedOrder != null)
+                    {
+                        try
+                        {
+                            using (var client = new HttpClient())
+                            {
+                                var customerOrder = new SupplierOrderRequestDTO
+                                {
+                                    Status = editedOrder.Status,
+                                    SupplierId = editedOrder.Supplier.SupplierId
+                                };
+
+                                var jsonItem = JsonConvert.SerializeObject(customerOrder);
+                                var content = new StringContent(jsonItem, Encoding.UTF8, "application/json");
+
+
+                                // Envoyer la requête PUT à l'API
+                                using (HttpClient Orderclient = new HttpClient())
+                                {
+                                    var response = await Orderclient.PutAsync($"http://localhost:5165/api/SupplierOrder/{editedOrder.OrderID}", content);
+
+                                    if (!response.IsSuccessStatusCode)
+                                    {
+                                        MessageBox.Show("Erreur lors de la mise à jour du stock dans la base de données.");
+                                    }
+
+                                }
+
+                            }
+                        }
+                        catch (HttpRequestException ex)
+                        {
+                            MessageBox.Show($"Erreur lors de la mise à jour : {ex.Message}");
+                        }
+                    }
+                }
+            }
         }
     }
 }
