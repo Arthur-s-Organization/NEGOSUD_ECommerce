@@ -66,6 +66,11 @@ namespace API.Services
 				throw new ValidationException($"Unable to delete : supplier '{id}' doesn't exists");
 			}
 
+			var hasOrders = await _context.SupplierOrders.AnyAsync(o => o.SupplierId== id);
+			if (hasOrders)
+			{
+				throw new ValidationException("Unable to delete : supplier has related Orders.");
+			}
 			_context.Suppliers.Remove(supplier);
 			await _context.SaveChangesAsync();
 
