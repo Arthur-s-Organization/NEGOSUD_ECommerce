@@ -71,7 +71,7 @@ namespace API.Controllers
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
-			var customer = await _userManager.FindByEmailAsync(model.Email);
+			var customer = await _userManager.FindByIdAsync(model.Id.ToString());
 			if (customer == null)
 			{
 				return Unauthorized("Customer not found.");
