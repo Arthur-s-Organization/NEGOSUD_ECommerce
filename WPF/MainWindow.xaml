@@ -48,7 +48,7 @@
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Price" Binding="{Binding Price}" />
                 <DataGridTextColumn Header="Origin Country" Binding="{Binding OriginCountry}" />
-                <DataGridTextColumn Header="Supplier Item Name" Binding="{Binding Supplier.Name}" />
+                <DataGridTextColumn Header="Item's Supplier Name" Binding="{Binding Supplier.Name}" />
                 <DataGridTextColumn Header="Alcohol Family" Binding="{Binding AlcoholFamily.Name}" />
                 <DataGridCheckBoxColumn Header="Active" Binding="{Binding IsActive}"/>
 
