@@ -11,20 +11,20 @@ import {
   CardContent,
   CardFooter,
 } from "./ui/card";
-import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
-
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
-);
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { useRouter } from "next/navigation";
 
 export default function Cart() {
+  const stripe = useStripe();
+  const elements = useElements();
+  const router = useRouter();
   const [cart, setCart] = useState<Cart>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [loadingPayment, setLoadingPayment] = useState<boolean>(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
 
-  const API_URL = "http://localhost:5165/api/Payment";
+  const API_URL = "/api/create-payment-intent";
 
   const updateCartItemQuantity = async (
     itemId: string,
@@ -73,27 +73,40 @@ export default function Cart() {
     }
   }, [cart]);
 
-  const initiatePayment = async (cart: Cart) => {
-    setLoadingPayment(true);
-    setPaymentError(null); // Réinitialisation des erreurs
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const cardElement = elements?.getElement(CardElement);
 
     try {
-      const response = await axios.post(API_URL, cart);
+      if (!stripe || !cardElement) {
+        setPaymentError("Erreur avec Stripe ou les éléments de la carte.");
+        return;
+      }
 
-      if (response.data && response.data.id) {
-        const stripe = await stripePromise;
-        const { error } = await stripe!.redirectToCheckout({
-          sessionId: response.data.id,
-        });
+      setLoadingPayment(true);
+      setPaymentError(null);
 
-        if (error) {
-          setPaymentError(
-            "Erreur lors de la redirection vers Stripe Checkout : " +
-              error.message
-          );
+      // Envoyer la demande pour créer un Payment Intent avec le montant total calculé du panier
+      const { data } = await axios.post(API_URL, {
+        data: { amount: totalPrice * 100 }, // Stripe attend le montant en centimes
+      });
+      const clientSecret = data.client_secret;
+
+      // Confirmer le paiement avec la carte
+      const { error, paymentIntent } = await stripe.confirmCardPayment(
+        clientSecret,
+        {
+          payment_method: { card: cardElement },
         }
-      } else {
-        throw new Error("Erreur lors de la création de la session Stripe");
+      );
+
+      if (error) {
+        setPaymentError(
+          "Erreur lors de la confirmation du paiement : " + error.message
+        );
+      } else if (paymentIntent && paymentIntent.status === "succeeded") {
+        console.log("Paiement réussi !");
+        router.push("/cart/payment/success?validAccess=true");
       }
     } catch (error) {
       console.error("Erreur lors de l'initiation du paiement :", error);
@@ -104,6 +117,7 @@ export default function Cart() {
       setLoadingPayment(false);
     }
   };
+
   return (
     <div>
       {cart.length === 0 ? (
@@ -124,24 +138,22 @@ export default function Cart() {
               />
             ))}
           </div>
-          <Card className="text-center h-full">
+          <Card className="text-center h-full w-1/4">
             <CardHeader>
               <CardTitle className="text-xl">Paiement</CardTitle>
             </CardHeader>
             <CardContent className="text-lg text-primary">
               Total : {totalPrice.toFixed(2)} €
-            </CardContent>
-            <CardFooter className="flex flex-col gap-2">
-              <Button
-                onClick={() => initiatePayment(cart)}
-                disabled={loadingPayment}
-              >
-                {loadingPayment
-                  ? "Redirection vers Stripe..."
-                  : "Procéder au paiement"}
-              </Button>
+              <form onSubmit={onSubmit}>
+                <CardElement />
+                <Button type="submit" disabled={loadingPayment}>
+                  {loadingPayment
+                    ? "Redirection vers Stripe..."
+                    : "Procéder au paiement"}
+                </Button>
+              </form>
               {paymentError && <p className="text-red-500">{paymentError}</p>}
-            </CardFooter>
+            </CardContent>
           </Card>
         </div>
       )}
