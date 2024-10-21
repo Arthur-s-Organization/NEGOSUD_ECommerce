@@ -23,6 +23,15 @@ export const login = async (username: string, password: string) => {
   throw new Error("Erreur lors de la connexion");
 };
 
-export const logout = () => {
-  Cookies.remove("negosudToken");
+export const logout = async () => {
+  const response = await axios.post(
+    `${API_URL}logout`,
+  );
+
+  if (response.status === 200) {
+    localStorage.removeItem("userId");
+    return;
+  }
+
+  throw new Error("Erreur lors de la déconnexion");
 };

@@ -18,8 +18,7 @@ export default function SignInPage() {
 
     try {
       await login(username, password);
-      // Redirection après connexion réussie
-      router.push("/"); // Redirigez vers la page d'accueil ou une autre page
+      router.push("/");
     } catch (error) {
       setError("Erreur de connexion. Vérifiez vos identifiants.");
     }
