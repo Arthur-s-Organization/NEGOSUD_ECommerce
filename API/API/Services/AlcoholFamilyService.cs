@@ -45,6 +45,13 @@ namespace API.Services
 				throw new ValidationException($"Unable to delete : alcohol Family '{id}' doesn't exists");
 			}
 
+			var hasRelatedItems = await _context.Items.AnyAsync(i => i.AlcoholFamilyId == id);
+
+			if (hasRelatedItems)
+			{
+				throw new ValidationException("Unable to delete :  alcohol Family '{id}' has relaeted items");
+			}
+
 			_context.AlcoholFamilies.Remove(alcoholFamily);
 			await _context.SaveChangesAsync();
 
@@ -97,5 +104,7 @@ namespace API.Services
 
 			return alcoholFamilyResponseDTO;
 		}
+
+
 	}
 }
