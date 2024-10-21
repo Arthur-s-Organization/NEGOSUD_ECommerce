@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json.Serialization;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using WPF.Class.Adrsess;
 using WPF.Class.AlcoholFamily;
 using WPF.Class.Customer;
+using WPF.Class.CustomerOrder;
 using WPF.Class.Item;
 using WPF.Class.Supplier;
+using Newtonsoft.Json;
 
 namespace WPF
 {
@@ -21,6 +25,7 @@ namespace WPF
         private List<CustomerResponseDTO> customers;
         private List<AlcoholFamilyResponseDTO> alcoholFamily;
         private List<AddressResponseDTO> addresses;
+        private List<CustomerOrderResponseDTO> customerOrders;
 
         public MainWindow()
         {
@@ -37,7 +42,8 @@ namespace WPF
                 var customersTask = LoadCustomersAsync();
                 var alcoholTask = LoadAlcoholFamily();
                 var addressesTask = LoadAddress();
-                await Task.WhenAll(itemsTask, suppliersTask, customersTask, alcoholTask, addressesTask);
+                var customerOrdersTask = LoadCustomerOrders();
+                await Task.WhenAll(itemsTask, suppliersTask, customersTask, alcoholTask, addressesTask, customerOrdersTask);
             }
             catch (Exception e)
             {
@@ -105,6 +111,18 @@ namespace WPF
             }
         }
 
+        private async Task LoadCustomerOrders()
+        {
+            try
+            {
+                customerOrders = await client.GetFromJsonAsync<List<CustomerOrderResponseDTO>>("http://localhost:5165/api/CustomerOrder");
+            }
+            catch (HttpRequestException e)
+            {
+                MessageBox.Show($"Erreur lors de la récupération des adresses : {e.Message}");
+            }
+        }
+
         private void btnItems_Click(object sender, RoutedEventArgs e)
         {
             DataGrid.ItemsSource = items;
@@ -133,6 +151,12 @@ namespace WPF
         {
             DataGrid.ItemsSource = addresses;
             SetColumnsVisibility(false, "Addresses");
+        }
+
+        private void btnCustomerOrder_Click(object sender, RoutedEventArgs e)
+        {
+            DataGrid.ItemsSource = customerOrders;
+            SetColumnsVisibility(false, "Customer Orders");
         }
 
         private void btnRefresh_Click(object sender, RoutedEventArgs e)
@@ -171,6 +195,11 @@ namespace WPF
                     "Addresses" => column.Header.ToString() switch
                     {
                         "Street Address" or "Address City" or "Postal Code" or "Actions" => Visibility.Visible,
+                        _ => Visibility.Collapsed,
+                    },
+                    "Customer Orders" => column.Header.ToString() switch
+                    {
+                        "Order Id" or "Status" => Visibility.Visible,
                         _ => Visibility.Collapsed,
                     },
                     _ => Visibility.Collapsed,
@@ -396,6 +425,8 @@ namespace WPF
             return string.Empty;
         }
 
+
+
         private void NumberValidationTextBox(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {
             e.Handled = !int.TryParse(e.Text, out _);
@@ -403,51 +434,99 @@ namespace WPF
 
         private async void DataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-            if (e.EditAction == DataGridEditAction.Commit)
-            {
-                var dataGrid = sender as DataGrid;
-                var editedItem = e.Row.Item as ItemResponseDTO; // Cast de l'objet modifié en ItemResponseDTO
-
-                if (editedItem != null)
+            if (e.Column is DataGridTemplateColumn && e.Column.Header.ToString() == "Stock")
+            { 
+                if (e.EditAction == DataGridEditAction.Commit)
                 {
-                    try
+                    var dataGrid = sender as DataGrid;
+                    var editedItem = e.Row.Item as ItemResponseDTO; // Cast de l'objet modifié en ItemResponseDTO
+
+                    if (editedItem != null)
                     {
-                        using (var client = new HttpClient())
+                        try
                         {
-                            // Création du multipart content
-                            var multipartContent = new MultipartFormDataContent();
-
-                            // Ajout des champs dans le multipart
-                            multipartContent.Add(new StringContent(editedItem.Name), "Name");
-                            multipartContent.Add(new StringContent(editedItem.Stock.ToString()), "Stock");
-                            multipartContent.Add(new StringContent(editedItem.Price.ToString()), "Price");
-                            multipartContent.Add(new StringContent(editedItem.OriginCountry), "OriginCountry");
-                            multipartContent.Add(new StringContent(editedItem.Description), "Description");
-                            multipartContent.Add(new StringContent(editedItem.IsActive.ToString()), "IsActive");
-                            multipartContent.Add(new StringContent(editedItem.Supplier.SupplierId.ToString()), "SupplierId");
-                            multipartContent.Add(new StringContent(editedItem.AlcoholFamily.AlcoholFamilyId.ToString()), "AlcoholFamilyId");
-                            multipartContent.Add(new StringContent(editedItem.Category), "Category");
-                            multipartContent.Add(new StringContent(editedItem.AlcoholVolume), "AlcoholVolume");
-                            multipartContent.Add(new StringContent(editedItem.Year), "Year");
-                            multipartContent.Add(new StringContent(editedItem.Capacity.ToString()), "Capacity");
-                            multipartContent.Add(new StringContent(editedItem.ExpirationDate.ToString()), "ExpirationDate");
-
-
-                            // Envoi de la requête PUT avec le multipart content
-                            var response = await client.PutAsync($"http://localhost:5165/api/Item/{editedItem.ItemId}", multipartContent);
-
-                            if (!response.IsSuccessStatusCode)
+                            using (var client = new HttpClient())
                             {
-                                MessageBox.Show("Erreur lors de la mise à jour du stock dans la base de données.");
+                                // Création du multipart content
+                                var multipartContent = new MultipartFormDataContent();
+
+                                // Ajout des champs dans le multipart
+                                multipartContent.Add(new StringContent(editedItem.Name), "Name");
+                                multipartContent.Add(new StringContent(editedItem.Stock.ToString()), "Stock");
+                                multipartContent.Add(new StringContent(editedItem.Price.ToString()), "Price");
+                                multipartContent.Add(new StringContent(editedItem.OriginCountry), "OriginCountry");
+                                multipartContent.Add(new StringContent(editedItem.Description), "Description");
+                                multipartContent.Add(new StringContent(editedItem.IsActive.ToString()), "IsActive");
+                                multipartContent.Add(new StringContent(editedItem.Supplier.SupplierId.ToString()), "SupplierId");
+                                multipartContent.Add(new StringContent(editedItem.AlcoholFamily.AlcoholFamilyId.ToString()), "AlcoholFamilyId");
+                                multipartContent.Add(new StringContent(editedItem.Category), "Category");
+                                multipartContent.Add(new StringContent(editedItem.AlcoholVolume), "AlcoholVolume");
+                                multipartContent.Add(new StringContent(editedItem.Year), "Year");
+                                multipartContent.Add(new StringContent(editedItem.Capacity.ToString()), "Capacity");
+                                multipartContent.Add(new StringContent(editedItem.ExpirationDate.ToString()), "ExpirationDate");
+
+
+                                // Envoi de la requête PUT avec le multipart content
+                                var response = await client.PutAsync($"http://localhost:5165/api/Item/{editedItem.ItemId}", multipartContent);
+
+                                if (!response.IsSuccessStatusCode)
+                                {
+                                    MessageBox.Show("Erreur lors de la mise à jour du stock dans la base de données.");
+                                }
                             }
                         }
-                    }
-                    catch (HttpRequestException ex)
-                    {
-                        MessageBox.Show($"Erreur lors de la mise à jour : {ex.Message}");
+                        catch (HttpRequestException ex)
+                        {
+                            MessageBox.Show($"Erreur lors de la mise à jour : {ex.Message}");
+                        }
                     }
                 }
             }
+            if (e.Column is DataGridTemplateColumn && e.Column.Header.ToString() == "Status")
+            {
+                if (e.EditAction == DataGridEditAction.Commit)
+                {
+                    var dataGrid = sender as DataGrid;
+                    var editedOrder = e.Row.Item as CustomerOrderResponseDTO; // Cast de l'objet modifié en ItemResponseDTO
+
+                    if (editedOrder != null)
+                    {
+                        try
+                        {
+                            using (var client = new HttpClient())
+                            {
+                                var customerOrder = new CustomerOrderRequestDTO
+                                {
+                                    Status = editedOrder.Status,
+                                    CustomerId = editedOrder.Customer.Id
+                                };
+
+                                var jsonItem = JsonConvert.SerializeObject(customerOrder);
+                                var content = new StringContent(jsonItem, Encoding.UTF8, "application/json");
+
+
+                                // Envoyer la requête PUT à l'API
+                                using (HttpClient Orderclient = new HttpClient())
+                                {
+                                    var response = await Orderclient.PutAsync($"http://localhost:5165/api/CustomerOrder/{editedOrder.OrderID}", content);
+
+                                    if (!response.IsSuccessStatusCode)
+                                    {
+                                        MessageBox.Show("Erreur lors de la mise à jour du stock dans la base de données.");
+                                    }
+                                   
+                                }
+
+                            }
+                        }
+                        catch (HttpRequestException ex)
+                        {
+                            MessageBox.Show($"Erreur lors de la mise à jour : {ex.Message}");
+                        }
+                    }
+                }
+            }
+
         }
     }
 }
