@@ -60,12 +60,6 @@ namespace API.Services
 
 		public async Task<IEnumerable<CustomerOrderResponseDTO>> GetAllCustomerOrdersAsync()
 		{
-			//var CustomerOrders = await _context.CustomerOrders
-			//	.Include(co => co.OrderDetails)
-			//	.Include(co => co.Customer)
-			//	.ToListAsync();
-
-
 			var customerOrders = await _context.CustomerOrders
 				.Include(co => co.OrderDetails)
 				.ThenInclude(od => od.Item) // Inclut les items liés à chaque OrderDetail
@@ -126,13 +120,13 @@ namespace API.Services
 				throw new ValidationException($"Unable to update : customerOrder '{id}' doesn't exists");
 			}
 
-			// Cas ou la commande client passe en statut "payée" (donc validée)
+			// Cas ou la commande client passe en statut "en traitement" (donc validée)
 			if (customerOrderRequestDTO.Status == "1")
 			{
 				foreach (var orderDetail in customerOrder.OrderDetails)
 				{
 					var item = await _context.Items.FindAsync(orderDetail.ItemId);
-					// On repasse une commande fournisseur si la commande client fait baisser nos stocks en dessous de 10
+					// On repasse une commande fournisseur si la commande client fait baisser nos stocks théortiques en dessous de 10
 					if (item != null && (item.Stock - orderDetail.Quantity < 10))
 					{
 						var newSupplierOrder = new SupplierOrder
@@ -161,7 +155,7 @@ namespace API.Services
 
 
 			// Cas ou la commande client passe en statut  "expédiée"
-			if (customerOrderRequestDTO.Status == "3")
+			if (customerOrderRequestDTO.Status == "2")
 			{
 				foreach (var orderDetail in customerOrder.OrderDetails)
 				{

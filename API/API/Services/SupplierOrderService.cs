@@ -119,6 +119,7 @@ namespace API.Services
 			}
 
 
+			// Quand l'entreprise récupère la commande on incrémente les stocks
 			if (SupplierOrderRequestDTO.Status == "3")
 			{
 				foreach (var orderDetail in supplierOrder.OrderDetails)
