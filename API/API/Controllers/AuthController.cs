@@ -65,13 +65,13 @@ namespace API.Controllers
 
 		}
 
-		[HttpPut("update")]
-		public async Task<IActionResult> UpdateCustomer([FromBody] UpdateCustomerRequestDTO model)
+		[HttpPut("update/{id}")]
+		public async Task<IActionResult> UpdateCustomer(string id,[FromBody] UpdateCustomerRequestDTO model)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
-			var customer = await _userManager.FindByIdAsync(model.Id.ToString());
+			var customer = await _userManager.FindByIdAsync(id.ToString());
 			if (customer == null)
 			{
 				return Unauthorized("Customer not found.");
