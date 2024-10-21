@@ -18,7 +18,6 @@ export default function OrderItemCard({
 }) {
   const [productImage, setProductImage] = useState<string | null>(null);
 
-  // Charger l'image de l'item via fetchItemImage
   useEffect(() => {
     const loadImage = async () => {
       try {

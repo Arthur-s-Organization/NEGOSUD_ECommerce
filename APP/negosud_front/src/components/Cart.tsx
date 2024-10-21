@@ -8,6 +8,13 @@ import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 import axios from "axios";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useRouter } from "next/navigation";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "./ui/dialog";
 
 export default function Cart() {
   const stripe = useStripe();
@@ -17,6 +24,11 @@ export default function Cart() {
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [loadingPayment, setLoadingPayment] = useState<boolean>(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] =
+    useState<boolean>(false);
+  const [pendingDeleteItemId, setPendingDeleteItemId] = useState<string | null>(
+    null
+  );
 
   const API_URL = "/api/create-payment-intent";
 
@@ -26,10 +38,8 @@ export default function Cart() {
   ) => {
     try {
       if (newQuantity <= 0) {
-        setCart((prevCart) =>
-          prevCart.filter((cartItem) => cartItem.item.itemId !== itemId)
-        );
-        await removeFromCart(itemId);
+        setPendingDeleteItemId(itemId);
+        setShowDeleteConfirmation(true);
         return;
       }
       setCart((prevCart) =>
@@ -43,6 +53,25 @@ export default function Cart() {
     } catch (error) {
       console.error("Erreur lors de la mise à jour de la quantité :", error);
     }
+  };
+
+  const handleConfirmDelete = async () => {
+    if (pendingDeleteItemId) {
+      setCart((prevCart) =>
+        prevCart.filter(
+          (cartItem) => cartItem.item.itemId !== pendingDeleteItemId
+        )
+      );
+      await removeFromCart(pendingDeleteItemId);
+      setPendingDeleteItemId(null);
+    }
+    setShowDeleteConfirmation(false);
+  };
+
+  const handleCancelDelete = () => {
+    setPendingDeleteItemId(null);
+    setShowDeleteConfirmation(false);
+    window.location.reload();
   };
 
   useEffect(() => {
@@ -80,13 +109,11 @@ export default function Cart() {
       setLoadingPayment(true);
       setPaymentError(null);
 
-      // Envoyer la demande pour créer un Payment Intent avec le montant total calculé du panier
       const { data } = await axios.post(API_URL, {
-        data: { amount: totalPrice * 100 }, // Stripe attend le montant en centimes
+        data: { amount: totalPrice * 100 },
       });
       const clientSecret = data.client_secret;
 
-      // Confirmer le paiement avec la carte
       const { error, paymentIntent } = await stripe.confirmCardPayment(
         clientSecret,
         {
@@ -150,6 +177,28 @@ export default function Cart() {
             </CardContent>
           </Card>
         </div>
+      )}
+
+      {showDeleteConfirmation && (
+        <Dialog
+          open={showDeleteConfirmation}
+          onOpenChange={setShowDeleteConfirmation}
+        >
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Supprimer l'objet du panier</DialogTitle>
+            </DialogHeader>
+            <p>
+              Êtes-vous sûr de vouloir supprimer cet objet de votre panier ?
+            </p>
+            <DialogFooter>
+              <Button onClick={handleConfirmDelete}>Oui, supprimer</Button>
+              <Button variant="secondary" onClick={handleCancelDelete}>
+                Non, conserver
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       )}
     </div>
   );
