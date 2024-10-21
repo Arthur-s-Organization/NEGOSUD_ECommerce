@@ -44,6 +44,13 @@ namespace API.Services
 			{
 				throw new ValidationException($"Unable to delete : customer '{id}' doesn't exists");
 			}
+
+			var hasItems = await _context.OrderDetails.AnyAsync(od => od.OrderId == id);
+			if (hasItems)
+			{
+				throw new ValidationException("Unable to delete : Customer Order has related items.");
+			}
+
 			_context.CustomerOrders.Remove(customerOrder);
 			await _context.SaveChangesAsync();
 

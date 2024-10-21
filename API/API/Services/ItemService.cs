@@ -36,6 +36,14 @@ namespace API.Services
 			{
 				throw new ValidationException($"Unable to delete : Item '{id}' doesn't exists");
 			}
+
+			var isReferencedInOrders = await _context.OrderDetails.AnyAsync(od => od.ItemId == id);
+
+			if (isReferencedInOrders)
+			{
+				throw new ValidationException($"Unable to delete : Item '{id}' is referenced in one or more orders.");
+			}
+
 			_context.Items.Remove(item);
 			await _context.SaveChangesAsync();
 
@@ -90,7 +98,7 @@ namespace API.Services
 			}
 			var query = _context.Items
 				.Include(i => i.Supplier)
-				.Include(i=> i.AlcoholFamily)
+				.Include(i => i.AlcoholFamily)
 				.AsQueryable();
 
 			if (!string.IsNullOrWhiteSpace(filters.Name))
