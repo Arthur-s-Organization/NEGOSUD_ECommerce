@@ -7,7 +7,8 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Linq;
-using WPF.Class;
+using WPF.Class.Adrsess;
+using WPF.Class.Customer;
 
 namespace WPF
 {
@@ -47,11 +48,15 @@ namespace WPF
                 {
                     Customer = new CustomerRequestDTO
                     {
+                        Email = EmailAdress.Text,
+                        Password = Password.Password,
+                        ConfirmPassword = ConfirmPassword.Password,
                         FirstName = FirstName.Text,
                         LastName = LastName.Text,
                         Gender = Gender.Text,
-                        DateOfBirth = dateOfBirth, // Assignation correcte
-                        PhoneNumber = PhoneNumber.Text
+                        DateOfBirth = dateOfBirth,
+                        PhoneNumber = PhoneNumber.Text,
+                        AddressId = (Guid)AddressComboBox.SelectedValue
                     };
                     // Convertir l'objet en JSON
                     string jsonItem = JsonSerializer.Serialize(Customer);
@@ -60,7 +65,7 @@ namespace WPF
                     // Envoyer la requête PUT à l'API
                     using (HttpClient client = new HttpClient())
                     {
-                        var response = await client.PostAsync($"http://localhost:5165/api/Customer", content);
+                        var response = await client.PostAsync($"http://localhost:5165/api/Auth/register", content);
 
                         // Vérifier si la requête a réussi
                         if (response.IsSuccessStatusCode)

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WPF.Class.AlcoholFamily;
+using WPF.Class.Supplier;
 
-namespace WPF.Class
+namespace WPF.Class.Item
 {
     public class ItemResponseDTO
     {
