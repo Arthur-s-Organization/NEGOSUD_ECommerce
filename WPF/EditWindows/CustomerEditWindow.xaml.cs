@@ -14,7 +14,7 @@ namespace WPF
 {
     public partial class CustomerEditWindow: Window
     {
-        private Guid customerId;
+        private string customerId;
         public UpdateCustomerRequestDTO Customer { get; set; }
         private static readonly HttpClient client = new HttpClient();
         private List<AddressResponseDTO> addresses;
@@ -32,6 +32,7 @@ namespace WPF
                 DateOfBirth.Text = customer.DateOfBirth.ToString();
                 PhoneNumber.Text = customer.PhoneNumber;
                 AddressComboBox.SelectedValue = customer.Address.AddressId;
+                customerId = customer.Id;
             }
         }
 
