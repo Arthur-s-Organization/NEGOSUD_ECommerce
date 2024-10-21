@@ -38,6 +38,14 @@ namespace API.Services
 			{
 				throw new ValidationException($"Unable to delete : Address '{id}' not found");
 			}
+
+			var hasCustomer = await _context.Customers.AnyAsync(c => c.AddressId == id);
+			var hasSupplier = await _context.Suppliers.AnyAsync(s => s.AddressId == id);
+
+			if (hasCustomer || hasSupplier)
+			{
+				throw new ValidationException("Unable to delete : address is associated with a customer or supplier.");
+			}
 			_context.Addresses.Remove(address);
 			await _context.SaveChangesAsync();
 
