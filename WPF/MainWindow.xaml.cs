@@ -195,37 +195,37 @@ namespace WPF
                 {
                     "Items" => column.Header.ToString() switch
                     {
-                        "Item Name" or "Stock" or "Price" or "Origin Country" or "Supplier Item Name" or "Alcohol Family" or "Active" or "Actions" => Visibility.Visible,
+                        "Nom Produit" or "Stock" or "Prix" or "Pays d'origine" or "Nom du fournisseur" or "Famille d'alcool" or "Actif" or "Actions" => Visibility.Visible,
                         _ => Visibility.Collapsed,
                     },
                     "Suppliers" => column.Header.ToString() switch
                     {
-                        "Supplier Name" or "Description" or "Phone Number" or "Address" or "City" or "Actions" or "Active" => Visibility.Visible,
+                        "Nom fournisseur" or "Description" or "Phone Number" or "Adresse" or "Ville" or "Actions" or "Actif" => Visibility.Visible,
                         _ => Visibility.Collapsed,
                     },
                     "Customers" => column.Header.ToString() switch
                     {
-                        "First Name" or "Last Name" or "Email Address" or "Phone Number" or "Actions" => Visibility.Visible,
+                        "Prénom" or "Nom" or "Email" or "Portable" or "Actions" => Visibility.Visible,
                         _ => Visibility.Collapsed,
                     },
                     "Alcohol Family"=> column.Header.ToString() switch
                     {
-                        "Alcohol Family Name" or "Actions" => Visibility.Visible,
+                        "Nom de la famille d'alcool" or "Actions" => Visibility.Visible,
                         _ => Visibility.Collapsed,
                     },
                     "Addresses" => column.Header.ToString() switch
                     {
-                        "Street Address" or "Address City" or "Postal Code" or "Actions" => Visibility.Visible,
+                        "Numéro de Rue" or "Villes" or "Code postal" or "Actions" => Visibility.Visible,
                         _ => Visibility.Collapsed,
                     },
                     "Customer Orders" => column.Header.ToString() switch
                     {
-                        "Order Id" or "Status" => Visibility.Visible,
+                        "Id Commande" or "Statut" => Visibility.Visible,
                         _ => Visibility.Collapsed,
                     },
                     "Supplier Orders" => column.Header.ToString() switch
                     {
-                        "Order Id" or "Order Status" => Visibility.Visible,
+                        "Order Id" or "Statut Commande" => Visibility.Visible,
                         _ => Visibility.Collapsed,
                     },
                     _ => Visibility.Collapsed,
