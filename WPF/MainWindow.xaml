@@ -5,26 +5,26 @@
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
             xmlns:local="clr-namespace:WPF"
             mc:Ignorable="d"
-            Title="MainWindow" Height="450" Width="800">
+            Title="Acceuil" Height="450" Width="900">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="160"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <!-- Panneau de navigation -->
         <StackPanel Grid.Column="0" Background="#F0F0F0">
-            <Button Name="btnAdd" Content="Add" Click="btnAdd_Click" Margin="5 20 5 5"/>
-            <Button Name="btnRefresh" Content="Refresh" Click="btnRefresh_Click" Margin="5"/>
+            <Button Name="btnAdd" Content="Ajouter" Click="btnAdd_Click" Margin="5 20 5 5"/>
+            <Button Name="btnRefresh" Content="Rafraichir" Click="btnRefresh_Click" Margin="5"/>
             <Separator Margin="0 10 0 10"/>
-            <Button Name="btnItems" Content="Items" Click="btnItems_Click" Margin="5" />
-            <Button Name="btnSuppliers" Content="Suppliers" Click="btnSuppliers_Click" Margin="5" />
-            <Button Name="btnCustomers" Content="Customers" Click="btnCustomers_Click" Margin="5" />
-            <Button Name="btnAlcoholFamily" Content="Alcohol Family" Click="btnAlcohoolFamily_Click" Margin="5" />
-            <Button Name="btnAddress" Content="Address" Click="btnAddress_Click" Margin="5"/>
+            <Button Name="btnItems" Content="Produits" Click="btnItems_Click" Margin="5" />
+            <Button Name="btnSuppliers" Content="Fournisseurs" Click="btnSuppliers_Click" Margin="5" />
+            <Button Name="btnCustomers" Content="Clients" Click="btnCustomers_Click" Margin="5" />
+            <Button Name="btnAlcoholFamily" Content="Famille d'alcool" Click="btnAlcohoolFamily_Click" Margin="5" />
+            <Button Name="btnAddress" Content="Adresse" Click="btnAddress_Click" Margin="5"/>
             <Separator Margin="0 10 0 10"/>
-            <Button Name="btnCustomerOrder" Content="Customer Order" Click="btnCustomerOrder_Click" Margin="5"/>
-            <Button Name="btnSupplierOrder" Content="Supplier Order" Click="btnSupplierOrder_Click" Margin="5"/>
+            <Button Name="btnCustomerOrder" Content="Commandes clients" Click="btnCustomerOrder_Click" Margin="5"/>
+            <Button Name="btnSupplierOrder" Content="Commandes fournisseurs" Click="btnSupplierOrder_Click" Margin="5"/>
         </StackPanel>
 
 
@@ -32,7 +32,7 @@
         <DataGrid x:Name="DataGrid" Grid.Column="1" AutoGenerateColumns="False" Margin="10" CanUserAddRows="False" CellEditEnding="DataGrid_CellEditEnding">
             <DataGrid.Columns>
                 <!-- Colonnes pour les Items -->
-                <DataGridTextColumn Header="Item Name" Binding="{Binding Name}" />
+                <DataGridTextColumn Header="Nom Produit" Binding="{Binding Name}" />
                 <DataGridTemplateColumn Header="Stock">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -46,35 +46,35 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Price" Binding="{Binding Price}" />
-                <DataGridTextColumn Header="Origin Country" Binding="{Binding OriginCountry}" />
-                <DataGridTextColumn Header="Item's Supplier Name" Binding="{Binding Supplier.Name}" />
-                <DataGridTextColumn Header="Alcohol Family" Binding="{Binding AlcoholFamily.Name}" />
-                <DataGridCheckBoxColumn Header="Active" Binding="{Binding IsActive}"/>
+                <DataGridTextColumn Header="Prix" Binding="{Binding Price}" />
+                <DataGridTextColumn Header="Pays d'origine" Binding="{Binding OriginCountry}" />
+                <DataGridTextColumn Header="Nom du fournisseur" Binding="{Binding Supplier.Name}" />
+                <DataGridTextColumn Header="Famille d'alcool" Binding="{Binding AlcoholFamily.Name}" />
+                <DataGridCheckBoxColumn Header="Actif" Binding="{Binding IsActive}"/>
 
                 <!-- Colonnes pour les Suppliers -->
-                <DataGridTextColumn Header="Supplier Name" Binding="{Binding Name}" Visibility="Collapsed" />
+                <DataGridTextColumn Header="Nom fournisseur" Binding="{Binding Name}" Visibility="Collapsed" />
                 <DataGridTextColumn Header="Description" Binding="{Binding Description}" Visibility="Collapsed" />
-                <DataGridTextColumn Header="Address" Binding="{Binding Address.StreetAddress}" Visibility="Collapsed" />
-                <DataGridTextColumn Header="City" Binding="{Binding Address.City}" Visibility="Collapsed" />
+                <DataGridTextColumn Header="Adresse" Binding="{Binding Address.StreetAddress}" Visibility="Collapsed" />
+                <DataGridTextColumn Header="Ville" Binding="{Binding Address.City}" Visibility="Collapsed" />
 
                 <!-- Colonnes pour les Customers -->
-                <DataGridTextColumn Header="First Name" Binding="{Binding FirstName}" Visibility="Collapsed" />
-                <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" Visibility="Collapsed" />
-                <DataGridTextColumn Header="Email Address" Binding="{Binding Email}" Visibility="Collapsed" />
-                <DataGridTextColumn Header="Phone Number" Binding="{Binding PhoneNumber}" Visibility="Collapsed" />
+                <DataGridTextColumn Header="Prénom" Binding="{Binding FirstName}" Visibility="Collapsed" />
+                <DataGridTextColumn Header="Nom" Binding="{Binding LastName}" Visibility="Collapsed" />
+                <DataGridTextColumn Header="Email" Binding="{Binding Email}" Visibility="Collapsed" />
+                <DataGridTextColumn Header="Portable" Binding="{Binding PhoneNumber}" Visibility="Collapsed" />
 
                 <!-- Colonnes pour les familles -->
-                <DataGridTextColumn Header="Alcohol Family Name" Binding="{Binding Name}" Visibility="Collapsed"/>
+                <DataGridTextColumn Header="Nom de la famille d'alcool" Binding="{Binding Name}" Visibility="Collapsed"/>
 
                 <!-- Colonnes pour les adresses-->
-                <DataGridTextColumn Header="Street Address" Binding="{Binding StreetAddress}" Visibility="Collapsed" />
-                <DataGridTextColumn Header="Address City" Binding="{Binding City}" Visibility="Collapsed" />
-                <DataGridTextColumn Header="Postal Code" Binding="{Binding PostalCode}" Visibility="Collapsed"/>
+                <DataGridTextColumn Header="Numéro de Rue" Binding="{Binding StreetAddress}" Visibility="Collapsed" />
+                <DataGridTextColumn Header="Villes" Binding="{Binding City}" Visibility="Collapsed" />
+                <DataGridTextColumn Header="Code postal" Binding="{Binding PostalCode}" Visibility="Collapsed"/>
 
                 <!-- Colonnes pour les commandes clients -->
-                <DataGridTextColumn Header="Order Id" Binding="{Binding OrderID}" Visibility="Collapsed" />
-                <DataGridTemplateColumn Header="Status" Visibility="Collapsed">
+                <DataGridTextColumn Header="Id Commande" Binding="{Binding OrderID}" Visibility="Collapsed" />
+                <DataGridTemplateColumn Header="Statut" Visibility="Collapsed">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Status}" />
@@ -89,7 +89,7 @@
                 </DataGridTemplateColumn>
                 
                 <!-- Colonnes pour les commandes fournisseurs -->
-                <DataGridTemplateColumn Header="Order Status" Visibility="Collapsed">
+                <DataGridTemplateColumn Header="Statut Commande" Visibility="Collapsed">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Status}" />
