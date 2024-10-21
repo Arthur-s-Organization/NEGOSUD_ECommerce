@@ -7,14 +7,15 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Linq;
-using WPF.Class;
+using WPF.Class.Adrsess;
+using WPF.Class.Customer;
 
 namespace WPF
 {
     public partial class CustomerEditWindow: Window
     {
         private Guid customerId;
-        public CustomerRequestDTO Customer { get; set; }
+        public UpdateCustomerRequestDTO Customer { get; set; }
         private static readonly HttpClient client = new HttpClient();
         private List<AddressResponseDTO> addresses;
 
@@ -56,13 +57,17 @@ namespace WPF
                 DateTime dateOfBirth;
                 if (DateTime.TryParse(DateOfBirth.Text, out dateOfBirth))
                 {
-                    Customer = new CustomerRequestDTO
+                    Customer = new UpdateCustomerRequestDTO
                     {
                         FirstName = FirstName.Text,
                         LastName = LastName.Text,
+                        PhoneNumber = PhoneNumber.Text,
                         Gender = Gender.Text,
                         DateOfBirth = dateOfBirth, // Assignation correcte
-                        PhoneNumber = PhoneNumber.Text
+                        AddressId = (Guid)AddressComboBox.SelectedValue,
+                        Email = EmailAdress.Text,
+                        OldPassword = OldPassword.Password,
+                        NewPassword = NewPassword.Password
                     };
                     // Convertir l'objet en JSON
                     string jsonItem = JsonSerializer.Serialize(Customer);
@@ -71,7 +76,7 @@ namespace WPF
                     // Envoyer la requête PUT à l'API
                     using (HttpClient client = new HttpClient())
                     {
-                        var response = await client.PutAsync($"http://localhost:5165/api/Customer/{customerId}", content);
+                        var response = await client.PutAsync($"http://localhost:5165/api/Auth/{customerId}", content);
 
                         // Vérifier si la requête a réussi
                         if (response.IsSuccessStatusCode)

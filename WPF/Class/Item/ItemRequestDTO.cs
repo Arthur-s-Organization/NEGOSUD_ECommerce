@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace WPF.Class
+namespace WPF.Class.Item
 {
     public class ItemRequestDTO
     {

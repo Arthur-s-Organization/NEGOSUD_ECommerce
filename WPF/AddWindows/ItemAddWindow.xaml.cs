@@ -10,8 +10,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32; // Pour la boîte de dialogue de sélection de fichier
-using WPF.Class; // Nouvelle référence de namespace
-using WPF.Class;
+using WPF.Class.AlcoholFamily;
+using WPF.Class.Item;
+using WPF.Class.Supplier;
 
 namespace WPF
 {

@@ -1,4 +1,4 @@
-﻿namespace WPF.Class
+﻿namespace WPF.Class.Supplier
 {
     public class SupplierRequestDTO
     {
