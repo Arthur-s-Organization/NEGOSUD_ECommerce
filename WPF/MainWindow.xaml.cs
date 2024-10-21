@@ -5,7 +5,11 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using WPF.Class;
+using WPF.Class.Adrsess;
+using WPF.Class.AlcoholFamily;
+using WPF.Class.Customer;
+using WPF.Class.Item;
+using WPF.Class.Supplier;
 
 namespace WPF
 {

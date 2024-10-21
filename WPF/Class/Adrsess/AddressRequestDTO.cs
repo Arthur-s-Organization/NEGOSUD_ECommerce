@@ -1,4 +1,4 @@
-﻿namespace WPF.Class
+﻿namespace WPF.Class.Adrsess
 {
     public class AddressRequestDTO
     {
