@@ -1,0 +1,120 @@
+﻿<Window x:Class="WPF.MainWindow"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+            xmlns:local="clr-namespace:WPF"
+            mc:Ignorable="d"
+            Title="Acceuil" Height="450" Width="900">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="160"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Panneau de navigation -->
+        <StackPanel Grid.Column="0" Background="#F0F0F0">
+            <Button Name="btnAdd" Content="Ajouter" Click="btnAdd_Click" Margin="5 20 5 5"/>
+            <Button Name="btnRefresh" Content="Rafraichir" Click="btnRefresh_Click" Margin="5"/>
+            <Separator Margin="0 10 0 10"/>
+            <Button Name="btnItems" Content="Produits" Click="btnItems_Click" Margin="5" />
+            <Button Name="btnSuppliers" Content="Fournisseurs" Click="btnSuppliers_Click" Margin="5" />
+            <Button Name="btnCustomers" Content="Clients" Click="btnCustomers_Click" Margin="5" />
+            <Button Name="btnAlcoholFamily" Content="Famille d'alcool" Click="btnAlcohoolFamily_Click" Margin="5" />
+            <Button Name="btnAddress" Content="Adresse" Click="btnAddress_Click" Margin="5"/>
+            <Separator Margin="0 10 0 10"/>
+            <Button Name="btnCustomerOrder" Content="Commandes clients" Click="btnCustomerOrder_Click" Margin="5"/>
+            <Button Name="btnSupplierOrder" Content="Commandes fournisseurs" Click="btnSupplierOrder_Click" Margin="5"/>
+        </StackPanel>
+
+
+        <!-- DataGrid -->
+        <DataGrid x:Name="DataGrid" Grid.Column="1" AutoGenerateColumns="False" Margin="10" CanUserAddRows="False" CellEditEnding="DataGrid_CellEditEnding">
+            <DataGrid.Columns>
+                <!-- Colonnes pour les Items -->
+                <DataGridTextColumn Header="Nom Produit" Binding="{Binding Name}" />
+                <DataGridTemplateColumn Header="Stock">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Stock}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Stock, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                         PreviewTextInput="NumberValidationTextBox" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Prix" Binding="{Binding Price}" />
+                <DataGridTextColumn Header="Pays d'origine" Binding="{Binding OriginCountry}" />
+                <DataGridTextColumn Header="Nom du fournisseur" Binding="{Binding Supplier.Name}" />
+                <DataGridTextColumn Header="Famille d'alcool" Binding="{Binding AlcoholFamily.Name}" />
+                <DataGridCheckBoxColumn Header="Actif" Binding="{Binding IsActive}"/>
+
+                <!-- Colonnes pour les Suppliers -->
+                <DataGridTextColumn Header="Nom fournisseur" Binding="{Binding Name}" Visibility="Collapsed" />
+                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Visibility="Collapsed" />
+                <DataGridTextColumn Header="Adresse" Binding="{Binding Address.StreetAddress}" Visibility="Collapsed" />
+                <DataGridTextColumn Header="Ville" Binding="{Binding Address.City}" Visibility="Collapsed" />
+
+                <!-- Colonnes pour les Customers -->
+                <DataGridTextColumn Header="Prénom" Binding="{Binding FirstName}" Visibility="Collapsed" />
+                <DataGridTextColumn Header="Nom" Binding="{Binding LastName}" Visibility="Collapsed" />
+                <DataGridTextColumn Header="Email" Binding="{Binding Email}" Visibility="Collapsed" />
+                <DataGridTextColumn Header="Portable" Binding="{Binding PhoneNumber}" Visibility="Collapsed" />
+
+                <!-- Colonnes pour les familles -->
+                <DataGridTextColumn Header="Nom de la famille d'alcool" Binding="{Binding Name}" Visibility="Collapsed"/>
+
+                <!-- Colonnes pour les adresses-->
+                <DataGridTextColumn Header="Numéro de Rue" Binding="{Binding StreetAddress}" Visibility="Collapsed" />
+                <DataGridTextColumn Header="Villes" Binding="{Binding City}" Visibility="Collapsed" />
+                <DataGridTextColumn Header="Code postal" Binding="{Binding PostalCode}" Visibility="Collapsed"/>
+
+                <!-- Colonnes pour les commandes clients -->
+                <DataGridTextColumn Header="Id Commande" Binding="{Binding OrderID}" Visibility="Collapsed" />
+                <DataGridTemplateColumn Header="Statut" Visibility="Collapsed">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Status}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                            PreviewTextInput="NumberValidationTextBox" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+                
+                <!-- Colonnes pour les commandes fournisseurs -->
+                <DataGridTemplateColumn Header="Statut Commande" Visibility="Collapsed">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Status}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                PreviewTextInput="NumberValidationTextBox" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Colonnes pour les actions -->
+                <DataGridTemplateColumn Header="Actions">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="Supprimer" Click="DeleteButton_Click" Tag="{Binding}" Margin="5" />
+                                <Button Content="Editer" Click="EditButton_Click" Tag="{Binding}" Margin="5"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

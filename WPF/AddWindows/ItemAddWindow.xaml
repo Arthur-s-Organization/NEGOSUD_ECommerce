@@ -1,0 +1,70 @@
+﻿<Window x:Class="WPF.ItemAddWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Ajouter un produit" Height="775" Width="400">
+    <Grid>
+        <StackPanel Margin="10">
+            <!-- Nom de l'item -->
+            <TextBlock Text="Nom:" HorizontalAlignment="Center"/>
+            <TextBox x:Name="Name" Width="200"/>
+
+            <!-- Stock -->
+            <TextBlock Text="Stock:" Margin="0,10,0,0" HorizontalAlignment="Center"/>
+            <TextBox x:Name="Stock" Width="200"/>
+
+            <!-- Description -->
+            <TextBlock Text="Description:" Margin="0,10,0,0" HorizontalAlignment="Center"/>
+            <TextBox x:Name="Description" Width="200"/>
+
+            <!-- Prix -->
+            <TextBlock Text="Prix:" Margin="0,10,0,0" HorizontalAlignment="Center"/>
+            <TextBox x:Name="Price" Width="200"/>
+
+            <!-- Pays d'origine -->
+            <TextBlock Text="Pays d'origine:" Margin="0,10,0,0" HorizontalAlignment="Center"/>
+            <TextBox x:Name="OriginCountry" Width="200"/>
+
+            <!-- Supplier -->
+            <TextBlock Text="Fournisseur:" Margin="0,10,0,0" HorizontalAlignment="Center"/>
+            <ComboBox x:Name="SupplierComboBox" Width="200" DisplayMemberPath="Name" SelectedValuePath="SupplierId"/>
+
+            <!-- Volume d'alcool -->
+            <TextBlock Text="Volume d'alcool:" Margin="0,10,0,0" HorizontalAlignment="Center"/>
+            <TextBox x:Name="AlcoholVolume" Width="200"/>
+
+            <!-- Année -->
+            <TextBlock Text="Année:" Margin="0,10,0,0" HorizontalAlignment="Center"/>
+            <TextBox x:Name="Year" Width="200"/>
+
+            <!-- Capacité -->
+            <TextBlock Text="Quantité en cl:" Margin="0,10,0,0" HorizontalAlignment="Center"/>
+            <TextBox x:Name="Capacity" Width="200"/>
+
+            <!-- Date d'expiration -->
+            <TextBlock Text="Date d'expiration:" Margin="0,10,0,0" HorizontalAlignment="Center"/>
+            <DatePicker x:Name="ExpirationDatePicker" Width="200" Margin="0,0,0,10"/>
+
+            <!-- AlcoholFamily -->
+            <TextBlock Text="Famille d'alcool:" Margin="0,10,0,0" HorizontalAlignment="Center"/>
+            <ComboBox x:Name="AlcoholFamilyComboBox" Width="200" DisplayMemberPath="Name" SelectedValuePath="AlcoholFamilyId"/>
+
+            <!-- Catégorie -->
+            <TextBlock Text="Catégorie:" Margin="0,10,0,0" HorizontalAlignment="Center"/>
+            <ComboBox x:Name="CategoryComboBox" Width="200">
+                <ComboBoxItem Content="Alcool" Tag="alcohol"/>
+                <ComboBoxItem Content="Accessoire" Tag="common"/>
+            </ComboBox>
+
+            <!-- Sélection d'image -->
+            <TextBlock Text="Selectionner l'image:" Margin="0,10,0,0" HorizontalAlignment="Center"/>
+            <Button Content="Parcourir..." Width="100" Margin="0,10,0,0" Click="BrowseImage_Click"/>
+            <TextBlock x:Name="SelectedImagePath" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+
+            <!-- CheckBox Active -->
+            <CheckBox x:Name="ActiveCheckBox" Content="Actif" HorizontalAlignment="Center" Margin="0,10,0,0"/>
+
+            <!-- Bouton de sauvegarde -->
+            <Button Content="Sauvegarder" Width="100" Margin="0,20,0,0" Click="SaveButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>
