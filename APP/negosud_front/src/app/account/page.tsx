@@ -1,3 +1,4 @@
+// Accout page with customer details and order history, available only when connected
 "use client";
 import { Button } from "@/components/ui/button";
 import {
@@ -79,9 +80,9 @@ export default function AccountPage() {
       case "1":
         return "En traitement";
       case "2":
-        return "Expédié";
+        return "Expédiée";
       case "3":
-        return "Livré";
+        return "Livrée";
       default:
         return "Une erreur est surevenue, contactez un administrateur";
     }

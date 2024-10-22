@@ -1,3 +1,4 @@
+// The pages with the details of a product, generated with the slug
 "use client";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";

@@ -1,3 +1,4 @@
+// Details of an order
 "use client";
 import OrderItemCard from "@/components/OrderItem";
 import { getCustomerOrderById } from "@/services/customerService";

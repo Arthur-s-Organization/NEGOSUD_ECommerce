@@ -9,7 +9,7 @@ export default function Hero() {
           NEGOSUD
         </h1>
         <p className="text-center md:text-lg mb-10 max-w-3xl mx-auto text-white">
-          NégoSud, c’est le rêve d’un œnologue passionné. Son ambition ? Offrir
+          NegoSud, c’est le rêve d’un œnologue passionné. Son ambition ? Offrir
           un lieu de rencontre entre les amateurs de vins, les visiteurs en
           quête d’expérience authentique, et les crus de notre terroir. Nichée
           au cœur de la Gascogne, terre de gastronomie par excellence, notre

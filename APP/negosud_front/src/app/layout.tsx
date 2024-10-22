@@ -8,7 +8,7 @@ import { Toaster } from "@/components/ui/toaster";
 const playfairDisplay = Playfair_Display({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-heading", // Variable CSS pour Playfair
+  variable: "--font-heading",
 });
 
 export const metadata: Metadata = {
