@@ -20,6 +20,7 @@ export default function Contact() {
     });
   };
 
+  // Open a mailto with all the information inside
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 

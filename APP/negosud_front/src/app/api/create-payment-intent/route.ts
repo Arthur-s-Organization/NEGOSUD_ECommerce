@@ -11,16 +11,14 @@ export async function POST(req: NextRequest) {
     const { data } = await req.json();
     const { amount } = data;
 
-    // Validation du montant
     if (!amount || isNaN(amount) || amount <= 0) {
       return new NextResponse(JSON.stringify({ error: "Montant invalide." }), {
         status: 400,
       });
     }
 
-    // Création du Payment Intent
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(Number(amount) * 100), // Convertir en centimes
+      amount: Math.round(Number(amount) * 100), 
       currency: "EUR",
     });
 

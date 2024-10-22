@@ -24,6 +24,7 @@ export default function PaymentSuccess() {
     }
   }, [validAccess, router]);
 
+  // When the payment is sucessful : clear the cart, create a customer order and the order lines
   const clearCartAndPlaceOrder = async () => {
     try {
       const userId = localStorage.getItem("userId");

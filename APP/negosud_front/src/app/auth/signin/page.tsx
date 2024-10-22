@@ -1,5 +1,5 @@
+// All the protected routes redirect to this page when the user is not connected
 "use client";
-
 import { Button } from "@/components/ui/button";
 import { login } from "@/services/authService";
 import { AlertCircleIcon } from "lucide-react";

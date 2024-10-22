@@ -15,7 +15,7 @@ export default function About() {
         />
 
         <p className="text-lg">
-          NégoSud est une entreprise passionnée par l'univers viticole,
+          NegoSud est une entreprise passionnée par l'univers viticole,
           spécialisée dans la vente de vins fins et raffinés. Nous sélectionnons
           avec soin des crus d'exception provenant de terroirs renommés, afin
           d'offrir à nos clients une expérience gustative unique. Notre équipe
